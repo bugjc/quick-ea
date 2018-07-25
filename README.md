@@ -1,5 +1,5 @@
 ## quick-ea
-[快速开始](http://note.youdao.com/noteshare?id=78c041954f9f57bf05288ff0c0fb2ff2)企业架构，关注业务代码的开发。
+[快速开始](https://github.com/bugjc/quick-ea/wiki/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)企业架构，关注业务代码的开发。
 
 
 ## 层级划分
