@@ -29,6 +29,7 @@
         <module>ea-gateway-layer</module>
         <module>ea-server-layer</module>
         <module>ea-monitor-layer</module>
+        <module>ea-apitest-layer</module>
     </modules>
 
     <dependencyManagement>

@@ -1,4 +1,4 @@
-package com.bugjc.ea.gateway.dto;
+package com.bugjc.ea.gateway.core.dto;
 
 /**
  * 响应码枚举，参考HTTP状态码的语义

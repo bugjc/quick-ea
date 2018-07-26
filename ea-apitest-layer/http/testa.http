@@ -1,0 +1,6 @@
+
+## 测试调用链接口
+GET {{url}}/api/v1/testa/10001
+Content-Type: application/json
+
+###

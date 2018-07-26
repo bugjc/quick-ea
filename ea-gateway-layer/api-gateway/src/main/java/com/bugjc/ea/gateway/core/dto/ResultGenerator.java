@@ -1,4 +1,4 @@
-package com.bugjc.ea.gateway.dto;
+package com.bugjc.ea.gateway.core.dto;
 
 /**
  * 响应结果生成工具

@@ -1,6 +1,6 @@
 package com.bugjc.ea.gateway.web;
 
-import com.bugjc.ea.gateway.dto.ResultGenerator;
+import com.bugjc.ea.gateway.core.dto.ResultGenerator;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import org.springframework.boot.web.servlet.error.ErrorController;

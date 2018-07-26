@@ -21,6 +21,7 @@
     - [x] flyway
 - 监控层
     - [x] spring boot admin
+    - [x] zipkin
 
 ## 技术组件
 - eureka
