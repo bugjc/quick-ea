@@ -8,9 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Auther: qingyang
- * @Date: 2018/7/22 14:39
- * @Description:
+ * 程序入口
+ * @author qingyang
  */
 @EnableEurekaClient
 @SpringBootApplication

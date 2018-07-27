@@ -10,19 +10,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @Auther: qingyang
- * @Date: 2018/7/22 15:04
- * @Description:
+ * 测试
+ * @author qingyang
  */
 @Slf4j
 @RestController
 public class ComputeController {
 
 
+    private final DiscoveryClient discoveryClient;
+    private final ApplicationConfig applicationConfig;
+
     @Autowired
-    private DiscoveryClient discoveryClient;
-    @Autowired
-    private ApplicationConfig applicationConfig;
+    public ComputeController(DiscoveryClient discoveryClient, ApplicationConfig applicationConfig) {
+        this.discoveryClient = discoveryClient;
+        this.applicationConfig = applicationConfig;
+    }
 
     @RequestMapping(value = "/add/{a}/{b}",method = RequestMethod.GET)
     public String add(@PathVariable Integer a, @PathVariable Integer b) {

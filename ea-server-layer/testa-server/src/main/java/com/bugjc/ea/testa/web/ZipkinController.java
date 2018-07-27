@@ -15,30 +15,31 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 /**
- * @Auther: qingyang
- * @Date: 2018/7/25 17:27
- * @Description:
+ * zipkin test
+ * @author qingyang
  */
 @Slf4j
 @RestController
 public class ZipkinController {
 
-    @Autowired
-    RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+
+    private final ZipkinService zipkinService;
+
 
     @Autowired
-    ZipkinService zipkinService;
+    public ZipkinController(RestTemplate restTemplate, ZipkinService zipkinService) {
+        this.restTemplate = restTemplate;
+        this.zipkinService = zipkinService;
+    }
 
-    @Autowired
-    Tracer tracer;
-
-    @RequestMapping(value = "service-a-message", method = RequestMethod.GET)
-    public String serviceAMessage() {
+    @GetMapping(value = "service-a-message")
+    public String testaMessage() {
         return "service-a-message";
     }
 
     @GetMapping(value = "/testa/{userId}")
-    public String serviceA(@PathVariable String userId) {
+    public String testa(@PathVariable String userId) {
         log.info("param:"+userId);
         zipkinService.orderStep1("U20");
         return restTemplate.getForObject("http://api-v2/service-b-message", String.class);

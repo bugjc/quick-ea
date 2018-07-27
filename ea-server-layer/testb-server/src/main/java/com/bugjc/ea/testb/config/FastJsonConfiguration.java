@@ -7,11 +7,10 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.context.annotation.Bean;
 
 /**
- * @Auther: qingyang
- * @Date: 2018/7/26 10:20
- * @Description:
+ * FastJson配置
+ * @author qingyang
  */
-public class FastjsonConfiguration {
+public class FastJsonConfiguration {
 
     @Bean
     public HttpMessageConverters fastjsonConverter() {

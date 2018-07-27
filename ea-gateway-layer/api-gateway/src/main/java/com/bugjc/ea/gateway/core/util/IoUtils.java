@@ -16,10 +16,14 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IOUtils {
+/**
+ * io 工具
+ * @author qingyang
+ */
+public class IoUtils {
     private static final int BUFFER_SIZE = 8192;
 
-    private IOUtils() {
+    private IoUtils() {
     }
 
     public static long write(InputStream is, OutputStream os) throws IOException {
@@ -76,7 +80,8 @@ public class IOUtils {
         long total = 0L;
 
         int read;
-        for(char[] buf = new char[8192]; (read = reader.read(buf)) != -1; total += (long)read) {
+        int length = 8192;
+        for(char[] buf = new char[length]; (read = reader.read(buf)) != -1; total += (long)read) {
             writer.write(buf, 0, read);
         }
 
@@ -110,11 +115,11 @@ public class IOUtils {
         PrintWriter writer = new PrintWriter(new OutputStreamWriter(os));
 
         try {
-            String[] arr$ = lines;
-            int len$ = lines.length;
+            String[] arr = lines;
+            int len = lines.length;
 
-            for(int i$ = 0; i$ < len$; ++i$) {
-                String line = arr$[i$];
+            for(int i = 0; i < len; ++i) {
+                String line = arr[i];
                 writer.println(line);
             }
 

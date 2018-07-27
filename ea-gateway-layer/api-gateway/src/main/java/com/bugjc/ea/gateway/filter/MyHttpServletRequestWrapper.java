@@ -8,11 +8,15 @@ import java.io.*;
 
 /**
  * 重新包装request，解决request.getInputStream()只能获取一次值得问题
+ * @author qingyang
  */
-public class MAPIHttpServletRequestWrapper extends HttpServletRequestWrapper{
+public class MyHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-    private byte[] body = null; // 报文
-    final static int BUFFER_SIZE = 4096;
+    /**
+     * 报文
+     */
+    private byte[] body = null;
+    private final static int BUFFER_SIZE = 4096;
 
     /**
      * Constructs a request object wrapping the given request.
@@ -20,9 +24,9 @@ public class MAPIHttpServletRequestWrapper extends HttpServletRequestWrapper{
      * @param request The request to wrap
      * @throws IllegalArgumentException if the request is null
      */
-    public MAPIHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
+    public MyHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
         super(request);
-        body = InputStreamTOByte(request.getInputStream());
+        body = inputStreamToByte(request.getInputStream());
     }
 
     @Override
@@ -57,14 +61,20 @@ public class MAPIHttpServletRequestWrapper extends HttpServletRequestWrapper{
         };
     }
 
-    // 将InputStream转换成byte数组
-    public static byte[] InputStreamTOByte(InputStream in) throws IOException {
+    /**
+     * 将InputStream转换成byte数组
+     * @param in
+     * @return
+     * @throws IOException
+     */
+    private static byte[] inputStreamToByte(InputStream in) throws IOException {
 
         ByteArrayOutputStream outStream = new ByteArrayOutputStream();
         byte[] data = new byte[BUFFER_SIZE];
         int count = -1;
-        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1)
+        while ((count = in.read(data, 0, BUFFER_SIZE)) != -1){
             outStream.write(data, 0, count);
+        }
         data = null;
         return outStream.toByteArray();
 

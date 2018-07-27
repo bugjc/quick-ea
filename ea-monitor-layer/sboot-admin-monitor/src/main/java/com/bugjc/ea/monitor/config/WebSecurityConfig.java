@@ -7,6 +7,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
+/**
+ * 安全配置
+ * @author qingyang
+ */
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 

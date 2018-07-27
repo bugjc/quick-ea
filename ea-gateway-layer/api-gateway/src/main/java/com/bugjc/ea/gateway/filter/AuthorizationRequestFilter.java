@@ -10,7 +10,7 @@ import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.gateway.config.GlobalProperty;
 import com.bugjc.ea.gateway.core.dto.ResultGenerator;
 import com.bugjc.ea.gateway.core.enums.ResultErrorEnum;
-import com.bugjc.ea.gateway.core.util.IOUtils;
+import com.bugjc.ea.gateway.core.util.IoUtils;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import org.slf4j.Logger;
@@ -57,7 +57,9 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 		RequestContext ctx = getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 
-        if (request.getMethod().toUpperCase().equals("GET")){       //GET请求不进行签名校验
+		String httpMethod = "GET";
+        if (httpMethod.equals(request.getMethod().toUpperCase())){
+            //GET请求不进行签名校验
             return null;
         }
 
@@ -67,7 +69,8 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 			return null;
 		}
 
-		if (!contentType.startsWith("application/json")){
+		String contentTypeValue = "application/json";
+		if (!contentType.startsWith(contentTypeValue)){
 			genResult(ctx,401,"请正确设置编码类型为application/json");
 			return null;
 		}
@@ -85,9 +88,9 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 
 		try {
 			request.setCharacterEncoding("UTF-8");
-			ServletRequest requestWrapper = new MAPIHttpServletRequestWrapper(request);
+			ServletRequest requestWrapper = new MyHttpServletRequestWrapper(request);
 			BufferedReader reader = new BufferedReader(new InputStreamReader(requestWrapper.getInputStream()));
-			body = IOUtils.read(reader);
+			body = IoUtils.read(reader);
 			if (StrUtil.isBlank(body)){
 				genResult(ctx,ResultErrorEnum.ParamError.code,"参数不能为空");
 				return null;
@@ -117,7 +120,8 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 	private static byte[] hexStringToByteArray(String data) {
 		int k = 0;
 		byte[] results = new byte[data.length() / 2];
-		for (int i = 0; i + 1 < data.length(); i += 2, k++) {
+		int z = 2;
+		for (int i = 0; i + 1 < data.length(); i += z, k++) {
 			results[k] = (byte) (Character.digit(data.charAt(i), 16) << 4);
 			results[k] += (byte) (Character.digit(data.charAt(i + 1), 16));
 		}

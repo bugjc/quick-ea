@@ -2,16 +2,16 @@ package com.bugjc.ea.gateway.filter;
 
 import brave.Tracer;
 import com.netflix.zuul.ZuulFilter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
 
 /**
- * 链路中自定义数据
- * @Auther: qingyang
- * @Date: 2018/7/25 17:51
- * @Description:
+ * 自定义链路数据
+ * @author qingyang
  */
+@Slf4j
 @Component
 public class ZipkinFilter extends ZuulFilter {
 
@@ -41,7 +41,7 @@ public class ZipkinFilter extends ZuulFilter {
     public Object run() {
         //通过Tracer在链路数据中添加自定义数据-操作人
         tracer.currentSpan().tag("operator","aoki");
-        System.out.println(tracer.currentSpan().context().traceIdString());
+        log.info(tracer.currentSpan().context().traceIdString());
         return null;
     }
 }

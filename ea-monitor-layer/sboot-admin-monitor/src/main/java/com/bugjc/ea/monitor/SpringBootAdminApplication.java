@@ -5,9 +5,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * @Auther: qingyang
- * @Date: 2018/7/23 14:53
- * @Description:
+ * 程序入口
+ * @author qingyang
  */
 @SpringBootApplication
 @EnableAdminServer

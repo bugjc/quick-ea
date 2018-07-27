@@ -1,5 +1,5 @@
 
 ## 测试调用链接口
-GET {{url}}/api/v1/testa/10001
+GET {{url}}/api/v2/testb/10001
 
 ###

@@ -4,7 +4,8 @@ if [ ! -f "zipkin.jar" ];then
     curl -sSL https://zipkin.io/quickstart.sh | bash -s
 fi
 echo "启动 zipkin server"
-java -Xms800m -Xmx800m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:MaxNewSize=512m \
+java -XX:+PrintFlagsFinal -Xms800m -Xmx800m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:MaxNewSize=512m \
+-XX:+PrintGCDateStamps -XX:+PrintGCDetails -Xloggc:../gc-monitor/sleuth-zipkin-gc.log \
 -jar zipkin.jar \
 --zipkin.collector.rabbitmq.addresses=192.168.36.39:5672 \
 --zipkin.collector.rabbitmq.username=zipkin \

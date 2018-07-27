@@ -7,9 +7,8 @@ import org.springframework.cloud.sleuth.annotation.SpanTag;
 import org.springframework.stereotype.Service;
 
 /**
- * @Auther: qingyang
- * @Date: 2018/7/25 21:30
- * @Description:
+ * zipkin service test
+ * @author qingyang
  */
 @Slf4j
 @Service

@@ -20,22 +20,33 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 /**
- * @Auther: qingyang
- * @Date: 2018/7/26 09:31
- * @Description:
+ * RestTemplate配置
+ * @author qingyang
  */
 @Configuration
 @ConditionalOnClass(value = {RestTemplate.class, HttpClient.class})
 public class RestTemplateConfig {
 
+    /**
+     * 读取超时默认30s
+     */
     @Value("${rest.readTimeout:30000}")
-    private int readTimeout;//读取超时默认30s
+    private int readTimeout;
+    /**
+     * 连接超时默认2s
+     */
     @Value("${rest.connectTimeout:2000}")
-    private int connectTimeout;//连接超时默认2s
+    private int connectTimeout;
+    /**
+     * 连接池的最大连接数默认为0
+     */
     @Value("${rest.maxTotalConnect:0}")
-    private int maxTotalConnect; //连接池的最大连接数默认为0
+    private int maxTotalConnect;
+    /**
+     * 单个主机的最大连接数
+     */
     @Value("${rest.maxConnectPerRoute:200}")
-    private int maxConnectPerRoute; //单个主机的最大连接数
+    private int maxConnectPerRoute;
 
     @Bean
     public ClientHttpRequestFactory createFactory() {
