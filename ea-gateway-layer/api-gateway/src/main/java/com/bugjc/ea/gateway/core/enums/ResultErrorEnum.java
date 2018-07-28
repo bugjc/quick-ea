@@ -22,10 +22,18 @@ public enum ResultErrorEnum {
      * 响应io错误
      */
     IOError(203,"IO流读取失败");
-    public int code;
-    public String msg;
+    private int code;
+    private String msg;
     ResultErrorEnum(int code,String msg){
         this.code = code;
         this.msg = msg;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public String getMsg() {
+        return msg;
     }
 }

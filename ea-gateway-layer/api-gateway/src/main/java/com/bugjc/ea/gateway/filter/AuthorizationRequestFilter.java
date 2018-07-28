@@ -78,7 +78,7 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 		String sign = request.getHeader("Signature");
 		logger.debug(sign);
 		if (StrUtil.isEmpty(sign)){
-			genResult(ctx,ResultErrorEnum.ParamError.code,"签名参数不能为空");
+			genResult(ctx,ResultErrorEnum.ParamError.getCode(),"签名参数不能为空");
 			return null;
 		}
 
@@ -92,7 +92,7 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(requestWrapper.getInputStream()));
 			body = IoUtils.read(reader);
 			if (StrUtil.isBlank(body)){
-				genResult(ctx,ResultErrorEnum.ParamError.code,"参数不能为空");
+				genResult(ctx,ResultErrorEnum.ParamError.getCode(),"参数不能为空");
 				return null;
 			}
 
@@ -112,7 +112,7 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 			logger.debug("验签成功！");
 			return null;
 		}else {
-			genResult(ctx, ResultErrorEnum.ParamError.code,"签名验证失败！");
+			genResult(ctx, ResultErrorEnum.ParamError.getCode(),"签名验证失败！");
 			return null;
 		}
 	}

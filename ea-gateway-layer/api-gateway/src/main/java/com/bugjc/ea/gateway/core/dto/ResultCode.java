@@ -4,7 +4,7 @@ package com.bugjc.ea.gateway.core.dto;
  * 响应码枚举，参考HTTP状态码的语义
  * @author : aoki
  */
-public enum ResultCode {
+public  enum ResultCode {
     //成功
     SUCCESS(200),
     //失败
@@ -16,9 +16,13 @@ public enum ResultCode {
     //服务器内部错误
     INTERNAL_SERVER_ERROR(500);
 
-    public int code;
+    private int code;
 
     ResultCode(int code) {
         this.code = code;
+    }
+
+    public int getCode() {
+        return code;
     }
 }

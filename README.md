@@ -3,7 +3,7 @@
 
 
 ## 层级划分
-- web层
+- WEB层
     - [x] admin system
 - 网关层
     - [x] zuul
@@ -12,7 +12,7 @@
 - 服务层
     - [x] test a server
     - [x] test b server
-- api test层
+- API TEST层
     - [x] IDEA Rest Client
 - 任务调度层
     - [x] xxl-job
