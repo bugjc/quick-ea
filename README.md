@@ -10,8 +10,8 @@
 - 基础服务层
     - [x] eureka server
 - 服务层
-    - [x] test a server
-    - [x] test b server
+    - [x] member server
+    - [x] qrcode server
 - API TEST层
     - [x] IDEA Rest Client
 - 任务调度层
@@ -24,9 +24,13 @@
     - [x] zipkin
 
 ## 技术组件
-- eureka
 - spring boot
-- zuul
+- spring cloud 
+- spring cloud feign
+- spring cloud sleuth
+- spring cloud eureka
+- spring cloud zuul
+- spring cloud zuul ratelimit
 - xxl-job
 - docker
 - jib

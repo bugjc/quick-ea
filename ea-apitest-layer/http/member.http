@@ -1,0 +1,5 @@
+
+## 测试调用链接口
+GET {{url}}/api/member/zipkin/10001
+
+###

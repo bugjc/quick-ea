@@ -12,8 +12,8 @@
     <artifactId>ea-server-layer</artifactId>
     <packaging>pom</packaging>
     <modules>
-        <module>testa-server</module>
-        <module>testb-server</module>
+        <module>member-server</module>
+        <module>qrcode-server</module>
     </modules>
 
 
