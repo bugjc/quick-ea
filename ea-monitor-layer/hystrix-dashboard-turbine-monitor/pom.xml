@@ -3,40 +3,35 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>ea-basis-server-layer</artifactId>
+        <artifactId>ea-monitor-layer</artifactId>
         <groupId>com.bugjc.ea</groupId>
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>eureka-basis-server</artifactId>
+    <artifactId>hystrix-dashboard-turbine-monitor</artifactId>
 
     <dependencies>
-        <!-- spring security -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-            <version>${spring-boot-starter-security.version}</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-turbine</artifactId>
+            <version>${spring-cloud-starter-turbine.version}</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-netflix-turbine</artifactId>
+            <version>${spring-cloud-netflix-turbine.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
             <version>${spring-boot-starter-actuator.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-            <version>${spring-cloud-starter-netflix-eureka-server.version}</version>
+            <artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>
+            <version>${spring-cloud-starter-hystrix-dashboard.version}</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <version>${spring-boot-starter-test.version}</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
+
 </project>

@@ -13,6 +13,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>sboot-admin-monitor</module>
+        <module>hystrix-dashboard-turbine-monitor</module>
     </modules>
 
 

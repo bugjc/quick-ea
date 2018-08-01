@@ -1,5 +1,8 @@
 
-## 测试调用链接口
-GET {{url}}/api/member/zipkin/10001
+### 测试调用链接口
+GET {{url}}/api/member/test/zipkin/10001
+
+### 测试断路器接口
+GET {{url}}/api/member/test/hystrix/10002
 
 ###

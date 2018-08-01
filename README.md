@@ -1,5 +1,6 @@
 ## quick-ea
-[快速开始](https://github.com/bugjc/quick-ea/wiki/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)企业架构，关注业务代码的开发。
+[快速开始](https://github.com/bugjc/quick-ea/wiki/%E5%BF%AB%E9%80%9F%E5%BC%80%E5%A7%8B)企业架构，关注业务代码的开发。  
+
 
 
 ## 层级划分
@@ -22,6 +23,8 @@
 - 监控层
     - [x] spring boot admin
     - [x] zipkin
+    - [x] spring cloud hystrix turbine
+    - [x] gcviewer
 
 ## 技术组件
 - spring boot
@@ -31,6 +34,7 @@
 - spring cloud eureka
 - spring cloud zuul
 - spring cloud zuul ratelimit
+- spring cloud hystrix
 - xxl-job
 - docker
 - jib

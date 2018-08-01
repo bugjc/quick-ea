@@ -13,9 +13,35 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
+
         <spring-boot.version>2.0.1.RELEASE</spring-boot.version>
+        <spring-boot-starter.version>2.0.1.RELEASE</spring-boot-starter.version>
+        <spring-boot-starter-web.version>2.0.1.RELEASE</spring-boot-starter-web.version>
         <spring.boot.admin.version>2.0.1</spring.boot.admin.version>
+        <spring-boot-starter-security.version>2.0.1.RELEASE</spring-boot-starter-security.version>
+        <spring-boot-starter-actuator.version>2.0.1.RELEASE</spring-boot-starter-actuator.version>
+        <spring-boot-starter-test.version>2.0.1.RELEASE</spring-boot-starter-test.version>
+
         <spring-cloud.version>Finchley.BUILD-SNAPSHOT</spring-cloud.version>
+        <spring-cloud-starter-netflix-zuul.version>2.0.1.BUILD-SNAPSHOT</spring-cloud-starter-netflix-zuul.version>
+        <spring-cloud-starter-netflix-eureka-client.version>2.0.1.BUILD-SNAPSHOT</spring-cloud-starter-netflix-eureka-client.version>
+        <spring-cloud-starter-netflix-eureka-server.version>2.0.1.BUILD-SNAPSHOT</spring-cloud-starter-netflix-eureka-server.version>
+        <spring-cloud-zuul-ratelimit.version>2.0.1.RELEASE</spring-cloud-zuul-ratelimit.version>
+        <spring-cloud-sleuth-zipkin.version>2.0.1.BUILD-SNAPSHOT</spring-cloud-sleuth-zipkin.version>
+        <spring-cloud-starter-sleuth.version>2.0.1.BUILD-SNAPSHOT</spring-cloud-starter-sleuth.version>
+        <spring-cloud-starter-turbine.version>1.4.5.RELEASE</spring-cloud-starter-turbine.version>
+        <spring-cloud-netflix-turbine.version>1.4.5.RELEASE</spring-cloud-netflix-turbine.version>
+        <spring-cloud-starter-hystrix-dashboard.version>1.4.5.RELEASE</spring-cloud-starter-hystrix-dashboard.version>
+        <spring-cloud-starter-feign.version>1.4.5.RELEASE</spring-cloud-starter-feign.version>
+        <spring-cloud-starter-hystrix.version>1.4.5.RELEASE</spring-cloud-starter-hystrix.version>
+
+        <spring-rabbit.version>2.0.3.RELEASE</spring-rabbit.version>
+        <fastjson.version>1.2.47</fastjson.version>
+        <hutool-all.version>4.1.4</hutool-all.version>
+        <lombok.version>1.18.2</lombok.version>
+        <slf4j-api.version>1.7.25</slf4j-api.version>
+        <log4j-over-slf4j.version>1.7.25</log4j-over-slf4j.version>
+        <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
     </properties>
 
     <parent>
@@ -29,7 +55,6 @@
         <module>ea-gateway-layer</module>
         <module>ea-server-layer</module>
         <module>ea-monitor-layer</module>
-        <module>ea-apitest-layer</module>
     </modules>
 
     <dependencyManagement>

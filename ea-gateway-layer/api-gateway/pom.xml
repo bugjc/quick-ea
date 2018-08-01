@@ -27,37 +27,42 @@
 
     <dependencies>
 
+        <!-- 服务网关限流 -->
         <dependency>
             <groupId>com.marcosbarbero.cloud</groupId>
             <artifactId>spring-cloud-zuul-ratelimit</artifactId>
+            <version>${spring-cloud-zuul-ratelimit.version}</version>
         </dependency>
-
+        <!-- 服务网关 -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+            <version>${spring-cloud-starter-netflix-zuul.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+            <version>${spring-boot-starter-web.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <version>${spring-cloud-starter-netflix-eureka-client.version}</version>
         </dependency>
 
         <!--阿里 FastJson依赖-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.39</version>
+            <version>${fastjson.version}</version>
         </dependency>
         <!--常用库依赖-->
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
-            <version>4.0.9</version>
+            <version>${hutool-all.version}</version>
         </dependency>
 
         <!-- spring boot admin start -->
@@ -70,13 +75,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
+            <version>${spring-boot-starter-actuator.version}</version>
         </dependency>
         <!-- spring boot admin end -->
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -84,27 +90,25 @@
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-sleuth-zipkin</artifactId>
+            <version>${spring-cloud-sleuth-zipkin.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-sleuth</artifactId>
+            <version>${spring-cloud-starter-sleuth.version}</version>
         </dependency>
         <dependency>
             <groupId> org.springframework.amqp</groupId>
             <artifactId>spring-rabbit</artifactId>
+            <version>${spring-rabbit.version}</version>
         </dependency>
         <!-- zipkin end -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring-boot-starter-test.version}</version>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-            <version>4.1.3</version>
         </dependency>
 
     </dependencies>
