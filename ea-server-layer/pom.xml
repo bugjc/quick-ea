@@ -11,6 +11,7 @@
 
     <artifactId>ea-server-layer</artifactId>
     <packaging>pom</packaging>
+
     <modules>
         <module>member-server</module>
         <module>qrcode-server</module>

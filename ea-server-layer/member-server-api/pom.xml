@@ -10,15 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>member-server-api</artifactId>
+    <packaging>jar</packaging>
 
-
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring-boot-starter-web.version}</version>
-        </dependency>
-
-    </dependencies>
 
 </project>
