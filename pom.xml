@@ -55,6 +55,7 @@
         <module>ea-gateway-layer</module>
         <module>ea-server-layer</module>
         <module>ea-monitor-layer</module>
+        <module>ea-devtool-layer</module>
     </modules>
 
     <dependencyManagement>
