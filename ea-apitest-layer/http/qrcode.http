@@ -1,8 +1,14 @@
 
 ### 测试调用链接口
+### 依次启动: eureka服务 -> 调用链服务 -> API网关服务 -> 至少一个qrcode服务 -> 至少1个member服务；打开调用链admin查看调用结果。
 GET {{url}}/api/qrcode/test/zipkin/10001
 
 ### 测试断路器接口
+### 依次启动: eureka服务 -> API网关服务 -> 至少一个qrcode服务 -> 至少1个member服务；最后观察打印结果。
 GET {{url}}/api/qrcode/test/hystrix/10002
+
+### 负载测试接口
+### 依次启动: eureka服务 -> API网关服务 -> 至少一个qrcode服务 -> 至少2个member服务；最后观察打印结果。
+GET {{url}}/api/qrcode/getServiceInstance
 
 ###
