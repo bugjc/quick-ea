@@ -16,6 +16,7 @@
         <module>member-server</module>
         <module>qrcode-server</module>
         <module>member-server-api</module>
+        <module>qrcode-server-api</module>
     </modules>
 
 
