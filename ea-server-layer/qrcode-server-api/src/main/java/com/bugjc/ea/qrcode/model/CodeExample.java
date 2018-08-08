@@ -5,6 +5,7 @@ import lombok.Data;
 import java.util.Date;
 
 /**
+ * 示例
  * @author aoki
  */
 @Data

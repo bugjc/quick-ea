@@ -1,5 +1,6 @@
-package com.bugjc.ea.qrcode;
+package com.bugjc.ea.qrcode.service;
 
+import com.bugjc.ea.qrcode.Tester;
 import com.bugjc.ea.qrcode.model.CodeExample;
 import com.bugjc.ea.qrcode.service.CodeExampleService;
 import com.github.pagehelper.PageHelper;
@@ -19,10 +20,7 @@ import java.util.List;
  * @since 2017/9/2.
  */
 @Slf4j
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Import(CodeServerApplication.class)
-public class CodeExampleServiceTest {
+public class CodeExampleServiceTest extends Tester {
 
     @Autowired
     private CodeExampleService codeExampleService;

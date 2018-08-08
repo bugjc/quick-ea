@@ -34,6 +34,10 @@ public class SpringContextUtil {
         return (T) context.getBean(name, requiredType);
     }
 
+    public static <T> T getBean(Class<T> clazz){
+        return context.getBean(clazz);
+    }
+
     public static boolean containsBean(String name) {
         return context.containsBean(name);
     }

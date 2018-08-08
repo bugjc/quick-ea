@@ -11,7 +11,7 @@ import org.springframework.context.annotation.ComponentScan;
  * 程序入口
  * @author qingyang
  */
-@ComponentScan(value = "com.bugjc.ea")
+@ComponentScan(basePackages = "com.bugjc.ea")
 @EnableHystrix
 @EnableFeignClients
 @EnableEurekaClient
