@@ -1,7 +1,7 @@
 package com.bugjc.ea.qrcode.core.sdk.qrcode;
 
 import cn.hutool.core.util.CharsetUtil;
-import com.bugjc.ea.qrcode.core.enums.QrCodeResultCodeEnum;
+import com.bugjc.ea.qrcode.core.dto.UnionPayResultCode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
@@ -193,7 +193,7 @@ public class AcpService {
 
 		log.info("验证签名成功");
 		String respCode = rspData.get("respCode") ;
-		if(!(QrCodeResultCodeEnum.SUCCESS.getCode()).equals(respCode)){
+		if(!(UnionPayResultCode.SUCCESS.getCode()).equals(respCode)){
 			log.info(respCode);
 			log.info("业务失败");
 			throw new Exception("业务失败");

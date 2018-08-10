@@ -1,7 +1,10 @@
 package com.bugjc.ea.qrcode.model;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class ComInfo implements Serializable {
     /**
      * 订单流水号

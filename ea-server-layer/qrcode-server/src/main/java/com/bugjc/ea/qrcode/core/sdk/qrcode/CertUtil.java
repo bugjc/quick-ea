@@ -15,7 +15,7 @@
  */
 package com.bugjc.ea.qrcode.core.sdk.qrcode;
 
-import com.bugjc.ea.qrcode.config.QrCodeConfig;
+import com.bugjc.ea.qrcode.config.QrCodePropConfig;
 import com.bugjc.ea.qrcode.core.util.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ResourceUtils;
@@ -62,7 +62,7 @@ public class CertUtil {
 	 */
 	private static void init() {
 		try {
-			QrCodeConfig qrCodeConfig = SpringContextUtil.getBean(QrCodeConfig.class);
+			QrCodePropConfig qrCodeConfig = SpringContextUtil.getBean(QrCodePropConfig.class);
 			//向系统添加BC provider
 			addProvider();
 			//初始化签名私钥证书
@@ -101,7 +101,7 @@ public class CertUtil {
 	/**
 	 * 用配置文件acp_sdk.properties中配置的私钥路径和密码 加载签名证书
 	 */
-	private static void initSignCert(QrCodeConfig qrCodeConfig) {
+	private static void initSignCert(QrCodePropConfig qrCodeConfig) {
 		if(!"01".equals(qrCodeConfig.getSignMethod())){
 			log.info("非rsa签名方式，不加载签名证书。");
 			return;
@@ -154,7 +154,7 @@ public class CertUtil {
 	/**
 	 * 用配置文件acp_sdk.properties配置路径 加载银联公钥上级证书（中级证书）
 	 */
-	private static void initEncryptCert(QrCodeConfig qrCodeConfig) {
+	private static void initEncryptCert(QrCodePropConfig qrCodeConfig) {
 		log.info("加载敏感信息加密证书==>"+qrCodeConfig.getEncryptCertPath());
 		if (!SdkUtil.isEmpty(qrCodeConfig.getEncryptCertPath())) {
 			encryptCert = initCert(qrCodeConfig.getEncryptCertPath());
@@ -181,7 +181,7 @@ public class CertUtil {
 	/**
 	 * 用配置文件acp_sdk.properties配置路径 加载验证签名证书
 	 */
-	private static void initValidateCertFromDir(QrCodeConfig qrCodeConfig)  {
+	private static void initValidateCertFromDir(QrCodePropConfig qrCodeConfig)  {
 		if(!"01".equals(qrCodeConfig.getSignMethod())){
 			log.info("非rsa签名方式，不加载验签证书。");
 			return;
@@ -307,7 +307,7 @@ public class CertUtil {
 			if (aliasenum.hasMoreElements()) {
 				keyAlias = aliasenum.nextElement();
 			}
-			QrCodeConfig qrCodeConfig = SpringContextUtil.getBean(QrCodeConfig.class);
+			QrCodePropConfig qrCodeConfig = SpringContextUtil.getBean(QrCodePropConfig.class);
 			return (PrivateKey) keyStore.getKey(keyAlias, qrCodeConfig.getSignCertPwd().toCharArray());
 		} catch (KeyStoreException | UnrecoverableKeyException | NoSuchAlgorithmException e) {
 			log.info("getSignCertPrivateKey Error", e);
@@ -346,7 +346,7 @@ public class CertUtil {
 	 */
 	public static PublicKey getEncryptCertPublicKey() {
 		if (null == encryptCert) {
-			QrCodeConfig qrCodeConfig = SpringContextUtil.getBean(QrCodeConfig.class);
+			QrCodePropConfig qrCodeConfig = SpringContextUtil.getBean(QrCodePropConfig.class);
 			String path = qrCodeConfig.getEncryptCertPath();
 			if (!SdkUtil.isEmpty(path)) {
 				encryptCert = initCert(path);
@@ -393,7 +393,7 @@ public class CertUtil {
 			return cf.getPublicKey();
 		} else {
 			// 不存在则重新Load证书文件目录
-			QrCodeConfig qrCodeConfig = SpringContextUtil.getBean(QrCodeConfig.class);
+			QrCodePropConfig qrCodeConfig = SpringContextUtil.getBean(QrCodePropConfig.class);
 			initValidateCertFromDir(qrCodeConfig);
 			if (certMap.containsKey(certId)) {
 				// 存在certId对应的证书对象
@@ -434,7 +434,7 @@ public class CertUtil {
 	 */
 	public static String getEncryptCertId() {
 		if (null == encryptCert) {
-			QrCodeConfig qrCodeConfig = SpringContextUtil.getBean(QrCodeConfig.class);
+			QrCodePropConfig qrCodeConfig = SpringContextUtil.getBean(QrCodePropConfig.class);
 			String path = qrCodeConfig.getEncryptCertPath();
 			if (!SdkUtil.isEmpty(path)) {
 				encryptCert = initCert(path);
@@ -696,7 +696,7 @@ public class CertUtil {
 			return false;
 		}
 
-		QrCodeConfig qrCodeConfig = SpringContextUtil.getBean(QrCodeConfig.class);
+		QrCodePropConfig qrCodeConfig = SpringContextUtil.getBean(QrCodePropConfig.class);
 		if(qrCodeConfig.isIfValidateCNName()){
 			// 验证公钥是否属于银联
 			if(!SdkConstants.UNIONPAY_CNNAME.equals(CertUtil.getIdentitiesFromCertficate(cert))) {

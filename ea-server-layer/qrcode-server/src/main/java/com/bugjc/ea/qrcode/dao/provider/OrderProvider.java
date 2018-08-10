@@ -1,6 +1,5 @@
 package com.bugjc.ea.qrcode.dao.provider;
 
-import com.bugjc.ea.qrcode.model.Order;
 import org.apache.ibatis.jdbc.SQL;
 
 /**
@@ -9,14 +8,11 @@ import org.apache.ibatis.jdbc.SQL;
  */
 public class OrderProvider {
 
-    /**
-     * 插入订单
-     * @return
-     */
     public String insert(){
         return new SQL(){
             {
                 INSERT_INTO("tbs_order");
+                VALUES("user_id", "#{userId}");
                 VALUES("req_type", "#{reqType}");
                 VALUES("orig_req_type", "#{origReqType}");
                 VALUES("txn_no", "#{txnNo}");
@@ -48,6 +44,14 @@ public class OrderProvider {
                 VALUES("create_time", "#{createTime}");
             }
         }.toString();
+    }
+
+    public String selOrderByQrNo(){
+        return new SQL(){{
+            SELECT_DISTINCT("*");
+            FROM("tbs_order");
+            WHERE("qr_no=#{qrNo}");
+        }}.toString();
     }
 
 }

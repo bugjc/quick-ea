@@ -21,6 +21,7 @@
         <spring-boot-starter-security.version>2.0.1.RELEASE</spring-boot-starter-security.version>
         <spring-boot-starter-actuator.version>2.0.1.RELEASE</spring-boot-starter-actuator.version>
         <spring-boot-starter-test.version>2.0.1.RELEASE</spring-boot-starter-test.version>
+        <spring-boot-starter-data-redis.version>2.0.1.RELEASE</spring-boot-starter-data-redis.version>
 
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <spring-cloud-starter-netflix-zuul.version>2.0.1.RELEASE</spring-cloud-starter-netflix-zuul.version>

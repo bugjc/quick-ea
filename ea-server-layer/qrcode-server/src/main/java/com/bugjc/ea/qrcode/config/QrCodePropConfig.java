@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Data
 @Configuration
-public class QrCodeConfig {
+public class QrCodePropConfig {
 
     /**  版本 **/
     @Value("${qrcode.version}")
@@ -56,9 +56,16 @@ public class QrCodeConfig {
     public boolean ifValidateRemoteCert;
     /**  过期时间(单位：秒) **/
     @Value("${qrcode.qrValidTime}")
-    public String qrValidTime;
-
-
+    public Long qrValidTime;
+    /**  免密限额 **/
+    @Value("${qrcode.pinFree}")
+    public String pinFree;
+    /**  最高交易金额 **/
+    @Value("${qrcode.maxAmont}")
+    public String maxAmont;
+    /**  附加请求处理地址 **/
+    @Value("${qrcode.pre.backUrl}")
+    public String preBackUrl;
 
 
 }

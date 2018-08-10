@@ -5,9 +5,14 @@ import com.bugjc.ea.qrcode.model.CouponInfo;
 import org.apache.ibatis.annotations.InsertProvider;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
+/**
+ * 优惠信息
+ * @author Administrator
+ */
 @Mapper
 public interface CouponInfoMapper{
 
@@ -16,6 +21,7 @@ public interface CouponInfoMapper{
      * @param list
      * @return
      */
-    @InsertProvider(type = CouponInfoProvider.class,method = "insert")
-    void insert(List<CouponInfo> list);
+    @InsertProvider(type = CouponInfoProvider.class,method = "batchInsert")
+    @Options(keyColumn="id",useGeneratedKeys=true)
+    int batchInsert(@Param("list") List<CouponInfo> list);
 }

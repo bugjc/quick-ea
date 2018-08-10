@@ -20,7 +20,9 @@
         <pagehelper-spring-boot-starter.version>1.2.5</pagehelper-spring-boot-starter.version>
         <hutool-all.version>4.0.9</hutool-all.version>
         <commons-httpclient.version>3.1</commons-httpclient.version>
-        <javax.persistence-api.version>2.2</javax.persistence-api.version>
+        <jetcache-starter-redis-lettuce.version>2.5.6</jetcache-starter-redis-lettuce.version>
+        <commons-pool2.version>2.6.0</commons-pool2.version>
+        <netty-common.version>4.1.28.Final</netty-common.version>
     </properties>
 
     <dependencies>
@@ -75,6 +77,13 @@
             <version>${jcl-over-slf4j.version}</version>
         </dependency>
 
+        <!-- redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${spring-boot-starter-data-redis.version}</version>
+        </dependency>
+
         <!-- spring boot admin start-->
         <dependency>
             <groupId>de.codecentric</groupId>
@@ -126,6 +135,12 @@
             <version>${mybatis-spring-boot-starter.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alicp.jetcache</groupId>
+            <artifactId>jetcache-starter-redis-lettuce</artifactId>
+            <version>${jetcache-starter-redis-lettuce.version}</version>
+        </dependency>
+
         <!-- mybatis -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -147,17 +162,22 @@
             <version>${hutool-all.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>${netty-common.version}</version>
+        </dependency>
+
         <!-- qrcode sdk -->
         <dependency>
             <groupId>commons-httpclient</groupId>
             <artifactId>commons-httpclient</artifactId>
             <version>${commons-httpclient.version}</version>
         </dependency>
-
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-            <version>${javax.persistence-api.version}</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
+            <version>${commons-pool2.version}</version>
         </dependency>
 
 

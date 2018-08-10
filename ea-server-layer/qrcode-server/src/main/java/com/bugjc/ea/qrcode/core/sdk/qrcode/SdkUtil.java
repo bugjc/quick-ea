@@ -1,6 +1,6 @@
 package com.bugjc.ea.qrcode.core.sdk.qrcode;
 
-import com.bugjc.ea.qrcode.config.QrCodeConfig;
+import com.bugjc.ea.qrcode.config.QrCodePropConfig;
 import com.bugjc.ea.qrcode.core.util.SpringContextUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -329,7 +329,7 @@ public class SdkUtil {
             } else if (SdkConstants.VERSION_5_1_0.equals(version)) {
                 // 1.从返回报文中获取公钥信息转换成公钥对象
                 String strCert = resData.get(SdkConstants.param_signPubKeyCert);
-//				log.info("验签公钥证书：["+strCert+"]");
+				log.info("验签公钥证书：["+strCert+"]");
                 X509Certificate x509Cert = CertUtil.genCertificateByStr(strCert);
                 if(x509Cert == null) {
                     log.info("convert signPubKeyCert failed");
@@ -618,7 +618,7 @@ public class SdkUtil {
         X509Certificate x509Cert = CertUtil.genCertificateByStr(strCert);
         if (SdkConstants.CERTTYPE_01.equals(certType)) {
             // 更新敏感信息加密公钥
-            QrCodeConfig qrCodeConfig = SpringContextUtil.getBean(QrCodeConfig.class);
+            QrCodePropConfig qrCodeConfig = SpringContextUtil.getBean(QrCodePropConfig.class);
             if (!Objects.equals(CertUtil.getEncryptCertId(), x509Cert.getSerialNumber().toString())) {
                 // ID不同时进行本地证书更新操作
                 if (qrCodeConfig == null) {
@@ -776,9 +776,6 @@ public class SdkUtil {
             ByteBuffer buffer = ByteBuffer.wrap(fileContent.getBytes(encoding));
             fcout.write(buffer);
             fout.flush();
-        } catch (FileNotFoundException e) {
-            log.info("WriteFile fail", e);
-            return false;
         } catch (IOException ex) {
             log.info("WriteFile fail", ex);
             return false;

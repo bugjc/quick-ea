@@ -25,6 +25,15 @@ public class QrCodeBase {
     }
 
     /**
+     * 组装附加处理条件
+     * @param encoding 编码方式
+     * @return 用{}连接并base64后的附加处理条件
+     */
+    public static String getAddnCond(Map<String, String> addnCondMap,String encoding) {
+        return formInfoBase64(addnCondMap,encoding);
+    }
+
+    /**
      * 用{}连接并base64
      * @param map 参数
      * @param encoding utf-8

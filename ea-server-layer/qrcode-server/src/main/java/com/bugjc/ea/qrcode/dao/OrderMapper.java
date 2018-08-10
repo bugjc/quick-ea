@@ -2,9 +2,7 @@ package com.bugjc.ea.qrcode.dao;
 
 import com.bugjc.ea.qrcode.dao.provider.OrderProvider;
 import com.bugjc.ea.qrcode.model.Order;
-import org.apache.ibatis.annotations.InsertProvider;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
+import org.apache.ibatis.annotations.*;
 
 /**
  *
@@ -21,4 +19,12 @@ public interface OrderMapper {
     @InsertProvider(type = OrderProvider.class,method = "insert")
     @Options(keyColumn="id",useGeneratedKeys=true)
     int insert(Order order);
+
+    /**
+     * 查询会员 C2B码 交易记录
+     * @param qrNo
+     * @return
+     */
+    @SelectProvider(type = OrderProvider.class,method = "selOrderByQrNo")
+    Order selOrderByQrNo(@Param("qrNo") String qrNo);
 }

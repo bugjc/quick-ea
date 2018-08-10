@@ -21,18 +21,43 @@ public interface C2bBeiSaoService {
 
     /**
      * 交易通知处理
+     * @param userId
      * @param order
-     * @return
      */
-    String tradeNoticeProcess(String version,Order order);
+    void tradeNoticeProcess(String userId,Order order);
 
     /**
      * 交易前通知处理
-     * @param order
+     * @param userId
+     * @param map
+     */
+    void preTradeCondition(String userId,Map<String,String> map);
+
+    /**
+     * 获取流程结果
+     * @param qrNo
      * @return
      */
-    String preTradeCondition(Order order);
+    String findConsumeProcess(String qrNo);
 
-    void insert(Order order);
+    /**
+     * 更新消费流程状态
+     * @param qrNo
+     * @param status
+     */
+    void updConsumeProcess(String qrNo,int status);
 
+    /**
+     * 消费码支付密码验证成功通知
+     * @param qrNo
+     * @param status
+     */
+    void verifySuccessNotify(String qrNo,int status);
+
+    /**
+     * 获取支付记录
+     * @param qrNo
+     * @return
+     */
+    Order findPayRecord(String qrNo);
 }
