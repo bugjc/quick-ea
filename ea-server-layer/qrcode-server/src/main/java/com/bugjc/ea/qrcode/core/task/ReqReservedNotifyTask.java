@@ -1,11 +1,7 @@
 package com.bugjc.ea.qrcode.core.task;
 
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson.JSON;
-import com.bugjc.ea.qrcode.config.QrCodePropConfig;
 import com.bugjc.ea.qrcode.core.component.C2bProcessControlComponent;
-import com.bugjc.ea.qrcode.core.dto.UnionPayResultCode;
 import com.bugjc.ea.qrcode.core.sdk.qrcode.AcpService;
 import com.bugjc.ea.qrcode.core.util.NettyTimerTaskUtil;
 import io.netty.util.Timeout;
