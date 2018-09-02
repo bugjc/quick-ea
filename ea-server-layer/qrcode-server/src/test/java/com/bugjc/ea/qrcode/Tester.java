@@ -11,6 +11,6 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Import(CodeServerApplication.class)
+@Import(QrCodeServerApplication.class)
 public class Tester {
 }
