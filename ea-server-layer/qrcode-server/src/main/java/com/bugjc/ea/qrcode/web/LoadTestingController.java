@@ -19,7 +19,7 @@ public class LoadTestingController {
     @Resource
     private LoadBalancerClient loadBalancerClient;
 
-    @GetMapping("getServiceInstance")
+    @GetMapping("getMemberServiceInstance")
     public String getServiceInstance(){
         //轮询访问策略
         ServiceInstance serviceInstance = loadBalancerClient.choose("member-server");

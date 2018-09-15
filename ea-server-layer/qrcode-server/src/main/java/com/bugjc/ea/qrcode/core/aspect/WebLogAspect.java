@@ -46,7 +46,7 @@ public class WebLogAspect {
     @Before("webLog()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
         //重新设置zipkin name,防止通过转发的请求name值不对。
-        tracer.currentSpan().name(applicationConfig.applicationName);
+        tracer.currentSpan().name(applicationConfig.getApplicationName());
         startTime.set(System.currentTimeMillis());
 
         // 接收到请求，记录请求内容

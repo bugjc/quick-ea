@@ -22,6 +22,7 @@ public class TestController {
     @Resource
     private TestRemoteServiceImpl testRemoteService;
 
+
     @GetMapping(value = "message")
     public String message() {
         return "二维码服务 zipkin 模块应答消息";
