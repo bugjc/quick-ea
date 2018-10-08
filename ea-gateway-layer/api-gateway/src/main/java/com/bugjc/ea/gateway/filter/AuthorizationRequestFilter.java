@@ -27,6 +27,7 @@ import static com.netflix.zuul.context.RequestContext.getCurrentContext;
 
 /**
  * 授权认证
+ * https://github.com/spring-cloud-samples/sample-zuul-filters
  * @author aoki
  */
 @Component

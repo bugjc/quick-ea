@@ -11,6 +11,10 @@
 
     <artifactId>sboot-admin-monitor</artifactId>
 
+    <properties>
+        <docker.repository>registry.cn-hangzhou.aliyuncs.com/bugjc</docker.repository>
+    </properties>
+
     <dependencies>
 
         <dependency>
@@ -51,4 +55,38 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <!--打包插件-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+
+            <!--jib-->
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>0.9.9</version>
+                <configuration>
+                    <from>
+                        <image>openjdk:alpine</image>
+                    </from>
+                    <to>
+                        <image>${docker.repository}/${project.artifactId}:${project.version}</image>
+                    </to>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
