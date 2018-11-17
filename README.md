@@ -21,7 +21,7 @@
     - [x] 服务层业务代码生成
     - [x] flyway
 - 监控层
-    - [x] spring boot admin
+    - [x] spring boot admin/
     - [x] zipkin
     - [x] spring cloud hystrix turbine
     - [x] gcviewer
@@ -49,3 +49,13 @@
 - jwt认证
 - 自动化部署
 
+## 统一API网关
+- 负载均衡
+- 正反代理
+- 动态签名认证 | 排除
+- 动态路由
+- 断路器
+- 应用监控（x）
+- 流量控制 (x)
+- 密钥自动更新分发（x）
+- 动态接口权限认证（x）
