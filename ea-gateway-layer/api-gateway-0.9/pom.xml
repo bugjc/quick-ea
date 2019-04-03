@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>api-gateway</artifactId>
+    <artifactId>api-gateway-0.9</artifactId>
 
     <properties>
         <docker.repository>registry.cn-hangzhou.aliyuncs.com/bugjc</docker.repository>

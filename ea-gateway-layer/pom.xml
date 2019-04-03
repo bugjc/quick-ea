@@ -12,9 +12,9 @@
     <artifactId>ea-gateway-layer</artifactId>
     <packaging>pom</packaging>
 
-
     <modules>
-        <module>api-gateway</module>
+        <module>api-gateway-0.9</module>
+        <module>api-gateway-1.0</module>
     </modules>
 
 

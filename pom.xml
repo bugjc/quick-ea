@@ -14,22 +14,23 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
-        <spring-boot.version>2.0.1.RELEASE</spring-boot.version>
-        <spring-boot-starter.version>2.0.1.RELEASE</spring-boot-starter.version>
-        <spring-boot-starter-web.version>2.0.1.RELEASE</spring-boot-starter-web.version>
-        <spring.boot.admin.version>2.0.1</spring.boot.admin.version>
-        <spring-boot-starter-security.version>2.0.1.RELEASE</spring-boot-starter-security.version>
-        <spring-boot-starter-actuator.version>2.0.1.RELEASE</spring-boot-starter-actuator.version>
-        <spring-boot-starter-test.version>2.0.1.RELEASE</spring-boot-starter-test.version>
-        <spring-boot-starter-data-redis.version>2.0.1.RELEASE</spring-boot-starter-data-redis.version>
+        <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
+        <spring-boot-starter.version>2.0.3.RELEASE</spring-boot-starter.version>
+        <spring-boot-starter-web.version>2.0.3.RELEASE</spring-boot-starter-web.version>
+        <spring.boot.admin.version>2.0.3</spring.boot.admin.version>
+        <spring-boot-starter-security.version>2.0.3.RELEASE</spring-boot-starter-security.version>
+        <spring-boot-starter-actuator.version>2.0.3.RELEASE</spring-boot-starter-actuator.version>
+        <spring-boot-starter-test.version>2.0.3.RELEASE</spring-boot-starter-test.version>
+        <spring-boot-starter-data-redis.version>2.0.3.RELEASE</spring-boot-starter-data-redis.version>
+        <spring-boot-starter-jdbc.version>2.0.3.RELEASE</spring-boot-starter-jdbc.version>
 
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
-        <spring-cloud-starter-netflix-zuul.version>2.0.1.RELEASE</spring-cloud-starter-netflix-zuul.version>
-        <spring-cloud-starter-netflix-eureka-client.version>2.0.1.RELEASE</spring-cloud-starter-netflix-eureka-client.version>
-        <spring-cloud-starter-netflix-eureka-server.version>2.0.1.RELEASE</spring-cloud-starter-netflix-eureka-server.version>
-        <spring-cloud-zuul-ratelimit.version>2.0.1.RELEASE</spring-cloud-zuul-ratelimit.version>
-        <spring-cloud-sleuth-zipkin.version>2.0.1.RELEASE</spring-cloud-sleuth-zipkin.version>
-        <spring-cloud-starter-sleuth.version>2.0.1.RELEASE</spring-cloud-starter-sleuth.version>
+        <spring-cloud-starter-netflix-zuul.version>2.0.3.RELEASE</spring-cloud-starter-netflix-zuul.version>
+        <spring-cloud-starter-netflix-eureka-client.version>2.0.3.RELEASE</spring-cloud-starter-netflix-eureka-client.version>
+        <spring-cloud-starter-netflix-eureka-server.version>2.0.3.RELEASE</spring-cloud-starter-netflix-eureka-server.version>
+        <spring-cloud-zuul-ratelimit.version>2.0.3.RELEASE</spring-cloud-zuul-ratelimit.version>
+        <spring-cloud-sleuth-zipkin.version>2.0.3.RELEASE</spring-cloud-sleuth-zipkin.version>
+        <spring-cloud-starter-sleuth.version>2.0.3.RELEASE</spring-cloud-starter-sleuth.version>
         <spring-cloud-starter-turbine.version>1.4.5.RELEASE</spring-cloud-starter-turbine.version>
         <spring-cloud-netflix-turbine.version>1.4.5.RELEASE</spring-cloud-netflix-turbine.version>
         <spring-cloud-starter-hystrix-dashboard.version>1.4.5.RELEASE</spring-cloud-starter-hystrix-dashboard.version>
@@ -48,7 +49,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.0.1.RELEASE</version>
+        <version>2.0.3.RELEASE</version>
     </parent>
 
     <modules>
