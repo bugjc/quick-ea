@@ -2,7 +2,7 @@ package com.glcxw;
 
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
-import com.glcxw.gateway.core.dto.Result;
+import com.bugjc.ea.gateway.core.dto.Result;
 import com.glcxw.util.HttpParamUtil;
 import com.glcxw.util.WebHttpUtil;
 import lombok.extern.slf4j.Slf4j;

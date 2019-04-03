@@ -2,8 +2,8 @@ package com.glcxw.web;
 
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
-import com.glcxw.gateway.core.dto.Result;
-import com.glcxw.gateway.core.util.StrSortUtil;
+import com.bugjc.ea.gateway.core.dto.Result;
+import com.bugjc.ea.gateway.core.util.StrSortUtil;
 import com.glcxw.util.Des3Util;
 import com.glcxw.util.HttpParamUtil;
 import com.glcxw.util.MemberWebHttpUtil;

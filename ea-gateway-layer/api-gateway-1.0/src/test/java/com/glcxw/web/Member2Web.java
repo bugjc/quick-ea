@@ -3,7 +3,7 @@ package com.glcxw.web;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson.JSON;
-import com.glcxw.gateway.core.dto.Result;
+import com.bugjc.ea.gateway.core.dto.Result;
 import com.glcxw.util.Des3Util;
 import com.glcxw.util.HttpParamUtil;
 import com.glcxw.util.MemberWebHttpUtil;

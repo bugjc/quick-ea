@@ -9,8 +9,8 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.glcxw.gateway.core.dto.Result;
-import com.glcxw.gateway.core.dto.ResultCode;
+import com.bugjc.ea.gateway.core.dto.Result;
+import com.bugjc.ea.gateway.core.dto.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.SimpleDateFormat;

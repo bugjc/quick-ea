@@ -1,6 +1,6 @@
 package com.glcxw;
 
-import com.glcxw.gateway.EAGatewayApplication;
+import com.bugjc.ea.gateway.EAGatewayApplication;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
