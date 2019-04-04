@@ -6,7 +6,7 @@ import com.bugjc.ea.jwt.core.security.JwtUserFactory;
 import com.bugjc.ea.jwt.model.Authority;
 import com.bugjc.ea.jwt.model.AuthorityName;
 import com.bugjc.ea.jwt.model.User;
-import com.bugjc.ea.jwt.service.JwtUserDetailsService;
+import com.bugjc.ea.jwt.service.impl.JwtUserDetailsServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,7 +43,7 @@ public class UserRestControllerTest {
     private JwtTokenUtil jwtTokenUtil;
 
     @MockBean
-    private JwtUserDetailsService jwtUserDetailsService;
+    private JwtUserDetailsServiceImpl jwtUserDetailsService;
 
     @Before
     public void setup() {

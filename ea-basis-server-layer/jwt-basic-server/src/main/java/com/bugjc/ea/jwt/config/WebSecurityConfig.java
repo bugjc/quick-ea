@@ -1,6 +1,6 @@
 package com.bugjc.ea.jwt.config;
 
-import com.bugjc.ea.jwt.service.JwtUserDetailsService;
+import com.bugjc.ea.jwt.service.impl.JwtUserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtAuthenticationEntryPoint unauthorizedHandler;
 
     @Autowired
-    private JwtUserDetailsService jwtUserDetailsService;
+    private JwtUserDetailsServiceImpl jwtUserDetailsService;
 
     // Custom JWT based security filter
     @Autowired
@@ -48,9 +48,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .passwordEncoder(passwordEncoderBean());
     }
 
+    /**
+     * 配置加密和验证实现类
+     * @return
+     */
     @Bean
     public PasswordEncoder passwordEncoderBean() {
         return new BCryptPasswordEncoder();
+    }
+
+    public static void main(String[] args) {
+        String pwd = "123456";
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encodePwd = bCryptPasswordEncoder.encode(pwd);
+        System.out.println(encodePwd);
+        boolean flag = bCryptPasswordEncoder.matches(pwd,encodePwd);
+        System.out.println(flag);
     }
 
     @Bean

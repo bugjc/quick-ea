@@ -2,6 +2,7 @@ package com.bugjc.ea.jwt.model;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import javax.validation.constraints.Size;
 @Data
 @Entity
 @Table(name = "USER")
-public class User {
+public class User implements Serializable {
 
     @Id
     @Column(name = "ID")

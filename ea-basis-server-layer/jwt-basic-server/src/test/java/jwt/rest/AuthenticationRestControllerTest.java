@@ -1,13 +1,13 @@
 package jwt.rest;
 
-import com.bugjc.ea.jwt.core.security.JwtAuthenticationRequest;
+import jwt.core.security.JwtAuthenticationRequest;
 import com.bugjc.ea.jwt.core.security.JwtTokenUtil;
 import com.bugjc.ea.jwt.core.security.JwtUser;
 import com.bugjc.ea.jwt.core.security.JwtUserFactory;
 import com.bugjc.ea.jwt.model.Authority;
 import com.bugjc.ea.jwt.model.AuthorityName;
 import com.bugjc.ea.jwt.model.User;
-import com.bugjc.ea.jwt.service.JwtUserDetailsService;
+import com.bugjc.ea.jwt.service.impl.JwtUserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class AuthenticationRestControllerTest {
     private JwtTokenUtil jwtTokenUtil;
 
     @MockBean
-    private JwtUserDetailsService jwtUserDetailsService;
+    private JwtUserDetailsServiceImpl jwtUserDetailsService;
 
     @Before
     public void setup() {

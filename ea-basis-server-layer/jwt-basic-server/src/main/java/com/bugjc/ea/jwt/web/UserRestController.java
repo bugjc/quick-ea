@@ -26,6 +26,11 @@ public class UserRestController {
     @Qualifier("jwtUserDetailsService")
     private UserDetailsService userDetailsService;
 
+    /**
+     * 根据token获取用户授权认证的用户对象
+     * @param request
+     * @return
+     */
     @GetMapping(value = "user")
     public Result getAuthenticatedUser(HttpServletRequest request) {
         String token = request.getHeader(tokenHeader).substring(7);

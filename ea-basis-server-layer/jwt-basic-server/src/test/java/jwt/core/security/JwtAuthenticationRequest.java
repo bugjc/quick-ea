@@ -1,4 +1,4 @@
-package com.bugjc.ea.jwt.core.security;
+package jwt.core.security;
 
 import lombok.Data;
 

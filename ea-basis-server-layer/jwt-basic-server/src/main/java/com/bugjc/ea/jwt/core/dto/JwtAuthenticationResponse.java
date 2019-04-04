@@ -1,4 +1,4 @@
-package com.bugjc.ea.jwt.service;
+package com.bugjc.ea.jwt.core.dto;
 
 import java.io.Serializable;
 

@@ -1,7 +1,15 @@
 package com.bugjc.ea.jwt.core.exception;
 
-public class AuthenticationException extends RuntimeException {
-    public AuthenticationException(String message, Throwable cause) {
-        super(message, cause);
+/**
+ * 认证异常类
+ */
+public class AuthenticationException extends BusinessException {
+
+    public AuthenticationException(int code, String message, Throwable cause) {
+        super(code, message, cause);
+    }
+
+    public AuthenticationException(int code, String message, String method, String desc, Throwable cause) {
+        super(code, message, method, desc, cause);
     }
 }

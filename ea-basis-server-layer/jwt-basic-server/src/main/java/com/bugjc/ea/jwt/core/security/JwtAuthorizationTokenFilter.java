@@ -1,11 +1,16 @@
 package com.bugjc.ea.jwt.core.security;
 
+import com.alibaba.fastjson.JSON;
+import com.bugjc.ea.jwt.core.dto.AuthResultCode;
+import com.bugjc.ea.jwt.core.dto.ResultCode;
+import com.bugjc.ea.jwt.core.dto.ResultGenerator;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -48,12 +53,12 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
-                logger.error("an error occurred during getting username from token", e);
+                returnBodyError(response,ResultCode.UNAUTHORIZED.getCode(),"an error occurred during getting username from token");
+                return;
             } catch (ExpiredJwtException e) {
-                logger.warn("the token is expired and not valid anymore", e);
+                returnBodyError(response, AuthResultCode.ACCESS_TOKEN_EXPIRED.getCode(),"token 已过期");
+                return;
             }
-        } else {
-            logger.warn("couldn't find bearer string, will ignore the header");
         }
 
         logger.debug("checking authentication for user '{}'", username);
@@ -66,7 +71,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             try {
                 userDetails = userDetailsService.loadUserByUsername(username);
             } catch (UsernameNotFoundException e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+                returnBodyError(response,ResultCode.UNAUTHORIZED.getCode(),e.getMessage());
                 return;
             }
 
@@ -82,5 +87,21 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
         }
 
         chain.doFilter(request, response);
+    }
+
+    /**
+     * 返回错误状态
+     * @param response
+     * @param code
+     * @param message
+     */
+    private void returnBodyError(HttpServletResponse response, int code, String message){
+        response.setHeader("Content-Type", "application/json;charset=UTF-8");
+        try {
+            String result = JSON.toJSONString(ResultGenerator.genFailResult(code,message));
+            response.getOutputStream().write(result.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

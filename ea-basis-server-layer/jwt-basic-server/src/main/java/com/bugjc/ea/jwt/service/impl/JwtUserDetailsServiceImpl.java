@@ -1,4 +1,4 @@
-package com.bugjc.ea.jwt.service;
+package com.bugjc.ea.jwt.service.impl;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -6,15 +6,15 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.bugjc.ea.jwt.model.User;
 import com.bugjc.ea.jwt.core.security.JwtUserFactory;
-import com.bugjc.ea.jwt.dao.UserRepository;
+import com.bugjc.ea.jwt.dao.UserDao;
 
 import javax.annotation.Resource;
 
 @Service("jwtUserDetailsService")
-public class JwtUserDetailsService implements UserDetailsService {
+public class JwtUserDetailsServiceImpl implements UserDetailsService {
 
     @Resource
-    private UserRepository userRepository;
+    private UserDao userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
