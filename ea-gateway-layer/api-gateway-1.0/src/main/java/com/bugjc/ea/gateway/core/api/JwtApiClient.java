@@ -1,14 +1,12 @@
 package com.bugjc.ea.gateway.core.api;
 
-import cn.hutool.core.util.HashUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.gateway.core.dto.Result;
 import com.bugjc.ea.gateway.core.dto.ResultGenerator;
-import com.bugjc.ea.gateway.core.enums.ResultErrorEnum;
-import com.bugjc.ea.gateway.core.util.ApiGatewayHttpUtil;
-import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
 import com.bugjc.ea.gateway.model.App;
 import com.bugjc.ea.gateway.service.AppService;
+import com.bugjc.opensdk.util.http.ApiGatewayHttpClient;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,7 +86,8 @@ public class JwtApiClient {
 
         String url = config.getApiServerAddress().concat(path);
         try {
-            return ApiGatewayHttpUtil.post(url,appParam,param);
+            String json = new ApiGatewayHttpClient().url(url).initAppParams(appParam).initBusinessParams(param).execute();
+            return JSON.parseObject(json,Result.class);
         } catch (Exception e) {
             log.info(e.getMessage(),e);
             return ResultGenerator.genFailResult(e.getMessage());
