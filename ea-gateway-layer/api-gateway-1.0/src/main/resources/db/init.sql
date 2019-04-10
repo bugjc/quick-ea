@@ -1,7 +1,7 @@
 -- 创建数据库和账户
 CREATE DATABASE IF NOT EXISTS ea_api_gateway COLLATE = 'utf8_general_ci' CHARACTER SET = 'utf8';
-GRANT ALL ON ea_api_gateway.* TO 'api_gateway'@'%' IDENTIFIED BY 'api_gateway2018';
-GRANT ALL ON ea_api_gateway.* TO 'api_gateway'@'localhost' IDENTIFIED BY 'api_gateway2018';
+GRANT ALL ON ea_api_gateway.* TO 'ea_api_gateway'@'%' IDENTIFIED BY 'ea_api_gateway2018';
+GRANT ALL ON ea_api_gateway.* TO 'ea_api_gateway'@'localhost' IDENTIFIED BY 'ea_api_gateway2018';
 USE ea_api_gateway;
 
 -- 创建数据库表及插入初始示例数据
@@ -23,18 +23,18 @@ INSERT  INTO `app`(`app_id`,`rsa_public_key`,`rsa_private_key`,`enabled`,`descri
 ('509008971445761792','MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC7phHLqnazavjGoj5JnDnsJzGI4vsKjvX9RN+8HMawgGt4/vdfbgIWJNRyvMF/90yixaSI7yP4yybbZuKlStvh6aDBWn+GOq02QvT0txOaLvUmZtBQImyDuKtzEpnmU7R26R/TlHcm5jnDQ4ZbZ1E4mcCN1FNKZZ8FSqnHMceETQIDAQAB','MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBALumEcuqdrNq+MaiPkmcOewnMYji+wqO9f1E37wcxrCAa3j+919uAhYk1HK8wX/3TKLFpIjvI/jLJttm4qVK2+HpoMFaf4Y6rTZC9PS3E5ou9SZm0FAibIO4q3MSmeZTtHbpH9OUdybmOcNDhltnUTiZwI3UU0plnwVKqccxx4RNAgMBAAECgYAEUhWUz+79wJfL0w6GGV/IDTr5wOgw3QvS8hQIu8zjYYGX/p7phpnrsptlrOzzqlkMYmqgcIkugFb7tEnBrpCTf+ttvDKHvLejXRlr/Gip5tqlidKDBOOQAm/NuuzdunVQnXQwkbCkOLSstuNgv5WG4I0e19boX+T9EtKc/K9+LQJBAPRg5st4uFLEfiLD8soWKFraH5LXkt+ZwV9dTb4iyJraFiHzUuq43jwh4mVPYxJn6IPSta77FE6mZolY9WBrRisCQQDEkogA0N37BATZ/kSgXkLq6kVZTpvFsYZ2hDxHTRoau6i/kqCT0qgeJpEJoQ/rV9h4U2WjxnJZPgMMsWHMh1tnAkEA0zqa4w7Ci9AJkvU5+5Exam4VUnCBJEKbUVmtpAYezTJqZQgUCIyokuNa8+StprAn2yGbJtchU2YjRN6eoau3pwJAcGTYHp9OTRgfLgWUd51t5aPNwyKPLpoyp9E0JhCPvHlQIzlTVzI7rgGfLEJLN+UigKouk1YES8KJO9iwcqFyQQJBAKDZNobGwS7VkCCoM7CLC51i8hQRqODy/BCCKUjCpeSP43gbwIn8dN1Ne/MuQptVAhzPMfqpZcFmBzO4YZQ2/+E=',1,'乘车码','2018-11-05 14:21:52'),
 ('509737928172220918','MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCZ7/OKn2aAOvjfybqr+pbK1ohJwmKzbjTg2utLY/LK8KZe3omIM1GoHMdAmzyCwubju0EhtSEgcLvw72NiFvBKRubROJjwPLQr8qlIkvf/gs0Z+V9zE2l5dgxf3H3fOJmxGr/Yiq+ujDE3uTNkfIezK4h30php68rAxGuVfS8ofQIDAQAB','MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJnv84qfZoA6+N/Juqv6lsrWiEnCYrNuNODa60tj8srwpl7eiYgzUagcx0CbPILC5uO7QSG1ISBwu/DvY2IW8EpG5tE4mPA8tCvyqUiS9/+CzRn5X3MTaXl2DF/cfd84mbEav9iKr66MMTe5M2R8h7MriHfSmGnrysDEa5V9Lyh9AgMBAAECgYAuoSzYtOhLt5Fj2KufJM1ArDOkhCl5yMxjwGy97YzCRJtg6XAnvcPidLU2sM9nnLpsCXD1UPSz6vJDTYCBWgl3PiiL+gIG6sSf7PehFVQD1MRI7vMczSKJcyf88V2SNcew9AUDth+Kt1Z8kTWbrpKXlcl9326b/Rl4wW244ads0QJBAMybqy8ozDNIU87wAjhsup+7Nf5okdrlhpBH0Rj0rObnVTvaJjqlVzRVVcN+ZPnR9PATlsTk2Qm/EVFyhZ6VtW8CQQDAmiTrs36aoTJV3exHmXBpcFCR1xvQe9ExXjfh/QDB6frz0GWR+LB9px2kzIICjTk/7ibvUEdUy82jerVnPELTAkEAgX3/4C/c1JPw3qYNcbJ2hkMQj/uUW8op2MRq9HVdvCEqU1/kE/eych+T0M78jxMvBoYPRHtlVQLErhxhrpUnJwJAJfp/S0cCsQUWQt5W6Ct2giQWjxuGrY6synpUtKhKDPLRfGBclvMeAjkA3G1DObOVVWjlno0K88qYSyM4QBoe5wJAT3+BmNQEImnsejuPvUjBBkcR2OuE0D05/y9+KLvwg4dM0tQu8p3Bu9MYm4hg2kEmb6BgtzFXR0xCSm5asabffg==',1,'银联消费维码','2018-11-07 14:46:33');
 
-DROP TABLE IF EXISTS `app_config`;
-CREATE TABLE `app_config` (
+DROP TABLE IF EXISTS `app_security_config`;
+CREATE TABLE `app_security_config` (
   `id` INT(12) NOT NULL AUTO_INCREMENT COMMENT '主键',
   `app_id` VARCHAR(50) NOT NULL COMMENT 'appid',
   `exclude_path` VARCHAR(100) DEFAULT NULL COMMENT '排除前缀路径',
-  `is_signature` TINYINT(1) DEFAULT '0' COMMENT '是否需要签名（1:是,0:否）',
-  `is_verify_token` TINYINT(1) DEFAULT '0' COMMENT '是否核查会员Token（1:是,0:否）',
-  `enabled` TINYINT(1) DEFAULT NULL COMMENT '是否启用（1:启用，0:禁用）',
+  `is_verify_signature` TINYINT(1) DEFAULT '0' COMMENT '是否核验签名（1:是,0:否）',
+  `is_verify_token` TINYINT(1) DEFAULT '0' COMMENT '是否核验Token（1:是,0:否）',
+  `enabled` TINYINT(1) DEFAULT NULL COMMENT '是否启用配置（1:启用，0:禁用）',
   `description` VARCHAR(100) DEFAULT NULL COMMENT '描述',
   `create_time` DATETIME DEFAULT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=INNODB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8 COMMENT='配置不需要安全认证的API表';
+) ENGINE=INNODB AUTO_INCREMENT=127 DEFAULT CHARSET=utf8 COMMENT='应用安全配置表';
 
 INSERT  INTO `app_exclude_security_authentication_path`(`id`,`app_id`,`exclude_path`,`is_signature`,`is_verify_token`,`enabled`,`description`,`create_time`) VALUES 
 (8,'509737928172220918','/qrcode',1,1,1,'银联消费维码业务','2018-12-13 15:41:20'),

@@ -36,7 +36,7 @@ public class ResponseResultUtil {
     }
 
     public static void genErrorResult(RequestContext ctx, int status, String message){
-        log.error("响应错误信息:{}",message);
+        log.error("错误信息:{}",message);
         ctx.setSendZuulResponse(false);
         ctx.setResponseStatusCode(200);
         ctx.setResponseBody(JSON.toJSONString(ResultGenerator.genFailResult(status,message)));

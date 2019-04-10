@@ -13,11 +13,6 @@ import java.util.Date;
 public class AppVersionMap implements Serializable {
 
     /**
-     * id
-     */
-    private Long id;
-
-    /**
      * 应用id
      */
     private String appId;
@@ -36,6 +31,11 @@ public class AppVersionMap implements Serializable {
      * 版本映射的路径
      */
     private String mapPath;
+
+    /**
+     * 描述
+     */
+    private String description;
 
     /**
      * 创建时间

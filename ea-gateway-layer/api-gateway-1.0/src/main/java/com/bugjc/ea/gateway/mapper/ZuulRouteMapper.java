@@ -3,6 +3,7 @@ package com.bugjc.ea.gateway.mapper;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
 import com.bugjc.ea.gateway.model.CustomZuulRoute;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -31,4 +32,13 @@ public interface ZuulRouteMapper {
     @Select("SELECT * FROM route WHERE enabled = TRUE AND id = #{id}")
     @Cached(name = "zuul:route:id:", key = "#id", expire = 120, cacheType = CacheType.REMOTE)
     CustomZuulRoute selectById(@Param("id") String id);
+
+    /**
+     * 添加APP
+     * @param customZuulRoute
+     * @return
+     */
+    @Insert("INSERT  INTO `route`(`id`,`path`,`service_id`,`url`,`ribbon_url`,`retryable`,`strip_prefix`,`enabled`,`description`) VALUES \n " +
+            "(#{id},#{path},#{serviceId},#{url},#{ribbonUrl},#{retryable},#{stripPrefix},#{enabled},#{description})")
+    void insert(CustomZuulRoute customZuulRoute);
 }

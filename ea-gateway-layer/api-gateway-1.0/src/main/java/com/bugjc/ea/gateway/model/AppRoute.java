@@ -13,10 +13,6 @@ import java.util.Date;
 public class AppRoute implements Serializable {
 
     private static final long serialVersionUID = -210892970343051215L;
-    /**
-     * id。
-     */
-    private Integer id;
 
     /**
      * 应用id

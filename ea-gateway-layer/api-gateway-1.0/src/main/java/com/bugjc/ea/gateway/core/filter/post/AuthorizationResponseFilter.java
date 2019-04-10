@@ -7,13 +7,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.Sign;
 import cn.hutool.crypto.asymmetric.SignAlgorithm;
+import com.bugjc.ea.gateway.core.util.StrSortUtil;
 import com.bugjc.ea.gateway.model.App;
-import com.bugjc.ea.gateway.service.AppConfigService;
+import com.bugjc.ea.gateway.service.AppSecurityConfigService;
 import com.bugjc.ea.gateway.service.AppService;
 import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
-import com.netflix.zuul.exception.ZuulException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class AuthorizationResponseFilter extends ZuulFilter {
     @Resource
     private AppService appService;
     @Resource
-    private AppConfigService appExcludeSecurityAuthenticationPathService;
+    private AppSecurityConfigService appExcludeSecurityAuthenticationPathService;
 
     @Override
     public String filterType() {
@@ -60,27 +60,37 @@ public class AuthorizationResponseFilter extends ZuulFilter {
     }
 
     @Override
-    public Object run() throws ZuulException {
+    public Object run() {
         try {
             log.info("filter:生成应答签名过滤器");
             RequestContext context = getCurrentContext();
+            HttpServletRequest request = context.getRequest();
+
+            String appId = request.getHeader("AppId");
+            if (StrUtil.isBlank(appId)){
+                //针对回调类请求
+                ResponseResultUtil.genSuccessResult(context, "无需签名");
+                return null;
+            }
+
             InputStream stream = context.getResponseDataStream();
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
             if (StrUtil.isBlank(body)){
-                ResponseResultUtil.genSuccessResult(context, "无需处理");
+                ResponseResultUtil.genSuccessResult(context, "无需签名");
                 return null;
             }
+
             log.info("应答结果：{}", body);
             context.setResponseBody(body);
+
             //生成签名
             String timestamp = Long.parseLong(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date())) + "";
             String nonce = RandomUtil.randomNumbers(10);
+
             /**序列化参数**/
-            HttpServletRequest request = context.getRequest();
-            String appId = request.getHeader("AppId");
             App app = appService.findByAppId(appId);
             String sequence = request.getHeader("Sequence");
-            String requestSign = "appid=" + appId + "&message=" + body + "&nonce=" + nonce + "&timestamp=" + timestamp;
+            String requestSign = "appid="+appId+"&message="+ StrSortUtil.sortString(body)+"&nonce="+nonce+"&timestamp="+timestamp+"&Sequence="+sequence;
             //log.info("待签名字符串:{}",requestSign);
             /**生成签名**/
             Sign sign = SecureUtil.sign(SignAlgorithm.SHA1withRSA, app.getRsaPrivateKey(), null);

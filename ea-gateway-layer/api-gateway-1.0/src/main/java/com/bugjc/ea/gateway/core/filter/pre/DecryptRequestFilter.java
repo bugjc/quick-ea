@@ -4,7 +4,6 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
 import com.bugjc.ea.gateway.core.enums.ResultErrorEnum;
 import com.bugjc.ea.gateway.core.util.*;
-import com.glcxw.gateway.core.util.*;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;

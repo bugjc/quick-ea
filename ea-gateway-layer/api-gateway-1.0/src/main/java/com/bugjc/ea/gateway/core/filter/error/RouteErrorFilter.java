@@ -56,7 +56,7 @@ public class RouteErrorFilter extends SendErrorFilter {
                 ribbonComponent.markServerDown(appId, requestURI, url);
             }
 
-            ResponseResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), "还未配置物理地址或地址错误");
+            ResponseResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), ctx.getThrowable().getMessage());
             return null;
         }catch (Exception ex) {
             ResponseResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());

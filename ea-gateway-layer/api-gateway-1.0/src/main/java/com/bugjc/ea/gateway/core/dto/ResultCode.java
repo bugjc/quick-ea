@@ -11,8 +11,6 @@ public  enum ResultCode {
     FAIL(400),
     //未认证（签名错误）
     UNAUTHORIZED(401),
-    //token过期
-    TOKEN_EXPIRE(403),
     //接口不存在
     NOT_FOUND(404),
     //服务器内部错误
