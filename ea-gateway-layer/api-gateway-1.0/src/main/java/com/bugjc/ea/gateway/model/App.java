@@ -18,12 +18,12 @@ public class App implements Serializable {
     private String appId;
 
     /**
-     * RSA 公钥
+     * RSA 公钥（服务方）
      */
     private String rsaPublicKey;
 
     /**
-     * RSA 私钥
+     * RSA 私钥（接入方）
      */
     private String rsaPrivateKey;
 
@@ -31,6 +31,16 @@ public class App implements Serializable {
      * 类型：1,- 业务，2 - 平台
      */
     private Integer type;
+
+    /**
+     * 接入方元数据
+     */
+    private String accessPartyMetadata;
+
+    /**
+     * 服务方元数据
+     */
+    private String servicePartyMetadata;
 
     /**
      * 是否启用（1:启用，0禁用）
