@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * @author aoki
  */
@@ -22,6 +24,10 @@ public interface AppMapper {
     @Select("select * from app where enabled = true and app_id = #{appId}")
     @Cached(name = "app:", key = "#appId", expire = 120, cacheType = CacheType.BOTH)
     App selectByAppId(@Param("appId") String appId);
+
+    @Select("select * from app where enabled = true")
+    @Cached(name = "app:all", key = "#appId", expire = 120, cacheType = CacheType.BOTH)
+    List<App> selectAll();
 
     /**
      * 添加APP

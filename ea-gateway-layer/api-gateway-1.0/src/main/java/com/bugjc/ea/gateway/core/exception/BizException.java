@@ -1,35 +1,35 @@
-package com.bugjc.ea.opensdk.core.exception;
+package com.bugjc.ea.gateway.core.exception;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class HttpSecurityException extends RuntimeException {
+public class BizException extends RuntimeException {
 
     private int code;  //异常状态码
     private String message;  //异常信息
     private String method;   //发生的方法，位置等
     private String desc;   //描述
 
-    public HttpSecurityException(String message) {
+    public BizException(String message) {
         super(message);
         this.message = message;
     }
 
-    public HttpSecurityException(int code, String message) {
+    public BizException(int code, String message) {
         super(message);
         this.code = code;
         this.message = message;
     }
 
-    public HttpSecurityException(int code, String message, Throwable cause) {
+    public BizException(int code, String message, Throwable cause) {
         super(message, cause);
         this.code = code;
         this.message = message;
     }
 
-    public HttpSecurityException(int code, String message, String method, String desc, Throwable cause) {
+    public BizException(int code, String message, String method, String desc, Throwable cause) {
         super(message, cause);
         this.code = code;
         this.message = message;

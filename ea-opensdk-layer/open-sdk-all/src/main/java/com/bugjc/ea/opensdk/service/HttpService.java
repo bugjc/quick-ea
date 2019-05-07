@@ -1,9 +1,15 @@
 package com.bugjc.ea.opensdk.service;
 
+import java.io.IOException;
+
 public interface HttpService {
 
     /**
-     * 调用
+     * http post方式调用接口
+     * @param url   -- 接口全地址
+     * @param version   --接口版本
+     * @param body  --接口参数
+     * @return
      */
-    void post();
+    String post(String url, String version, String body) throws IOException;
 }

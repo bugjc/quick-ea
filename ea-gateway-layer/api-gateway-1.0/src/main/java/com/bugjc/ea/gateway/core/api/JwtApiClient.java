@@ -6,7 +6,9 @@ import com.bugjc.ea.gateway.core.dto.Result;
 import com.bugjc.ea.gateway.core.dto.ResultGenerator;
 import com.bugjc.ea.gateway.model.App;
 import com.bugjc.ea.gateway.service.AppService;
-import com.bugjc.opensdk.util.http.ApiGatewayHttpClient;
+import com.bugjc.ea.opensdk.core.util.ApiGatewayHttpClient;
+import com.bugjc.ea.opensdk.model.AppParam;
+import com.bugjc.ea.opensdk.service.HttpService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -78,15 +80,15 @@ public class JwtApiClient {
             version = ContentPath.DEFAULT_VERSION;
         }
 
-        Map<String,String> appParam = new HashMap<>();
-        appParam.put("version", version);
-        appParam.put("appId", app.getAppId());
-        appParam.put("rsaPublicKey", app.getRsaPrivateKey());
-        appParam.put("rsaPrivateKey", app.getRsaPublicKey());
-
         String url = config.getApiServerAddress().concat(path);
         try {
-            String json = new ApiGatewayHttpClient().url(url).initAppParams(appParam).initBusinessParams(param).execute();
+            AppParam appParam = new AppParam();
+            appParam.setBaseUrl(config.apiServerAddress);
+            appParam.setRsaPrivateKey(app.getRsaPrivateKey());
+            appParam.setRsaPublicKey(app.getRsaPublicKey());
+            appParam.setAppId(app.getAppId());
+            HttpService httpService = ApiGatewayHttpClient.getHttpService(appParam);
+            String json = httpService.post(url,version,param.toJSONString());
             return JSON.parseObject(json,Result.class);
         } catch (Exception e) {
             log.info(e.getMessage(),e);

@@ -1,11 +1,17 @@
 package com.glcxw.util;
 
+import cn.hutool.core.util.HashUtil;
+import lombok.extern.slf4j.Slf4j;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author : qingyang
  */
+@Slf4j
 public class IdWorker {
 
     // ==============================Fields===========================================
@@ -123,10 +129,15 @@ public class IdWorker {
     /** 测试 */
     public static void main(String[] args) {
         IdWorker idWorker = new IdWorker(0, 0);
-        for (int i = 0; i < 1000; i++) {
+        Map<String,Boolean> param = new HashMap<>(100000000);
+        for (int i = 0; i < 100000; i++) {
             long id = idWorker.nextId();
-            System.out.println(id);
-            System.out.println(getId());
+            String prefix = String.valueOf(HashUtil.bkdrHash(String.valueOf(id)));
+            if(param.containsKey(prefix)){
+                log.info("存在相同的hash key:{}",prefix);
+                continue;
+            }
+            param.put(prefix,true);
         }
     }
 
@@ -149,7 +160,7 @@ public class IdWorker {
      * @return string
      */
     public static String getNextId() {
-        return idWorker.nextId()+"";
+        return String.valueOf(idWorker.nextId());
     }
 
 }

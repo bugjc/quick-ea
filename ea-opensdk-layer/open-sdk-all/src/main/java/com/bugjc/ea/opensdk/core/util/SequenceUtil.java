@@ -1,5 +1,6 @@
 package com.bugjc.ea.opensdk.core.util;
 
+import cn.hutool.core.util.HashUtil;
 import cn.hutool.core.util.RandomUtil;
 
 import java.text.SimpleDateFormat;
@@ -17,19 +18,27 @@ public class SequenceUtil {
     private final static Object LOCK_OBJ = "lockerOrder";
 
     /**
+     * hash appid
+     * @param appId
+     * @return
+     */
+    public static String getAppPrefixCode(String appId){
+        return appId.substring(0,4);
+    }
+
+    /**
      * 生成序列
      * @return
      */
-    static String genUnionPaySequence() {
-        try {  
-            // 最终生成的订单号  
-            String finOrderNum = "";  
+    public static String genUnionPaySequence(String appId) {
+        try {
+            String prefix = getAppPrefixCode(appId);
+
             synchronized (LOCK_OBJ) {
                 // 取系统当前时间作为订单号变量前半部分，精确到毫秒
                 String format = "yyyyMMddhhmmss";
                 long nowLong = Long.parseLong(new SimpleDateFormat(format).format(new Date()));
-                finOrderNum = nowLong + RandomUtil.randomNumbers(10);
-                return finOrderNum;
+                return prefix + nowLong + RandomUtil.randomNumbers(10);
             }  
         } catch (Exception e) {
            return null;

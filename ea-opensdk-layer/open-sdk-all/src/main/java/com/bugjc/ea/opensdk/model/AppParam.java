@@ -10,11 +10,7 @@ public class AppParam implements Serializable {
     /**
      * 接口地址
      */
-    private String url;
-    /**
-     * 接口版本
-     */
-    private String version;
+    private String baseUrl;
     /**
      * 应用id
      */
@@ -27,9 +23,5 @@ public class AppParam implements Serializable {
      * 接入方
      */
     private String rsaPrivateKey;
-    /**
-     * 接口业务参数
-     */
-    private String businessParams;
 
 }

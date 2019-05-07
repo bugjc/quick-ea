@@ -12,6 +12,10 @@ import com.bugjc.ea.gateway.model.App;
 import com.bugjc.ea.gateway.service.AppSecurityConfigService;
 import com.bugjc.ea.gateway.service.AppService;
 import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
+import com.bugjc.ea.opensdk.core.constants.HttpHeaderKeyConstants;
+import com.bugjc.ea.opensdk.core.crypto.CryptoProcessor;
+import com.bugjc.ea.opensdk.core.crypto.input.ServicePartyEncryptParam;
+import com.bugjc.ea.opensdk.core.crypto.output.ServicePartyEncryptObj;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +70,7 @@ public class AuthorizationResponseFilter extends ZuulFilter {
             RequestContext context = getCurrentContext();
             HttpServletRequest request = context.getRequest();
 
-            String appId = request.getHeader("AppId");
+            String appId = request.getHeader(HttpHeaderKeyConstants.APP_ID);
             if (StrUtil.isBlank(appId)){
                 //针对回调类请求
                 ResponseResultUtil.genSuccessResult(context, "无需签名");
@@ -75,31 +79,23 @@ public class AuthorizationResponseFilter extends ZuulFilter {
 
             InputStream stream = context.getResponseDataStream();
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
-            if (StrUtil.isBlank(body)){
-                ResponseResultUtil.genSuccessResult(context, "无需签名");
-                return null;
-            }
-
             log.info("应答结果：{}", body);
-            context.setResponseBody(body);
 
-            //生成签名
-            String timestamp = Long.parseLong(new SimpleDateFormat("yyyyMMddhhmmss").format(new Date())) + "";
-            String nonce = RandomUtil.randomNumbers(10);
-
-            /**序列化参数**/
             App app = appService.findByAppId(appId);
-            String sequence = request.getHeader("Sequence");
-            String requestSign = "appid="+appId+"&message="+ StrSortUtil.sortString(body)+"&nonce="+nonce+"&timestamp="+timestamp+"&Sequence="+sequence;
-            //log.info("待签名字符串:{}",requestSign);
-            /**生成签名**/
-            Sign sign = SecureUtil.sign(SignAlgorithm.SHA1withRSA, app.getRsaPrivateKey(), null);
-            byte[] signed = sign.sign(requestSign.getBytes(CharsetUtil.CHARSET_UTF_8));
+            ServicePartyEncryptParam servicePartyEncryptParam = new ServicePartyEncryptParam();
+            servicePartyEncryptParam.setAppId(appId);
+            servicePartyEncryptParam.setBody(body);
+            servicePartyEncryptParam.setRsaPrivateKey(app.getRsaPrivateKey());
+            servicePartyEncryptParam.setSequence(request.getHeader(HttpHeaderKeyConstants.SEQUENCE));
+            ServicePartyEncryptObj servicePartyEncryptObj = new CryptoProcessor().servicePartyEncrypt(servicePartyEncryptParam);
+            //设置加密body
+            context.setResponseBody(servicePartyEncryptObj.getBody());
+
             HttpServletResponse response = context.getResponse();
-            response.setHeader("Sequence",sequence);
-            response.setHeader("Timestamp",timestamp);
-            response.setHeader("Nonce",nonce);
-            response.setHeader("Signature",Base64.encode(signed));
+            response.setHeader(HttpHeaderKeyConstants.SEQUENCE,servicePartyEncryptObj.getSequence());
+            response.setHeader(HttpHeaderKeyConstants.TIMESTAMP,servicePartyEncryptObj.getTimestamp());
+            response.setHeader(HttpHeaderKeyConstants.NONCE,servicePartyEncryptObj.getNonce());
+            response.setHeader(HttpHeaderKeyConstants.SIGNATURE,servicePartyEncryptObj.getSignature());
             log.info("生成应答签名成功！");
         } catch (IOException e) {
             rethrowRuntimeException(e);

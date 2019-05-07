@@ -35,6 +35,7 @@ public class AppServiceTest extends Tester {
     @Test
     public void testCreateBusinessApp(){
         String desc = "授权认证业务";
+        String appCode = "DDDD";
         Date date = new Date();
         //1.创建APP
         App app = new App();
@@ -42,7 +43,7 @@ public class AppServiceTest extends Tester {
         app.setDescription(desc);
         app.setType(1);
         app.setEnabled(true);
-        app.setAppId(IdWorker.getNextId());
+        app.setAppId(appCode.concat(IdWorker.getNextId()));
         BeanUtil.copyProperties(CreateSecurityKey.getKeyPair(),app);
         log.info("APP：{}",JSON.toJSONString(app));
         appMapper.insert(app);
