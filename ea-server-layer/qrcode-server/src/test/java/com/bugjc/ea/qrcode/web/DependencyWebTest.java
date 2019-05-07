@@ -19,7 +19,7 @@ public class DependencyWebTest {
         String json =  HttpUtil.get("http://127.0.0.1:8202/member/card/get/6831");
         JSONObject result = JSON.parseObject(json);
         if (result.getInteger("code") == 200){
-            JSONObject data = result.getJSONObject("data");
+            JSONObject data = result.getJSONObject("db");
             System.out.println(data.getString("token"));
             System.out.println(data.getString("phoneno"));
             System.out.println(data.getString("tokentype"));

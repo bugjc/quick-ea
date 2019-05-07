@@ -26,7 +26,7 @@ public class JwtServerWeb {
         String url = EnvUtil.getDevServer().concat("/jwt/auth");
         Map<String, Object> param = new HashMap<>();
         param.put("username", "admin");
-        param.put("password", "password");
+        param.put("password", "123456");
 
         AppParam appParam = new AppParam();
         appParam.setBaseUrl(EnvUtil.getDevServer());
