@@ -1,9 +1,9 @@
 package com.bugjc.ea.http.opensdk;
 
-import com.bugjc.ea.opensdk.core.util.SSLUtil;
-import com.bugjc.ea.opensdk.model.AppParam;
-import com.bugjc.ea.opensdk.service.HttpService;
-import com.bugjc.ea.opensdk.service.impl.HttpServiceImpl;
+import com.bugjc.ea.http.opensdk.core.util.SSLUtil;
+import com.bugjc.ea.http.opensdk.model.AppParam;
+import com.bugjc.ea.http.opensdk.service.HttpService;
+import com.bugjc.ea.http.opensdk.service.impl.HttpServiceImpl;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 

@@ -1,4 +1,4 @@
-package com.bugjc.ea.gateway.core.dto;
+package com.bugjc.ea.http.opensdk.core.dto;
 
 import com.alibaba.fastjson.JSON;
 

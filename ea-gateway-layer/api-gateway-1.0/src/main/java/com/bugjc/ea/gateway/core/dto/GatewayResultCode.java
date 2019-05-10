@@ -5,6 +5,10 @@ package com.bugjc.ea.gateway.core.dto;
  * @author : aoki
  */
 public  enum GatewayResultCode {
+    //未认证（签名错误）
+    UNAUTHORIZED(401),
+    //服务不可用
+    SERVICE_UNAVAILABLE(503),
     //缺失AppId参数
     APP_ID_MISSING(1000),
     //缺失Sequence参数

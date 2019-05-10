@@ -18,9 +18,10 @@
 
     <dependencies>
 
+        <!--opensdk-->
         <dependency>
             <groupId>com.bugjc.ea</groupId>
-            <artifactId>member-server-api</artifactId>
+            <artifactId>open-sdk-all</artifactId>
             <version>1.0</version>
         </dependency>
 

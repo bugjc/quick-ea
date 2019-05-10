@@ -1,8 +1,7 @@
 package com.bugjc.ea.gateway.core.fallback;
 
 import com.bugjc.ea.gateway.core.dto.GatewayResultCode;
-import com.bugjc.ea.gateway.core.dto.ResultCode;
-import com.bugjc.ea.gateway.core.dto.ResultGenerator;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.http.HttpHeaders;
@@ -46,7 +45,7 @@ public class JwtServerFallback implements FallbackProvider {
             @NotNull
             @Override
             public InputStream getBody() {
-                return new ByteArrayInputStream(ResultGenerator.genFailResult(ResultCode.SERVICE_UNAVAILABLE.getCode(),"授权认证服务暂时不可用。").toString().getBytes(StandardCharsets.UTF_8));
+                return new ByteArrayInputStream(ResultGenerator.genFailResult(GatewayResultCode.SERVICE_UNAVAILABLE.getCode(),"授权认证服务暂时不可用。").toString().getBytes(StandardCharsets.UTF_8));
             }
 
             @NotNull

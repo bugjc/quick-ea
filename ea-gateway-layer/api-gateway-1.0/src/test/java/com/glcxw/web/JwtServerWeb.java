@@ -1,9 +1,9 @@
 package com.glcxw.web;
 
 import com.alibaba.fastjson.JSON;
-import com.bugjc.ea.opensdk.core.util.ApiGatewayHttpClient;
-import com.bugjc.ea.opensdk.model.AppParam;
-import com.bugjc.ea.opensdk.service.HttpService;
+import com.bugjc.ea.http.opensdk.core.util.ApiGatewayHttpClient;
+import com.bugjc.ea.http.opensdk.model.AppParam;
+import com.bugjc.ea.http.opensdk.service.HttpService;
 import com.glcxw.env.EnvUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;

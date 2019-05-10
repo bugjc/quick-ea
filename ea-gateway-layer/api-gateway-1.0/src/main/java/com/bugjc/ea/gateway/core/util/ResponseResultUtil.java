@@ -1,7 +1,7 @@
 package com.bugjc.ea.gateway.core.util;
 
 import com.alibaba.fastjson.JSON;
-import com.bugjc.ea.gateway.core.dto.ResultGenerator;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 

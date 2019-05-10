@@ -1,8 +1,8 @@
 package com.bugjc.ea.gateway.core.filter.error;
 
 import com.bugjc.ea.gateway.core.component.RibbonComponent;
-import com.bugjc.ea.gateway.core.dto.ResultCode;
 import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
+import com.bugjc.ea.http.opensdk.core.dto.ResultCode;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;

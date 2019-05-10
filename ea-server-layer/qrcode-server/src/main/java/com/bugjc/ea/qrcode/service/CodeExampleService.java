@@ -10,7 +10,7 @@ import java.util.List;
  * @author aoki
  * @create 2018/08/06.
  */
-public interface CodeExampleService{
+public interface CodeExampleService {
 
     /**
      * 查询全部

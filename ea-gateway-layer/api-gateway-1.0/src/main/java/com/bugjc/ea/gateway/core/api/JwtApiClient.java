@@ -2,13 +2,13 @@ package com.bugjc.ea.gateway.core.api;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.bugjc.ea.gateway.core.dto.Result;
-import com.bugjc.ea.gateway.core.dto.ResultGenerator;
 import com.bugjc.ea.gateway.model.App;
 import com.bugjc.ea.gateway.service.AppService;
-import com.bugjc.ea.opensdk.core.util.ApiGatewayHttpClient;
-import com.bugjc.ea.opensdk.model.AppParam;
-import com.bugjc.ea.opensdk.service.HttpService;
+import com.bugjc.ea.http.opensdk.core.dto.Result;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
+import com.bugjc.ea.http.opensdk.core.util.ApiGatewayHttpClient;
+import com.bugjc.ea.http.opensdk.model.AppParam;
+import com.bugjc.ea.http.opensdk.service.HttpService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -67,7 +67,7 @@ public class JwtApiClient {
      * @param param
      * @return
      */
-    public Result post(String appId,String path, JSONObject param){
+    public Result post(String appId, String path, JSONObject param){
         //获取应用配置信息
         App app = appService.findByAppId(appId);
         if (app == null){

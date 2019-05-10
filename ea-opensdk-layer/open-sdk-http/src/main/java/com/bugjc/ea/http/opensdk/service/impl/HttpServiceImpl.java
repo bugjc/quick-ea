@@ -2,18 +2,19 @@ package com.bugjc.ea.http.opensdk.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
-import com.bugjc.ea.opensdk.core.constants.HttpHeaderKeyConstants;
-import com.bugjc.ea.opensdk.core.crypto.CryptoProcessor;
-import com.bugjc.ea.opensdk.core.crypto.input.AccessPartyDecryptParam;
-import com.bugjc.ea.opensdk.core.crypto.input.AccessPartyEncryptParam;
-import com.bugjc.ea.opensdk.core.crypto.output.AccessPartyDecryptObj;
-import com.bugjc.ea.opensdk.core.crypto.output.AccessPartyEncryptObj;
-import com.bugjc.ea.opensdk.core.exception.HttpSecurityException;
-import com.bugjc.ea.opensdk.model.AppParam;
-import com.bugjc.ea.opensdk.service.HttpService;
+import com.bugjc.ea.http.opensdk.core.constants.HttpHeaderKeyConstants;
+import com.bugjc.ea.http.opensdk.core.crypto.CryptoProcessor;
+import com.bugjc.ea.http.opensdk.core.crypto.input.AccessPartyDecryptParam;
+import com.bugjc.ea.http.opensdk.core.crypto.input.AccessPartyEncryptParam;
+import com.bugjc.ea.http.opensdk.core.crypto.output.AccessPartyDecryptObj;
+import com.bugjc.ea.http.opensdk.core.crypto.output.AccessPartyEncryptObj;
+import com.bugjc.ea.http.opensdk.core.exception.HttpSecurityException;
+import com.bugjc.ea.http.opensdk.model.AppParam;
+import com.bugjc.ea.http.opensdk.service.HttpService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.*;
 
 import java.io.IOException;
 

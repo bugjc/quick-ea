@@ -1,7 +1,7 @@
 package com.glcxw.util;
 
-import com.bugjc.ea.opensdk.APIBuilder;
-import com.bugjc.ea.opensdk.service.HttpService;
+import com.bugjc.ea.http.opensdk.APIBuilder;
+import com.bugjc.ea.http.opensdk.service.HttpService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

@@ -25,6 +25,7 @@
 
     <dependencies>
 
+        <!--opensdk-->
         <dependency>
             <groupId>com.bugjc.ea</groupId>
             <artifactId>open-sdk-all</artifactId>

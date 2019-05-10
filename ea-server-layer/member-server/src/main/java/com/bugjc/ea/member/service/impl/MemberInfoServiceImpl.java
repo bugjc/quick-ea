@@ -1,6 +1,10 @@
 package com.bugjc.ea.member.service.impl;
 
-import com.bugjc.ea.member.service.TestService;
+import com.bugjc.ea.http.opensdk.core.dto.Result;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
+import com.bugjc.ea.member.model.MemberInfo;
+import com.bugjc.ea.member.service.MemberInfoService;
+import com.bugjc.ea.member.web.http.body.memberinfo.GetBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.sleuth.annotation.NewSpan;
 import org.springframework.cloud.sleuth.annotation.SpanTag;
@@ -12,7 +16,15 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class ZipkinServiceImpl implements TestService {
+public class MemberInfoServiceImpl implements MemberInfoService {
+
+
+    @NewSpan
+    @Override
+    public Result get(GetBody.RequestBody requestBody) {
+        return ResultGenerator.genSuccessResult(new MemberInfo(1001L,"aoki",26));
+    }
+
 
     /** 调用链注解最好放到实现类，防止实现类内部相互调用不走接口出现错误 **/
     @NewSpan
@@ -20,7 +32,6 @@ public class ZipkinServiceImpl implements TestService {
         log.info("add:"+userId);
     }
 
-    @NewSpan
     @Override
     public String testZipkin(String userId) {
         log.info("test zipkin:"+userId);

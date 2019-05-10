@@ -1,19 +1,15 @@
 package com.bugjc.ea.gateway.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.gateway.core.exception.BizException;
-import com.bugjc.ea.gateway.service.AppService;
 import com.bugjc.ea.gateway.mapper.AppMapper;
 import com.bugjc.ea.gateway.model.App;
-import com.bugjc.ea.opensdk.core.util.SequenceUtil;
+import com.bugjc.ea.gateway.service.AppService;
+import com.bugjc.ea.http.opensdk.core.util.SequenceUtil;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author aoki

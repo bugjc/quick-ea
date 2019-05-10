@@ -1,4 +1,4 @@
-package com.bugjc.ea.gateway.core.dto;
+package com.bugjc.ea.http.opensdk.core.dto;
 
 /**
  * 响应结果生成工具
@@ -29,12 +29,6 @@ public class ResultGenerator {
     public static Result genFailResult(int code,String message) {
         return new Result()
                 .setCode(code)
-                .setMessage(message);
-    }
-
-    public static Result genUnauthorizedResult(String message) {
-        return new Result()
-                .setCode(ResultCode.UNAUTHORIZED)
                 .setMessage(message);
     }
 }

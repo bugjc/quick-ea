@@ -1,8 +1,8 @@
 package com.bugjc.ea.http.opensdk.core.util;
 
-import com.bugjc.ea.opensdk.APIBuilder;
-import com.bugjc.ea.opensdk.model.AppParam;
-import com.bugjc.ea.opensdk.service.HttpService;
+import com.bugjc.ea.http.opensdk.APIBuilder;
+import com.bugjc.ea.http.opensdk.model.AppParam;
+import com.bugjc.ea.http.opensdk.service.HttpService;
 
 public class ApiGatewayHttpClient {
 
