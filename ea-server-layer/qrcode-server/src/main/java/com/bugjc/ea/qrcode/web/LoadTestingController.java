@@ -1,5 +1,8 @@
 package com.bugjc.ea.qrcode.web;
 
+import com.alibaba.fastjson.JSON;
+import com.bugjc.ea.qrcode.core.dto.Result;
+import com.bugjc.ea.qrcode.core.dto.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
@@ -20,15 +23,15 @@ public class LoadTestingController {
     private LoadBalancerClient loadBalancerClient;
 
     @GetMapping("getMemberServiceInstance")
-    public String getServiceInstance(){
+    public Result getServiceInstance(){
         //轮询访问策略
         ServiceInstance serviceInstance = loadBalancerClient.choose("member-server");
         if (serviceInstance == null){
-            return "依赖服务未启动";
+            return ResultGenerator.genFailResult("依赖服务未启动");
         }
-        String result = "二维码服务："+serviceInstance.getHost()+":"+serviceInstance.getPort()+":"+serviceInstance.getServiceId();
-        log.info(result);
-        return result;
+        log.info(serviceInstance.getScheme());
+        log.info(JSON.toJSONString(serviceInstance.getMetadata()));
+        return ResultGenerator.genSuccessResult(serviceInstance);
     }
 
 

@@ -7,11 +7,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.commons.util.InetUtils;
+import org.springframework.cloud.commons.util.InetUtilsProperties;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Array;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -50,7 +53,8 @@ public class ApplicationConfig implements ApplicationListener<WebServerInitializ
             JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(serviceInstance));
             JSONObject instanceInfo = jsonObject.getJSONObject("instanceInfo");
             String instanceId = instanceInfo.getString("instanceId");
-            String localInstanceId = this.getIp()+":"+serviceInstance.getHost()+":"+this.getPort();
+            InetAddress inetAddress = new InetUtils(new InetUtilsProperties()).findFirstNonLoopbackAddress();
+            String localInstanceId = inetAddress.getHostAddress()+":"+serviceInstance.getHost()+":"+this.getPort();
             if (localInstanceId.equals(instanceId)){
                 return serviceInstance;
             }

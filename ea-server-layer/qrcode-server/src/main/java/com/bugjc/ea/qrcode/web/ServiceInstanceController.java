@@ -3,6 +3,8 @@ package com.bugjc.ea.qrcode.web;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.qrcode.config.ApplicationConfig;
+import com.bugjc.ea.qrcode.core.dto.Result;
+import com.bugjc.ea.qrcode.core.dto.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
@@ -32,9 +34,12 @@ public class ServiceInstanceController {
      * @return
      */
     @GetMapping(value = "getServiceInstance")
-    public String getServiceInstanceList(){
+    public Result getServiceInstanceList(){
 
         ServiceInstance localServiceInstance = applicationConfig.getLocalServiceInstance();
+        if (localServiceInstance == null){
+            return ResultGenerator.genFailResult("获取本地服务实例失败");
+        }
         JSONObject jsonObject = JSON.parseObject(JSON.toJSONString(localServiceInstance));
         JSONObject instanceInfo = jsonObject.getJSONObject("instanceInfo");
         log.info("localInstanceId:{}",instanceInfo.getString("instanceId"));
@@ -45,7 +50,7 @@ public class ServiceInstanceController {
             instanceInfo = jsonObject.getJSONObject("instanceInfo");
             log.info("instanceId:{}",instanceInfo.getString("instanceId"));
         }
-        return JSON.toJSONString(list);
+        return ResultGenerator.genSuccessResult(JSON.toJSONString(list));
     }
 
 
