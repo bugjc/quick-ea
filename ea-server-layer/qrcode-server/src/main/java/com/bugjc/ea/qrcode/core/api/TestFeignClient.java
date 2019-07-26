@@ -1,6 +1,5 @@
 package com.bugjc.ea.qrcode.core.api;
 
-import com.bugjc.ea.member.service.TestService;
 import com.bugjc.ea.qrcode.config.FeignClientConfig;
 import org.springframework.cloud.openfeign.FeignClient;
 
@@ -10,6 +9,6 @@ import org.springframework.cloud.openfeign.FeignClient;
  * @date 2018/7/29 16:24
  */
 @FeignClient(name = "member-server",configuration = FeignClientConfig.class)
-public interface TestFeignClient extends TestService {
+public interface TestFeignClient{
 
 }

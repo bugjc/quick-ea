@@ -14,6 +14,7 @@
 
     <properties>
         <docker.repository>registry.cn-hangzhou.aliyuncs.com/bugjc</docker.repository>
+        <httpclient.version>4.5.9</httpclient.version>
     </properties>
 
     <dependencies>
@@ -90,6 +91,12 @@
             <version>${spring-rabbit.version}</version>
         </dependency>
         <!-- zipkin end -->
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
 
     </dependencies>
 

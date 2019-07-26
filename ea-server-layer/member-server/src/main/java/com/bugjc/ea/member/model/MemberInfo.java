@@ -13,7 +13,6 @@ import java.util.Date;
  * @author aoki
  */
 @NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
 @Data
 public class MemberInfo implements Serializable{

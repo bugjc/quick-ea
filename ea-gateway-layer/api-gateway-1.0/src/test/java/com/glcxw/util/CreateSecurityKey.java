@@ -7,10 +7,8 @@ package com.glcxw.util;
  * 这里只用到了编码
  */
 
+import cn.hutool.core.codec.Base64;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringEscapeUtils;
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import java.security.Key;
 import java.security.KeyPair;
@@ -53,12 +51,12 @@ public class CreateSecurityKey {
 
     //解码返回byte
     public static byte[] decryptBASE64(String key) throws Exception {
-        return (new BASE64Decoder()).decodeBuffer(key);
+        return Base64.decode(key);
     }
 
     //编码返回字符串
     private static String encryptBASE64(byte[] key) throws Exception {
-        return (new BASE64Encoder()).encodeBuffer(key);
+        return Base64.encode(key);
     }
 
     //map对象中存放公私钥

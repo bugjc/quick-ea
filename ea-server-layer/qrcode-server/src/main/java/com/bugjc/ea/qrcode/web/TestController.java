@@ -18,9 +18,6 @@ import javax.annotation.Resource;
 @RestController
 public class TestController {
 
-    @Resource
-    private TestRemoteServiceImpl testRemoteService;
-
 
     @GetMapping(value = "message")
     public String message() {
@@ -29,12 +26,12 @@ public class TestController {
 
     @GetMapping(value = "/hystrix/{userId}")
     public String testHystrix(@PathVariable String userId){
-        return testRemoteService.testHystrix(userId);
+        return null;
     }
 
     @GetMapping(value = "/zipkin/{userId}")
     public String testZipkin(@PathVariable String userId){
-        return testRemoteService.testHystrix(userId);
+        return null;
     }
 
 }
