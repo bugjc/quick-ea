@@ -13,15 +13,15 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
  * 程序入口
  * @author qingyang
  */
-@EnableMethodCache(basePackages = "com.glcxw.gateway")
+@EnableMethodCache(basePackages = "com.bugjc.ea.gateway")
 @EnableCreateCacheAnnotation
 @EnableEurekaClient
 @EnableZuulProxy
 @SpringBootApplication
-public class EAGatewayApplication {
+public class ApiGatewayServerApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EAGatewayApplication.class, args);
+        SpringApplication.run(ApiGatewayServerApplication.class, args);
         //自定义过滤处理器
         FilterProcessor.setProcessor(new CustomFilterProcessor());
     }

@@ -13,7 +13,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>api-gateway-1.0</module>
+        <module>api-gateway</module>
+        <module>api-gateway-server</module>
     </modules>
 
 
