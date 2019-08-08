@@ -13,6 +13,7 @@
     <packaging>jar</packaging>
 
     <properties>
+        <server.port>2225</server.port>
         <docker.repository>192.168.8.18/bugjc</docker.repository>
         <spring-boot-starter-jdbc.version>2.0.1.RELEASE</spring-boot-starter-jdbc.version>
         <mysql-connector-java.version>8.0.11</mysql-connector-java.version>
@@ -213,13 +214,53 @@
                     <to>
                         <image>${docker.repository}/${project.artifactId}:${project.version}</image>
                     </to>
+                    <!--可以设置容器启动时执行的命令-->
                     <container>
+                        <!--jvm命令参数-->
+                        <jvmFlags>
+                            <!--大量使用随机数设置-->
+                            <jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>
+                            <jvmFlag>-Xms256m</jvmFlag>
+                            <jvmFlag>-Xdebug</jvmFlag>
+                        </jvmFlags>
+
+                        <!--Springboot 启动类-->
+                        <mainClass>com.bugjc.ea.qrcode.QrCodeServerApplication</mainClass>
+
+                        <!--可以设置额外的环境变量-->
+                        <!--<args>-->
+                        <!--<arg>some</arg>-->
+                        <!--<arg>args</arg>-->
+                        <!--</args>-->
+
+                        <!--设置容器暴露的端口，可以指定tcp或udp-->
+                        <ports>
+                            <port>${server.port}</port>
+                            <port>8082-8083/udp</port>
+                        </ports>
+
+                        <!--可以设置多个容器标签-->
+                        <labels>
+                            <key1>{parent.project.version}</key1>
+                            <key2>latest</key2>
+                        </labels>
+
+                        <!--<format>OCI</format>-->
                         <!--使用实际创建时间-->
                         <useCurrentTimestamp>true</useCurrentTimestamp>
                     </container>
                     <!--如果私有镜像仓库没有启用https，设置allowInsecureRegistries参数为true-->
                     <allowInsecureRegistries>true</allowInsecureRegistries>
                 </configuration>
+                <!--绑定jib:build到 Maven生命周期，例如package-->
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
