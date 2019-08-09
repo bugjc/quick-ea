@@ -10,9 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>eureka-basis-server</artifactId>
+    <packaging>jar</packaging>
 
     <properties>
-        <docker.repository>registry.cn-hangzhou.aliyuncs.com/bugjc</docker.repository>
+        <docker.repository>192.168.8.18/bugjc</docker.repository>
     </properties>
 
     <dependencies>
@@ -66,15 +67,58 @@
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>0.9.9</version>
+                <version>1.3.0</version>
                 <configuration>
                     <from>
-                        <image>openjdk:alpine</image>
+                        <image>registry.hub.docker.com/adoptopenjdk/openjdk8-openj9</image>
                     </from>
                     <to>
                         <image>${docker.repository}/${project.artifactId}:${project.version}</image>
                     </to>
+                    <!--可以设置容器启动时执行的命令-->
+                    <container>
+                        <!--jvm命令参数-->
+                        <jvmFlags>
+                            <!--大量使用随机数设置-->
+                            <jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>
+                            <jvmFlag>-Xms256m</jvmFlag>
+                            <jvmFlag>-Xmx512m</jvmFlag>
+                            <jvmFlag>-Xdebug</jvmFlag>
+                            <jvmFlag>-XX:+UnlockExperimentalVMOptions</jvmFlag>
+                            <jvmFlag>-XX:+UseCGroupMemoryLimitForHeap</jvmFlag>
+                        </jvmFlags>
+
+                        <environment>
+                            <spring.profiles.active>prod</spring.profiles.active>
+                            <!--配置使用的时区-->
+                            <TZ>Asia/Shanghai</TZ>
+                        </environment>
+
+
+                        <!--Springboot 启动类-->
+                        <mainClass>com.bugjc.ea.eureka.EurekaServerApplication</mainClass>
+
+                        <!--可以设置多个容器标签-->
+                        <labels>
+                            <name>latest</name>
+                        </labels>
+
+                        <!--<format>OCI</format>-->
+                        <!--使用实际创建时间-->
+                        <useCurrentTimestamp>true</useCurrentTimestamp>
+                    </container>
+                    <!--如果私有镜像仓库没有启用https，设置allowInsecureRegistries参数为true-->
+                    <allowInsecureRegistries>true</allowInsecureRegistries>
                 </configuration>
+                <!--绑定jib:build到 Maven生命周期，例如package-->
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
         </plugins>

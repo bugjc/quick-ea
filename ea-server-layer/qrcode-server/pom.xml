@@ -13,7 +13,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <server.port>2225</server.port>
+        <!--Docker Register 仓库-->
         <docker.repository>192.168.8.18/bugjc</docker.repository>
         <spring-boot-starter-jdbc.version>2.0.1.RELEASE</spring-boot-starter-jdbc.version>
         <mysql-connector-java.version>8.0.11</mysql-connector-java.version>
@@ -221,8 +221,18 @@
                             <!--大量使用随机数设置-->
                             <jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>
                             <jvmFlag>-Xms256m</jvmFlag>
+                            <jvmFlag>-Xmx512m</jvmFlag>
                             <jvmFlag>-Xdebug</jvmFlag>
+                            <jvmFlag>-XX:+UnlockExperimentalVMOptions</jvmFlag>
+                            <jvmFlag>-XX:+UseCGroupMemoryLimitForHeap</jvmFlag>
                         </jvmFlags>
+
+                        <environment>
+                            <spring.profiles.active>prod</spring.profiles.active>
+                            <!--配置使用的时区-->
+                            <TZ>Asia/Shanghai</TZ>
+                        </environment>
+
 
                         <!--Springboot 启动类-->
                         <mainClass>com.bugjc.ea.qrcode.QrCodeServerApplication</mainClass>
@@ -234,15 +244,15 @@
                         <!--</args>-->
 
                         <!--设置容器暴露的端口，可以指定tcp或udp-->
-                        <ports>
-                            <port>${server.port}</port>
-                            <port>8082-8083/udp</port>
-                        </ports>
+<!--                        <ports>-->
+<!--                            <port>${server.port}</port>-->
+<!--                            <port>8082-8083/udp</port>-->
+<!--                        </ports>-->
 
                         <!--可以设置多个容器标签-->
                         <labels>
-                            <key1>{parent.project.version}</key1>
-                            <key2>latest</key2>
+<!--                            <key1>{parent.project.version}</key1>-->
+                            <name>latest</name>
                         </labels>
 
                         <!--<format>OCI</format>-->
