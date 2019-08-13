@@ -162,7 +162,7 @@
 						</jvmFlags>
 
 						<environment>
-							<spring.profiles.active>prod</spring.profiles.active>
+							<spring.profiles.active>test</spring.profiles.active>
 							<!--配置使用的时区-->
 							<TZ>Asia/Shanghai</TZ>
 						</environment>
