@@ -23,7 +23,7 @@ public class EnvUtil {
     private static Map<String,String> servers = new HashMap<>();
     static {
         servers.put(EnvType.DEV.name(),"http://127.0.0.1:7900");
-        servers.put(EnvType.TEST.name(),"http://127.0.0.1:7900");
+        servers.put(EnvType.TEST.name(),"http://192.168.8.17:31381");
         servers.put(EnvType.UAT.name(),"http://127.0.0.1:7900");
         servers.put(EnvType.PROD.name(),"http://127.0.0.1:7900");
     }

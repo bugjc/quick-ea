@@ -4,6 +4,10 @@ import com.bugjc.ea.http.opensdk.APIBuilder;
 import com.bugjc.ea.http.opensdk.model.AppParam;
 import com.bugjc.ea.http.opensdk.service.HttpService;
 
+/**
+ * API 网关http客户端
+ * @author aoki
+ */
 public class ApiGatewayHttpClient {
 
     /**
