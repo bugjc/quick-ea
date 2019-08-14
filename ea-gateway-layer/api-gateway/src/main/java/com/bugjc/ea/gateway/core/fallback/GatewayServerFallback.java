@@ -25,7 +25,7 @@ public class GatewayServerFallback implements FallbackProvider {
     @Override
     public String getRoute() {
         //表示所有服务，如果想对单个服务进行限制，写入服务ID即可。
-        return "ea-api-gateway-server";
+        return "api-gateway-server";
     }
 
     @Override

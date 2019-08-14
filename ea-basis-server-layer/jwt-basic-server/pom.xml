@@ -146,7 +146,7 @@
 						<image>registry.hub.docker.com/adoptopenjdk/openjdk8-openj9</image>
 					</from>
 					<to>
-						<image>${docker.repository}/${project.artifactId}:${project.version}</image>
+						<image>${docker.repository}/${project.artifactId}</image>
 					</to>
 					<!--可以设置容器启动时执行的命令-->
 					<container>
@@ -162,7 +162,7 @@
 						</jvmFlags>
 
 						<environment>
-							<spring.profiles.active>test</spring.profiles.active>
+<!--							<spring.profiles.active>test</spring.profiles.active>-->
 							<!--配置使用的时区-->
 							<TZ>Asia/Shanghai</TZ>
 						</environment>
@@ -170,11 +170,6 @@
 
 						<!--Springboot 启动类-->
 						<mainClass>com.bugjc.ea.jwt.JwtApplication</mainClass>
-
-						<!--可以设置多个容器标签-->
-						<labels>
-							<name>latest</name>
-						</labels>
 
 						<!--<format>OCI</format>-->
 						<!--使用实际创建时间-->

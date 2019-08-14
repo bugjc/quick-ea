@@ -127,7 +127,7 @@
                         <image>registry.hub.docker.com/adoptopenjdk/openjdk8-openj9</image>
                     </from>
                     <to>
-                        <image>${docker.repository}/${project.artifactId}:${project.version}</image>
+                        <image>${docker.repository}/${project.artifactId}</image>
                     </to>
                     <!--可以设置容器启动时执行的命令-->
                     <container>
@@ -143,7 +143,7 @@
                         </jvmFlags>
 
                         <environment>
-                            <spring.profiles.active>prod</spring.profiles.active>
+                            <!--<spring.profiles.active>prod</spring.profiles.active>-->
                             <!--配置使用的时区-->
                             <TZ>Asia/Shanghai</TZ>
                         </environment>

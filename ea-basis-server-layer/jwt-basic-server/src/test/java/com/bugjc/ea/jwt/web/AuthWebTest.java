@@ -49,6 +49,7 @@ public class AuthWebTest {
         try {
             Response httpResponse = new OkHttpClient().newCall(httpRequest).execute();
             if (httpResponse.isSuccessful()){
+                assert httpResponse.body() != null;
                 System.out.println(httpResponse.body().string());
             }
 

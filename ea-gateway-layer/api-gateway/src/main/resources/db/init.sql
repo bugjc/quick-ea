@@ -1,8 +1,8 @@
 -- 创建数据库和账户
-CREATE DATABASE IF NOT EXISTS gl_api_gateway_test COLLATE = 'utf8_general_ci' CHARACTER SET = 'utf8';
-GRANT ALL ON gl_api_gateway_test.* TO 'gateway'@'%' IDENTIFIED BY 'gateway2018';
-GRANT ALL ON gl_api_gateway_test.* TO 'gateway'@'localhost' IDENTIFIED BY 'gateway2018';
-USE `gl_api_gateway_test`;
+CREATE DATABASE IF NOT EXISTS ea_api_gateway_test COLLATE = 'utf8_general_ci' CHARACTER SET = 'utf8';
+GRANT ALL ON ea_api_gateway_test.* TO 'gateway'@'%' IDENTIFIED BY 'gateway2018';
+GRANT ALL ON ea_api_gateway_test.* TO 'gateway'@'localhost' IDENTIFIED BY 'gateway2018';
+USE `ea_api_gateway_test`;
 
 
 DROP TABLE IF EXISTS `route`;

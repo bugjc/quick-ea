@@ -90,7 +90,6 @@
                         </jvmFlags>
 
                         <environment>
-                            <spring.profiles.active>eureka2</spring.profiles.active>
                             <!--配置使用的时区-->
                             <TZ>Asia/Shanghai</TZ>
                         </environment>

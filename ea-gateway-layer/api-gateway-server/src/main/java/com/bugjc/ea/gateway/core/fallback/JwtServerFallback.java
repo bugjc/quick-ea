@@ -26,7 +26,7 @@ public class JwtServerFallback implements FallbackProvider {
     @Override
     public String getRoute() {
         //表示所有服务，如果想对单个服务进行限制，写入服务ID即可。
-        return "jwt-server";
+        return "jwt-basic-server";
     }
 
     @Override
