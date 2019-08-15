@@ -99,6 +99,7 @@ public class APIBuilder {
                 try {
                     this.httpClientBuilder.sslSocketFactory(SSLUtil.getAllTrustContext().getSocketFactory(), SSLUtil.getAllTrustManager());
                     this.httpClientBuilder.hostnameVerifier(new HostnameVerifier() {
+                        @Override
                         public boolean verify(String s, SSLSession sslSession) {
                             return true;
                         }

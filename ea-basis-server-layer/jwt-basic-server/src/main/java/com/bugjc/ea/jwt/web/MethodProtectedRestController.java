@@ -1,7 +1,7 @@
 package com.bugjc.ea.jwt.web;
 
-import com.bugjc.ea.jwt.core.dto.Result;
-import com.bugjc.ea.jwt.core.dto.ResultGenerator;
+import com.bugjc.ea.http.opensdk.core.dto.Result;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

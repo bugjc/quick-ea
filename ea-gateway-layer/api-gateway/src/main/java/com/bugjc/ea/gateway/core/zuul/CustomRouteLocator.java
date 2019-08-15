@@ -39,6 +39,7 @@ public class CustomRouteLocator extends SimpleRouteLocator implements Refreshabl
 
     @Override
     protected Map<String, ZuulRoute> locateRoutes() {
+        log.info("加载|刷新路由配置");
         LinkedHashMap<String, ZuulRoute> routesMap = new LinkedHashMap<String, ZuulRoute>();
         //从application.properties中加载路由信息
         routesMap.putAll(super.locateRoutes());

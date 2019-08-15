@@ -40,6 +40,9 @@ public class ZuulRouteServiceImpl implements ZuulRouteService {
 
         for (AppRoute appRoute : appRoutes) {
             CustomZuulRoute zuulRoute = zuulRouteMapper.selectById(appRoute.getRouteId());
+            if (zuulRoute == null){
+                continue;
+            }
             String pathPrefix = zuulRoute.getPath().split("/")[1];
             if (!path.startsWith("/".concat(pathPrefix))) {
                 continue;

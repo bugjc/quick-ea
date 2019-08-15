@@ -1,6 +1,7 @@
 package com.bugjc.ea.gateway.core.fallback;
 
-import com.bugjc.ea.gateway.core.dto.GatewayResultCode;
+import com.bugjc.ea.gateway.core.dto.ApiGatewayServerResultCode;
+import com.bugjc.ea.http.opensdk.core.constants.HttpHeaderKeyConstants;
 import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
@@ -31,6 +32,9 @@ public class JwtServerFallback implements FallbackProvider {
 
     @Override
     public ClientHttpResponse fallbackResponse(String route, Throwable cause) {
+
+        //失败应答消息
+        String failureResponseMessage = ResultGenerator.genFailResult(ApiGatewayServerResultCode.BUSINESS_SERVICE_UNAVAILABLE.getCode(),ApiGatewayServerResultCode.BUSINESS_SERVICE_UNAVAILABLE.getMessage()).toString();
         return new ClientHttpResponse(){
 
             @NotNull
@@ -39,13 +43,15 @@ public class JwtServerFallback implements FallbackProvider {
                 HttpHeaders headers = new HttpHeaders();
                 //和body中的内容编码一致，否则容易乱码
                 headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+                //标记失败回退
+                headers.add(HttpHeaderKeyConstants.EA_FALLBACK, failureResponseMessage);
                 return headers;
             }
 
             @NotNull
             @Override
             public InputStream getBody() {
-                return new ByteArrayInputStream(ResultGenerator.genFailResult(GatewayResultCode.SERVICE_UNAVAILABLE.getCode(),"授权认证服务暂时不可用。").toString().getBytes(StandardCharsets.UTF_8));
+                return new ByteArrayInputStream(failureResponseMessage.getBytes(StandardCharsets.UTF_8));
             }
 
             @NotNull

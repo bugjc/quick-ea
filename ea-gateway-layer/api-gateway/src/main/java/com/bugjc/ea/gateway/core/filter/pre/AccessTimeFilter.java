@@ -1,7 +1,7 @@
 package com.bugjc.ea.gateway.core.filter.pre;
 
-import com.bugjc.ea.gateway.core.dto.ResultCode;
 import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
+import com.bugjc.ea.http.opensdk.core.dto.ResultCode;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;

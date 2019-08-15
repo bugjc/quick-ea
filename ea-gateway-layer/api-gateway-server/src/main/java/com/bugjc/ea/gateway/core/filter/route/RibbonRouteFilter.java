@@ -2,6 +2,7 @@ package com.bugjc.ea.gateway.core.filter.route;
 
 import cn.hutool.core.util.StrUtil;
 import com.bugjc.ea.gateway.core.component.RibbonComponent;
+import com.bugjc.ea.gateway.core.constants.ApiGatewayKeyConstants;
 import com.bugjc.ea.gateway.service.ZuulRouteService;
 import com.bugjc.ea.gateway.core.enums.ResultErrorEnum;
 import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
@@ -52,8 +53,8 @@ public class RibbonRouteFilter extends ZuulFilter {
 
 		//检查请求header中是否带有debug
 		boolean isDebug = Boolean.parseBoolean(request.getHeader("IsDebug"));
-		String requestURI = request.getRequestURI();
-		return zuulRouteService.checkRouteMode(appId, requestURI, isDebug) && (boolean) context.get("isSuccess");
+		String uri = request.getRequestURI();
+		return zuulRouteService.checkRouteMode(appId, uri, isDebug) && (boolean) context.get("isSuccess");
 	}
 
 	@Override
@@ -61,12 +62,14 @@ public class RibbonRouteFilter extends ZuulFilter {
 
 		log.info("filter:物理地址负载均衡过滤器");
 		RequestContext context = getCurrentContext();
+		//标记为自定义路由
+		context.set(ApiGatewayKeyConstants.CUSTOM_ROUTE_TAG,true);
 		HttpServletRequest request = context.getRequest();
 		try {
 			boolean isDebug = Boolean.parseBoolean(request.getHeader("IsDebug"));
 			String appId = request.getHeader("AppId");
-			String requestURI = request.getRequestURI();
-			URL ribbonUrl = ribbonComponent.chooseServer(appId, requestURI, isDebug);
+			String uri = request.getRequestURI();
+			URL ribbonUrl = ribbonComponent.chooseServer(appId, uri, isDebug);
 			if (ribbonUrl == null) {
 				ResponseResultUtil.genErrorResult(context, ResultErrorEnum.ERROR_URI.getCode(), "还未配置物理地址");
 				return null;

@@ -19,6 +19,7 @@ import org.springframework.util.StreamUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -87,6 +88,7 @@ public class AuthorizationResponseFilter extends ZuulFilter {
             response.setHeader(HttpHeaderKeyConstants.TIMESTAMP,servicePartyEncryptObj.getTimestamp());
             response.setHeader(HttpHeaderKeyConstants.NONCE,servicePartyEncryptObj.getNonce());
             response.setHeader(HttpHeaderKeyConstants.SIGNATURE,servicePartyEncryptObj.getSignature());
+            context.setResponse(response);
             log.info("生成应答签名成功！");
         } catch (IOException e) {
             rethrowRuntimeException(e);

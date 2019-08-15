@@ -2,9 +2,9 @@
 //
 //import cn.hutool.core.util.HashUtil;
 //import cn.hutool.core.util.StrUtil;
-//import com.glcxw.gateway.core.util.ResponseResultUtil;
-//import com.glcxw.gateway.model.AppVersionMap;
-//import com.glcxw.gateway.service.AppVersionMapService;
+//import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
+//import com.bugjc.ea.gateway.model.AppVersionMap;
+//import com.bugjc.ea.gateway.service.AppVersionMapService;
 //import com.netflix.zuul.ZuulFilter;
 //import com.netflix.zuul.context.RequestContext;
 //import lombok.extern.slf4j.Slf4j;

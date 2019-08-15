@@ -1,6 +1,8 @@
 package com.bugjc.ea.gateway.core.fallback;
 
-import com.bugjc.ea.gateway.core.dto.ResultGenerator;
+import com.bugjc.ea.gateway.core.dto.ApiGatewayResultCode;
+import com.bugjc.ea.http.opensdk.core.constants.HttpHeaderKeyConstants;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +32,8 @@ public class GatewayServerFallback implements FallbackProvider {
 
     @Override
     public ClientHttpResponse fallbackResponse(String route, Throwable cause) {
+        //失败应答消息
+        String failureResponseMessage = ResultGenerator.genFailResult(ApiGatewayResultCode.BUSINESS_LOAD_BALANCING_UNAVAILABLE.getCode(),ApiGatewayResultCode.BUSINESS_LOAD_BALANCING_UNAVAILABLE.getMessage()).toString();
         return new ClientHttpResponse(){
 
             @NotNull
@@ -38,13 +42,15 @@ public class GatewayServerFallback implements FallbackProvider {
                 HttpHeaders headers = new HttpHeaders();
                 //和body中的内容编码一致，否则容易乱码
                 headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+                //标记失败回退
+                headers.add(HttpHeaderKeyConstants.EA_FALLBACK, failureResponseMessage);
                 return headers;
             }
 
             @NotNull
             @Override
             public InputStream getBody() {
-                return new ByteArrayInputStream(ResultGenerator.genFailResult("业务应用负载均衡服务暂不可用。").toString().getBytes(StandardCharsets.UTF_8));
+                return new ByteArrayInputStream(failureResponseMessage.getBytes(StandardCharsets.UTF_8));
             }
 
             @NotNull

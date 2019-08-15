@@ -1,8 +1,8 @@
 package com.bugjc.ea.jwt.core.security;
 
 import com.alibaba.fastjson.JSON;
-import com.bugjc.ea.jwt.core.dto.ResultCode;
-import com.bugjc.ea.jwt.core.dto.ResultGenerator;
+import com.bugjc.ea.http.opensdk.core.dto.ResultCode;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;

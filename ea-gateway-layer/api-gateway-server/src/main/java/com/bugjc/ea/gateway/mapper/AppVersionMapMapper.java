@@ -1,5 +1,6 @@
 package com.bugjc.ea.gateway.mapper;
 
+import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
 import com.bugjc.ea.gateway.model.AppVersionMap;
@@ -9,6 +10,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author aoki
@@ -22,7 +24,8 @@ public interface AppVersionMapMapper {
      * @return
      */
     @Select("SELECT * FROM `app_version_map` a WHERE a.`app_id` = #{appId}")
-    @Cached(name = "app:version_map:", key = "#appId", expire = 120, cacheType = CacheType.REMOTE)
+    @Cached(cacheType = CacheType.LOCAL, expire = 2, timeUnit = TimeUnit.MINUTES)
+    @CacheRefresh(refresh = 2, timeUnit = TimeUnit.MINUTES)
     List<AppVersionMap> selectByAppIdAndVersion(@Param("appId") String appId);
 
     /**

@@ -24,6 +24,13 @@
 
     <dependencies>
 
+        <!--opensdk-->
+        <dependency>
+            <groupId>com.bugjc.ea</groupId>
+            <artifactId>open-sdk-all</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!--注册中心-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

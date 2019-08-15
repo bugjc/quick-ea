@@ -1,6 +1,8 @@
 package com.bugjc.ea.gateway.core.filter.error;
 
 import com.bugjc.ea.gateway.core.component.RibbonComponent;
+import com.bugjc.ea.gateway.core.constants.ApiGatewayKeyConstants;
+import com.bugjc.ea.gateway.core.dto.ApiGatewayServerResultCode;
 import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
 import com.bugjc.ea.http.opensdk.core.dto.ResultCode;
 import com.netflix.zuul.ZuulFilter;
@@ -37,7 +39,8 @@ public class RouteErrorFilter extends SendErrorFilter {
         // 判断：仅处理来自route过滤器引起的异常
         RequestContext ctx = RequestContext.getCurrentContext();
         ZuulFilter failedFilter = (ZuulFilter) ctx.get("failed.filter");
-        return failedFilter != null && failedFilter.filterType().equals(FilterConstants.ROUTE_TYPE);
+        return failedFilter != null && failedFilter.filterType().equals(FilterConstants.ROUTE_TYPE) ;
+                //&& ctx.getBoolean(ApiGatewayKeyConstants.CUSTOM_ROUTE_TAG);
     }
 
     @Override
@@ -50,16 +53,16 @@ public class RouteErrorFilter extends SendErrorFilter {
             if (ctx.getThrowable().getCause().getCause().getCause() instanceof HttpHostConnectException) {
                 //生成唯一服务key
                 String appId = request.getHeader("AppId");
-                String requestURI = request.getRequestURI();
+                String uri = request.getRequestURI();
                 String url = String.valueOf(ctx.get("ribbonRouteUrl"));
                 //移除无效的服务
-                ribbonComponent.markServerDown(appId, requestURI, url);
+                ribbonComponent.markServerDown(appId, uri, url);
             }
 
             ResponseResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), ctx.getThrowable().getMessage());
             return null;
         }catch (Exception ex) {
-            ResponseResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());
+            ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.ROUTE_FAILURE.getCode(), ApiGatewayServerResultCode.ROUTE_FAILURE.getMessage()+":"+ex.getMessage());
             ReflectionUtils.rethrowRuntimeException(ex);
         }
         return null;

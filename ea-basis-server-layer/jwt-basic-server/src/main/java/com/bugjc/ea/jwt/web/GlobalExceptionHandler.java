@@ -1,7 +1,7 @@
 package com.bugjc.ea.jwt.web;
 
-import com.bugjc.ea.jwt.core.dto.Result;
-import com.bugjc.ea.jwt.core.dto.ResultGenerator;
+import com.bugjc.ea.http.opensdk.core.dto.Result;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import com.bugjc.ea.jwt.core.exception.AuthenticationException;
 import com.bugjc.ea.jwt.core.exception.BusinessException;
 import org.springframework.web.bind.annotation.ControllerAdvice;

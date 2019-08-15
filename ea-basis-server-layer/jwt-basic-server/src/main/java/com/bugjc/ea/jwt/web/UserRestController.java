@@ -2,15 +2,15 @@ package com.bugjc.ea.jwt.web;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import com.bugjc.ea.jwt.core.dto.Result;
-import com.bugjc.ea.jwt.core.dto.ResultGenerator;
+
+import com.bugjc.ea.http.opensdk.core.dto.Result;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.bugjc.ea.jwt.core.security.JwtTokenUtil;
-import com.bugjc.ea.jwt.core.security.JwtUser;
 
 @RestController
 public class UserRestController {

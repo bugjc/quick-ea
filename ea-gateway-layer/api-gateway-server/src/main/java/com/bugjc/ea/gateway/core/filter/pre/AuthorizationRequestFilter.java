@@ -2,7 +2,7 @@ package com.bugjc.ea.gateway.core.filter.pre;
 
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
-import com.bugjc.ea.gateway.core.dto.GatewayResultCode;
+import com.bugjc.ea.gateway.core.dto.ApiGatewayServerResultCode;
 import com.bugjc.ea.gateway.core.util.IoUtils;
 import com.bugjc.ea.gateway.core.util.MyHttpServletRequestWrapper;
 import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
@@ -76,25 +76,25 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 
 		String appId = request.getHeader(HttpHeaderKeyConstants.APP_ID);
 		if (StrUtil.isBlank(appId)){
-			ResponseResultUtil.genErrorResult(ctx, GatewayResultCode.APP_ID_MISSING.getCode(), "缺失AppId参数");
+			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.APP_ID_MISSING.getCode(), "缺失AppId参数");
 			return null;
 		}
 
         String sequence = request.getHeader(HttpHeaderKeyConstants.SEQUENCE);
 		if (StrUtil.isBlank(sequence)){
-			ResponseResultUtil.genErrorResult(ctx, GatewayResultCode.SEQUENCE_MISSING.getCode(), "缺失Sequence参数");
+			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.SEQUENCE_MISSING.getCode(), "缺失Sequence参数");
 			return null;
 		}
 
 		String signValue = request.getHeader(HttpHeaderKeyConstants.SIGNATURE);
 		if (StrUtil.isBlank(signValue)){
-			ResponseResultUtil.genErrorResult(ctx, GatewayResultCode.SIGNATURE_MISSING.getCode(), "缺失Signature参数");
+			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.SIGNATURE_MISSING.getCode(), "缺失Signature参数");
 			return null;
 		}
 
         //重放控制
         if (sequenceLimitUtil.limit(sequence)) {
-			ResponseResultUtil.genErrorResult(ctx, GatewayResultCode.REQUEST_REPLAY_LIMIT.getCode(), "请求不能重放");
+			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.REQUEST_REPLAY_LIMIT.getCode(), "请求不能重放");
             return null;
         }
 
@@ -106,22 +106,22 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(requestWrapper.getInputStream()));
 			body = IoUtils.read(reader);
 			if (StrUtil.isBlank(body)){
-				ResponseResultUtil.genErrorResult(ctx, GatewayResultCode.BUSINESS_PARAM_MISSING.getCode(), "缺失业务参数，如没有业务参数请传空的JSON字符串");
+				ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.BUSINESS_PARAM_MISSING.getCode(), "缺失业务参数，如没有业务参数请传空的JSON字符串");
 				return null;
 			}
 		} catch (IOException e) {
-			ResponseResultUtil.genErrorResult(ctx,GatewayResultCode.IO_ERROR.getCode(), "读取流数据错误!");
+			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.IO_ERROR.getCode(), "读取流数据错误!");
 			return null;
 		}
 
 		App app = appService.findByAppId(appId);
 		if (app == null){
-			ResponseResultUtil.genErrorResult(ctx, GatewayResultCode.INVALID_APP_ID.getCode(), "不合法的AppId"+ appId);
+			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.INVALID_APP_ID.getCode(), "不合法的AppId"+ appId);
 			return null;
 		}
 
 		if (app.getRsaPublicKey() == null){
-			ResponseResultUtil.genErrorResult(ctx, GatewayResultCode.NOT_CONFIG_RSA.getCode(), "未配置RSA安全密钥对");
+			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.NOT_CONFIG_RSA.getCode(), "未配置RSA安全密钥对");
 			return null;
 		}
 
@@ -137,7 +137,7 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 
 		ServicePartyDecryptObj servicePartyDecryptObj = new CryptoProcessor().servicePartyDecrypt(servicePartyDecryptParam);
 		if (!servicePartyDecryptObj.isSignSuccessful()){
-			ResponseResultUtil.genErrorResult(ctx,GatewayResultCode.SIGNATURE_ERROR.getCode(), "验签失败!");
+			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.SIGNATURE_ERROR.getCode(), "验签失败!");
 			return null;
 		}
 

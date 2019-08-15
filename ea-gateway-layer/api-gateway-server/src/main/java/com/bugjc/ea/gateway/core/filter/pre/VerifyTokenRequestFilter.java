@@ -2,7 +2,7 @@ package com.bugjc.ea.gateway.core.filter.pre;
 
 import cn.hutool.core.util.StrUtil;
 import com.bugjc.ea.gateway.core.api.JwtApiClient;
-import com.bugjc.ea.gateway.core.dto.GatewayResultCode;
+import com.bugjc.ea.gateway.core.dto.ApiGatewayServerResultCode;
 import com.bugjc.ea.gateway.service.AppSecurityConfigService;
 import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
 import com.bugjc.ea.http.opensdk.core.dto.Result;
@@ -59,13 +59,13 @@ public class VerifyTokenRequestFilter extends ZuulFilter {
 			String token = request.getHeader("Authorization");
 			log.info("token:{}",token);
 			if (StrUtil.isBlank(token)){
-				ResponseResultUtil.genErrorResult(ctx, GatewayResultCode.TOKEN_MISSING.getCode(), "缺失Token参数！");
+				ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.TOKEN_MISSING.getCode(), "缺失Token参数！");
 				return null;
 			}
 
 			String appId = request.getHeader("AppId");
 			if (StrUtil.isBlank(appId)){
-				ResponseResultUtil.genErrorResult(ctx, GatewayResultCode.APP_ID_MISSING.getCode(), "缺失AppId参数");
+				ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.APP_ID_MISSING.getCode(), "缺失AppId参数");
 				return null;
 			}
 
@@ -81,7 +81,7 @@ public class VerifyTokenRequestFilter extends ZuulFilter {
 
 		}catch (Exception ex){
 			log.error(ex.getMessage(),ex);
-			ResponseResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), "服务器内部错误！");
+			ResponseResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), "Token认证服务器内部错误！");
 			return null;
 		}
 

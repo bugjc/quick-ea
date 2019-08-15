@@ -1,5 +1,6 @@
 package com.bugjc.ea.gateway.mapper;
 
+import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
 import com.bugjc.ea.gateway.model.App;
@@ -9,6 +10,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author aoki
@@ -21,7 +23,8 @@ public interface AppSecurityConfigMapper {
      * @return
      */
     @Select("select * from app_security_config where enabled = true ORDER BY is_verify_signature ASC")
-    @Cached(name = "app:security_config:signature", expire = 120, cacheType = CacheType.REMOTE)
+    @Cached(cacheType = CacheType.LOCAL, expire = 2, timeUnit = TimeUnit.MINUTES)
+    @CacheRefresh(refresh = 2, timeUnit = TimeUnit.MINUTES)
     List<AppSecurityConfig> selectAllByIsSignature();
 
 
@@ -30,7 +33,8 @@ public interface AppSecurityConfigMapper {
      * @return
      */
     @Select("select * from app_security_config where enabled = true ORDER BY is_verify_token ASC")
-    @Cached(name = "app:security_config:token", expire = 120, cacheType = CacheType.REMOTE)
+    @Cached(cacheType = CacheType.LOCAL, expire = 2, timeUnit = TimeUnit.MINUTES)
+    @CacheRefresh(refresh = 2, timeUnit = TimeUnit.MINUTES)
     List<AppSecurityConfig> selectAllByIsVerifyToken();
 
     /**

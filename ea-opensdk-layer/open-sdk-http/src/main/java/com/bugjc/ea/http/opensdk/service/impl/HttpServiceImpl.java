@@ -88,6 +88,12 @@ public class HttpServiceImpl implements HttpService {
 
         try {
             String resultJson = httpResponse.body().string();
+
+            if (StrUtil.isNotBlank(httpResponse.header(HttpHeaderKeyConstants.EA_FALLBACK))){
+                //直接返回
+                return resultJson;
+            }
+
             /**获取response header**/
             String headerSequenceValue = httpResponse.header(HttpHeaderKeyConstants.SEQUENCE);
             if (!accessPartyEncryptObj.getSequence().equals(headerSequenceValue)){

@@ -1,16 +1,15 @@
 package com.bugjc.ea.jwt.core.security;
 
 import com.alibaba.fastjson.JSON;
+import com.bugjc.ea.http.opensdk.core.dto.ResultCode;
+import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import com.bugjc.ea.jwt.core.dto.AuthResultCode;
-import com.bugjc.ea.jwt.core.dto.ResultCode;
-import com.bugjc.ea.jwt.core.dto.ResultGenerator;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,7 +52,7 @@ public class JwtAuthorizationTokenFilter extends OncePerRequestFilter {
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
-                returnBodyError(response,ResultCode.UNAUTHORIZED.getCode(),"从token中获取username失败");
+                returnBodyError(response, ResultCode.UNAUTHORIZED.getCode(),"从token中获取username失败");
                 return;
             } catch (ExpiredJwtException e) {
                 returnBodyError(response, AuthResultCode.ACCESS_TOKEN_EXPIRED.getCode(),"token 已过期");
