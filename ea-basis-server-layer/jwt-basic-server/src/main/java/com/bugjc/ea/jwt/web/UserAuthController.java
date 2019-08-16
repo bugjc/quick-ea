@@ -11,6 +11,7 @@ import com.bugjc.ea.jwt.core.exception.AuthenticationException;
 import com.bugjc.ea.jwt.core.dto.JwtAuthenticationResponse;
 import com.bugjc.ea.jwt.web.reqbody.userauthentication.AuthTokenGroup;
 import com.bugjc.ea.jwt.web.reqbody.userauthentication.UserAuthRepBody;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.*;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import com.bugjc.ea.jwt.core.security.JwtTokenUtil;
 import com.bugjc.ea.jwt.core.security.JwtUser;
 
+@Slf4j
 @RestController
 public class UserAuthController {
 
@@ -61,6 +63,7 @@ public class UserAuthController {
      */
     @PostMapping(value = "${jwt.route.authentication.verify}")
     public Result verifyToken(){
+        log.info("TODO Token 校验成功");
         return ResultGenerator.genSuccessResult();
     }
 

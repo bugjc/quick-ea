@@ -44,7 +44,7 @@ public class JwtServerFallback implements FallbackProvider {
                 //和body中的内容编码一致，否则容易乱码
                 headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
                 //标记失败回退
-                headers.add(HttpHeaderKeyConstants.EA_FALLBACK, failureResponseMessage);
+                headers.add(HttpHeaderKeyConstants.GATEWAY_ERROR_FLAG, "true");
                 return headers;
             }
 

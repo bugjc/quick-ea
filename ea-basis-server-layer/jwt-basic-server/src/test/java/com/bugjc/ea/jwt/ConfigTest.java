@@ -10,7 +10,7 @@ public class ConfigTest {
     @Test
     public void testGenPwd(){
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-        String pwd = bCryptPasswordEncoder.encode("123456");
+        String pwd = bCryptPasswordEncoder.encode("admin");
         log.info(pwd);
     }
 }

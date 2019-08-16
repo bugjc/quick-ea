@@ -1,12 +1,11 @@
 package com.bugjc.ea.gateway.core.api;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.gateway.model.App;
 import com.bugjc.ea.gateway.service.AppService;
 import com.bugjc.ea.http.opensdk.core.dto.Result;
 import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
-import com.bugjc.ea.http.opensdk.core.util.ApiGatewayHttpClient;
+import com.bugjc.ea.http.opensdk.core.util.HttpClient;
 import com.bugjc.ea.http.opensdk.model.AppParam;
 import com.bugjc.ea.http.opensdk.service.HttpService;
 import lombok.Data;
@@ -67,7 +66,7 @@ public class JwtApiClient {
      * @param param
      * @return
      */
-    public Result post(String appId, String path, JSONObject param){
+    public Result post(String appId, String path, String token,JSONObject param){
         //获取应用配置信息
         App app = appService.findByAppId(appId);
         if (app == null){
@@ -87,9 +86,8 @@ public class JwtApiClient {
             appParam.setRsaPrivateKey(app.getRsaPrivateKey());
             appParam.setRsaPublicKey(app.getRsaPublicKey());
             appParam.setAppId(app.getAppId());
-            HttpService httpService = ApiGatewayHttpClient.getHttpService(appParam);
-            String json = httpService.post(url,version,param.toJSONString());
-            return JSON.parseObject(json,Result.class);
+            HttpService httpService = HttpClient.getHttpService(appParam);
+            return httpService.post(url,version,param.toJSONString());
         } catch (Exception e) {
             log.info(e.getMessage(),e);
             return ResultGenerator.genFailResult(e.getMessage());

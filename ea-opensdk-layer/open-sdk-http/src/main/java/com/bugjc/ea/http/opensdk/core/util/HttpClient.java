@@ -5,10 +5,10 @@ import com.bugjc.ea.http.opensdk.model.AppParam;
 import com.bugjc.ea.http.opensdk.service.HttpService;
 
 /**
- * API 网关http客户端
+ * http api 客户端
  * @author aoki
  */
-public class ApiGatewayHttpClient {
+public class HttpClient {
 
     /**
      * 获取开放平台网关HTTP调用对象
@@ -17,10 +17,7 @@ public class ApiGatewayHttpClient {
      */
     public static HttpService getHttpService(AppParam appParam) {
         return new APIBuilder()
-                .setAppId(appParam.getAppId())
-                .setBaseUrl(appParam.getBaseUrl())
-                .setRsaPrivateKey(appParam.getRsaPrivateKey())
-                .setRsaPublicKey(appParam.getRsaPublicKey())
+                .setAppParam(appParam)
                 .setHttpConnTimeout(5000)
                 .build();
     }

@@ -9,6 +9,7 @@ import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.anno.CachePenetrationProtect;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.CreateCache;
+import com.bugjc.ea.gateway.core.constants.ApiGatewayKeyConstants;
 import com.bugjc.ea.gateway.model.CustomZuulRoute;
 import com.bugjc.ea.gateway.service.ZuulRouteService;
 import com.bugjc.ea.gateway.core.util.RuleUtil;
@@ -48,12 +49,12 @@ public class RibbonComponent {
     /**
      * 获取当前应用路由唯一key
      * @param appId
-     * @param requestURI
+     * @param uri
      * @return
      */
-    private static String getAppRouteKey(String appId, String requestURI){
+    private static String getAppRouteKey(String appId, String uri){
         //生成唯一服务key
-        return String.valueOf(HashUtil.bkdrHash(appId.concat("/").concat(requestURI.split("/")[1])));
+        return String.valueOf(HashUtil.bkdrHash(appId.concat("/").concat(uri.split("/")[1])));
     }
 
     /**
@@ -129,11 +130,11 @@ public class RibbonComponent {
     /**
      * 检测服务是否已失效
      * @param appId
-     * @param requestURI
+     * @param uri
      * @return false:可用 true：失效
      */
-    private boolean checkServerDown(String appId, String requestURI, String url){
-        String markKey = getAppRouteKey(appId,requestURI);
+    private boolean checkServerDown(String appId, String uri, String url){
+        String markKey = getAppRouteKey(appId,uri);
         String urlKey = getAppRouteUrlKey(url);
         JSONObject map = serverStatusCache.get(markKey);
         if (map == null || map.isEmpty()){
@@ -160,7 +161,7 @@ public class RibbonComponent {
         Server server = RuleUtil.weightRobin(allList);
         //将服务添加到当前上下文中
         RequestContext context = getCurrentContext();
-        context.set("ribbonRouteUrl",server.getUrl());
+        context.set(ApiGatewayKeyConstants.PHYSICAL_ROUTING_ADDRESS,server.getUrl());
         //标记服务可用
         markServerUp(appId,path,server.getUrl());
         return new URL(server.getUrl());

@@ -35,7 +35,6 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         // WriteNullBooleanAsFalse 将Boolean类型字段的空值输出为false
 
         fastJsonConfig.setSerializerFeatures(
-                SerializerFeature.WriteMapNullValue,
                 SerializerFeature.WriteNullStringAsEmpty,
                 SerializerFeature.WriteNullNumberAsZero
         );

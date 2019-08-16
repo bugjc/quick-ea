@@ -1,7 +1,7 @@
 package com.bugjc.ea.gateway.core.filter.pre;
 
 import com.bugjc.ea.gateway.core.enums.ResultErrorEnum;
-import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
+import com.bugjc.ea.gateway.core.util.FilterChainReturnResultUtil;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
@@ -51,7 +51,7 @@ public class AccessTimeFilter extends ZuulFilter{
         if (NOW.isAfter(ZERO_CLOCK) && NOW.isBefore(TWENTY_CLOCK)) {
             // 如果用户在0-20点之间访问了系统
             RequestContext ctx = getCurrentContext();
-            ResponseResultUtil.genErrorResult(ctx, ResultErrorEnum.ParamHeaderError.getCode(), "系统维护中...");
+            FilterChainReturnResultUtil.genErrorResult(ctx, ResultErrorEnum.ParamHeaderError.getCode(), "系统维护中...");
             return null;
         }
         return null;

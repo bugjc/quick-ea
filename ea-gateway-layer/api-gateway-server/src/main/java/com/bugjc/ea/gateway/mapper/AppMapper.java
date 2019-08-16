@@ -42,7 +42,7 @@ public interface AppMapper {
      * @param app
      * @return
      */
-    @Insert("INSERT  INTO `app`(`app_id`,`rsa_public_key`,`rsa_private_key`,`enabled`,type,`description`,`create_time`) VALUES \n " +
-            "(#{appId},#{rsaPublicKey},#{rsaPrivateKey},#{enabled},#{type},#{description},#{createTime})")
+    @Insert("INSERT  INTO `app`(`app_id`,app_secret,`rsa_public_key`,`rsa_private_key`,`enabled`,type,`description`,`create_time`) VALUES \n " +
+            "(#{appId},#{appSecret},#{rsaPublicKey},#{rsaPrivateKey},#{enabled},#{type},#{description},#{createTime})")
     void insert(App app);
 }

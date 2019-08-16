@@ -22,13 +22,13 @@ public class ZuulRouteController {
     @Resource
     private ZuulHandlerMapping zuulHandlerMapping;
 
-    @RequestMapping("/refreshRoute")
+    @RequestMapping("/refresh_route")
     public String refreshRoute(){
         refreshRouteService.refreshRoute();
         return "refreshRoute";
     }
 
-    @RequestMapping("/watchNowRoute")
+    @RequestMapping("/watch_now_route")
     public String watchNowRoute(){
         //可以用debug模式看里面具体是什么
         Map<String, Object> handlerMap = zuulHandlerMapping.getHandlerMap();

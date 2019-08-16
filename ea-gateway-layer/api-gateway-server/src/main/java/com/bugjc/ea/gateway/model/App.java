@@ -18,6 +18,11 @@ public class App implements Serializable {
     private String appId;
 
     /**
+     * 应用密钥
+     */
+    private String appSecret;
+
+    /**
      * RSA 公钥（服务方）
      */
     private String rsaPublicKey;

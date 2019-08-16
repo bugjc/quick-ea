@@ -1,5 +1,6 @@
 package com.bugjc.ea.http.opensdk;
 
+import cn.hutool.core.util.StrUtil;
 import com.bugjc.ea.http.opensdk.core.util.SSLUtil;
 import com.bugjc.ea.http.opensdk.model.AppParam;
 import com.bugjc.ea.http.opensdk.service.HttpService;
@@ -11,8 +12,12 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSession;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * 构建API
+ * @author aoki
+ */
 public class APIBuilder {
-    private AppParam appParam = new AppParam();
+    private AppParam appParam = null;
     private HttpServiceImpl httpServiceImpl = new HttpServiceImpl();
     private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
     private OkHttpClient httpClient;
@@ -37,45 +42,12 @@ public class APIBuilder {
 
     /**
      * 设置服务方接口基地址
-     * @param baseUrl
+     * @param appParam
      * @return
      */
-    public APIBuilder setBaseUrl(String baseUrl) {
-        appParam.setBaseUrl(baseUrl);
-        this.httpServiceImpl.setAppParam(appParam);
-        return this;
-    }
-
-    /**
-     * 设置服务方分配的应用ID
-     * @param appId
-     * @return
-     */
-    public APIBuilder setAppId(String appId) {
-        appParam.setAppId(appId);
-        this.httpServiceImpl.setAppParam(appParam);
-        return this;
-    }
-
-    /**
-     * 设置服务方分配的公钥
-     * @param rsaPublicKey
-     * @return
-     */
-    public APIBuilder setRsaPublicKey(String rsaPublicKey) {
-        appParam.setRsaPublicKey(rsaPublicKey);
-        this.httpServiceImpl.setAppParam(appParam);
-        return this;
-    }
-
-    /**
-     * 设置接入方生成的私钥
-     * @param rsaPrivateKey
-     * @return
-     */
-    public APIBuilder setRsaPrivateKey(String rsaPrivateKey) {
-        appParam.setRsaPrivateKey(rsaPrivateKey);
-        this.httpServiceImpl.setAppParam(appParam);
+    public APIBuilder setAppParam(AppParam appParam) {
+        this.appParam = appParam;
+        this.httpServiceImpl.setAppParam(this.appParam);
         return this;
     }
 
@@ -84,14 +56,18 @@ public class APIBuilder {
      * @return
      */
     public HttpService build(){
-        if (this.appParam.getBaseUrl() == null) {
+        if (this.appParam == null){
+            throw new IllegalStateException("app param object not set");
+        } else if (StrUtil.isBlank(this.appParam.getBaseUrl())) {
             throw new IllegalStateException("base url  not set");
-        } else if (this.appParam.getRsaPrivateKey() == null) {
+        } else if (StrUtil.isBlank(this.appParam.getRsaPrivateKey())) {
             throw new IllegalStateException("access party rsa private key not set");
-        } else if (this.appParam.getRsaPublicKey() == null) {
+        } else if (StrUtil.isBlank(this.appParam.getRsaPublicKey())) {
             throw new IllegalStateException("service party rsa public key not set");
-        } else if (this.appParam.getAppId() == null) {
-            throw new IllegalStateException("appid not set");
+        } else if (StrUtil.isBlank(this.appParam.getAppId())) {
+            throw new IllegalStateException("app id not set");
+        } else if (StrUtil.isBlank(this.appParam.getAppSecret())){
+            throw new IllegalStateException("app secret not set");
         } else {
             if (this.httpClient == null) {
                 this.httpClientBuilder.connectionPool(new ConnectionPool(2, 3L, TimeUnit.MINUTES));

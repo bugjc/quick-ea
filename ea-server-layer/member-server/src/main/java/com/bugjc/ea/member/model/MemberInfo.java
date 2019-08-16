@@ -19,7 +19,7 @@ public class MemberInfo implements Serializable{
     /**
      * 外键
      */
-    private Long memberId;
+    private String memberId;
 
     /**
      * 昵称

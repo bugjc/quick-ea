@@ -14,7 +14,7 @@ import java.util.Map;
  * @author aoki
  */
 @Slf4j
-public class JwtServerWeb {
+public class MemberServerWeb {
 
     /**
      * 获取二维码 20181115162444
@@ -23,9 +23,8 @@ public class JwtServerWeb {
     public void testAuth() throws Exception {
         //请求地址
         Map<String, Object> param = new HashMap<>();
-        param.put("username", "admin");
-        param.put("password", "admin");
-        Result result = HttpUtil.getHttpService(EnvUtil.getDevServer()).post("/jwt/auth","1.0", JSON.toJSONString(param));
+        param.put("memberId", "10001");
+        Result result = HttpUtil.getHttpService(EnvUtil.getDevServer()).post("/member/info/get","1.0", JSON.toJSONString(param));
         log.info("应答结果：{}",result.toString());
 
     }

@@ -5,7 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.bugjc.ea.gateway.core.dto.ApiGatewayServerResultCode;
 import com.bugjc.ea.gateway.core.util.IoUtils;
 import com.bugjc.ea.gateway.core.util.MyHttpServletRequestWrapper;
-import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
+import com.bugjc.ea.gateway.core.util.FilterChainReturnResultUtil;
 import com.bugjc.ea.gateway.core.util.SequenceLimitUtil;
 import com.bugjc.ea.gateway.model.App;
 import com.bugjc.ea.gateway.service.AppSecurityConfigService;
@@ -76,25 +76,25 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 
 		String appId = request.getHeader(HttpHeaderKeyConstants.APP_ID);
 		if (StrUtil.isBlank(appId)){
-			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.APP_ID_MISSING.getCode(), "缺失AppId参数");
+			FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.APP_ID_MISSING.getCode(), "缺失AppId参数");
 			return null;
 		}
 
         String sequence = request.getHeader(HttpHeaderKeyConstants.SEQUENCE);
 		if (StrUtil.isBlank(sequence)){
-			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.SEQUENCE_MISSING.getCode(), "缺失Sequence参数");
+			FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.SEQUENCE_MISSING.getCode(), "缺失Sequence参数");
 			return null;
 		}
 
 		String signValue = request.getHeader(HttpHeaderKeyConstants.SIGNATURE);
 		if (StrUtil.isBlank(signValue)){
-			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.SIGNATURE_MISSING.getCode(), "缺失Signature参数");
+			FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.SIGNATURE_MISSING.getCode(), "缺失Signature参数");
 			return null;
 		}
 
         //重放控制
         if (sequenceLimitUtil.limit(sequence)) {
-			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.REQUEST_REPLAY_LIMIT.getCode(), "请求不能重放");
+			FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.REQUEST_REPLAY_LIMIT.getCode(), "请求不能重放");
             return null;
         }
 
@@ -106,22 +106,22 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 			BufferedReader reader = new BufferedReader(new InputStreamReader(requestWrapper.getInputStream()));
 			body = IoUtils.read(reader);
 			if (StrUtil.isBlank(body)){
-				ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.BUSINESS_PARAM_MISSING.getCode(), "缺失业务参数，如没有业务参数请传空的JSON字符串");
+				FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.BUSINESS_PARAM_MISSING.getCode(), "缺失业务参数，如没有业务参数请传空的JSON字符串");
 				return null;
 			}
 		} catch (IOException e) {
-			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.IO_ERROR.getCode(), "读取流数据错误!");
+			FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.IO_ERROR.getCode(), "读取流数据错误!");
 			return null;
 		}
 
 		App app = appService.findByAppId(appId);
 		if (app == null){
-			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.INVALID_APP_ID.getCode(), "不合法的AppId"+ appId);
+			FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.INVALID_APP_ID.getCode(), "不合法的AppId"+ appId);
 			return null;
 		}
 
 		if (app.getRsaPublicKey() == null){
-			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.NOT_CONFIG_RSA.getCode(), "未配置RSA安全密钥对");
+			FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.NOT_CONFIG_RSA.getCode(), "未配置RSA安全密钥对");
 			return null;
 		}
 
@@ -137,11 +137,11 @@ public class AuthorizationRequestFilter extends ZuulFilter {
 
 		ServicePartyDecryptObj servicePartyDecryptObj = new CryptoProcessor().servicePartyDecrypt(servicePartyDecryptParam);
 		if (!servicePartyDecryptObj.isSignSuccessful()){
-			ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.SIGNATURE_ERROR.getCode(), "验签失败!");
+			FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.SIGNATURE_ERROR.getCode(), "验签失败!");
 			return null;
 		}
 
-		ResponseResultUtil.genSuccessResult(ctx, "验签成功!");
+		FilterChainReturnResultUtil.genSuccessResult(ctx, "验签成功!");
 		return null;
 
 	}

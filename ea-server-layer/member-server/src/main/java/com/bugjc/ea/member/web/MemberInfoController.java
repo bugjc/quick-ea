@@ -4,6 +4,7 @@ import com.bugjc.ea.http.opensdk.core.dto.Result;
 import com.bugjc.ea.member.service.MemberInfoService;
 import com.bugjc.ea.member.web.http.body.memberinfo.GetBody;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -28,7 +29,7 @@ public class MemberInfoController {
      * @return
      */
     @PostMapping(value = "/get")
-    public Result get(GetBody.RequestBody requestBody) {
+    public Result get(@Validated @RequestBody GetBody.RequestBody requestBody) {
         return memberInfoService.get(requestBody);
     }
 }

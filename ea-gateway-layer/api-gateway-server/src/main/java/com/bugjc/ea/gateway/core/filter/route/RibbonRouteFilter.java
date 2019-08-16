@@ -5,7 +5,8 @@ import com.bugjc.ea.gateway.core.component.RibbonComponent;
 import com.bugjc.ea.gateway.core.constants.ApiGatewayKeyConstants;
 import com.bugjc.ea.gateway.service.ZuulRouteService;
 import com.bugjc.ea.gateway.core.enums.ResultErrorEnum;
-import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
+import com.bugjc.ea.gateway.core.util.FilterChainReturnResultUtil;
+import com.bugjc.ea.http.opensdk.core.constants.HttpHeaderKeyConstants;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
@@ -46,15 +47,15 @@ public class RibbonRouteFilter extends ZuulFilter {
 	public boolean shouldFilter() {
 		RequestContext context = getCurrentContext();
 		HttpServletRequest request = context.getRequest();
-		String appId = request.getHeader("AppId");
+		String appId = request.getHeader(HttpHeaderKeyConstants.APP_ID);
 		if (StrUtil.isBlank(appId)){
 			return false;
 		}
 
 		//检查请求header中是否带有debug
-		boolean isDebug = Boolean.parseBoolean(request.getHeader("IsDebug"));
+		boolean isDebug = Boolean.parseBoolean(request.getHeader(HttpHeaderKeyConstants.IS_DEBUG));
 		String uri = request.getRequestURI();
-		return zuulRouteService.checkRouteMode(appId, uri, isDebug) && (boolean) context.get("isSuccess");
+		return zuulRouteService.checkRouteMode(appId, uri, isDebug) && (boolean) context.get(ApiGatewayKeyConstants.IS_SUCCESS);
 	}
 
 	@Override
@@ -66,12 +67,12 @@ public class RibbonRouteFilter extends ZuulFilter {
 		context.set(ApiGatewayKeyConstants.CUSTOM_ROUTE_TAG,true);
 		HttpServletRequest request = context.getRequest();
 		try {
-			boolean isDebug = Boolean.parseBoolean(request.getHeader("IsDebug"));
-			String appId = request.getHeader("AppId");
+			boolean isDebug = Boolean.parseBoolean(request.getHeader(HttpHeaderKeyConstants.IS_DEBUG));
+			String appId = request.getHeader(HttpHeaderKeyConstants.APP_ID);
 			String uri = request.getRequestURI();
 			URL ribbonUrl = ribbonComponent.chooseServer(appId, uri, isDebug);
 			if (ribbonUrl == null) {
-				ResponseResultUtil.genErrorResult(context, ResultErrorEnum.ERROR_URI.getCode(), "还未配置物理地址");
+				FilterChainReturnResultUtil.genErrorResult(context, ResultErrorEnum.ERROR_URI.getCode(), "还未配置物理地址");
 				return null;
 			}
 			URL currentUrl = context.getRouteHost();
@@ -82,11 +83,11 @@ public class RibbonRouteFilter extends ZuulFilter {
 			URL routeUrl = new URL(ribbonUrl.getProtocol(), ribbonUrl.getHost(), ribbonUrl.getPort(), file);
 
 			context.setRouteHost(routeUrl);
-			ResponseResultUtil.genSuccessResult(context, "加权轮询负载策略，当前路由地址:" + routeUrl.toString());
+			FilterChainReturnResultUtil.genSuccessResult(context, "加权轮询负载策略，当前路由地址:" + routeUrl.toString());
 			return null;
 		} catch (Exception e) {
 			log.error(e.getMessage(),e);
-			ResponseResultUtil.genErrorResult(context, ResultErrorEnum.ERROR_URI.getCode(), "解析路由信息失败！!");
+			FilterChainReturnResultUtil.genErrorResult(context, ResultErrorEnum.ERROR_URI.getCode(), "解析路由信息失败！!");
 			return null;
 		}
 	}

@@ -1,5 +1,6 @@
 package com.bugjc.ea.gateway.core.filter;
 
+import com.bugjc.ea.gateway.core.constants.ApiGatewayKeyConstants;
 import com.netflix.zuul.FilterProcessor;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -16,7 +17,7 @@ public class CustomFilterProcessor extends FilterProcessor {
             return super.processZuulFilter(filter);
         } catch (ZuulException e) {
             RequestContext ctx = RequestContext.getCurrentContext();
-            ctx.set("failed.filter", filter);
+            ctx.set(ApiGatewayKeyConstants.FAILED_FILTER, filter);
             throw e;
         }
     }

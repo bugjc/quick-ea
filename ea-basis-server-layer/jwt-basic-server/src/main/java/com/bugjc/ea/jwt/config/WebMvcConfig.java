@@ -33,9 +33,9 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         // WriteNullStringAsEmpty 将字符串类型字段的空值输出为空字符串 ""
         // WriteNullNumberAsZero 将数值类型字段的空值输出为0
         // WriteNullBooleanAsFalse 将Boolean类型字段的空值输出为false
+        // WriteMapNullValue 保留空值
 
         fastJsonConfig.setSerializerFeatures(
-                SerializerFeature.WriteMapNullValue,
                 SerializerFeature.WriteNullStringAsEmpty,
                 SerializerFeature.WriteNullNumberAsZero
         );

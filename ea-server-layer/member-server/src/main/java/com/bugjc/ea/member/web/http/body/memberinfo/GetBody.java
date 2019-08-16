@@ -1,6 +1,8 @@
 package com.bugjc.ea.member.web.http.body.memberinfo;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
@@ -21,6 +23,8 @@ public class GetBody implements Serializable {
      * 主动查询乘车及扣费记录接口应答参数对象
      */
     @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ResponseBody implements Serializable{
         private String nickname;
         private String age;

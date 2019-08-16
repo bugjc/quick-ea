@@ -2,13 +2,16 @@ package com.bugjc.ea.http.opensdk.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.http.opensdk.core.constants.HttpHeaderKeyConstants;
 import com.bugjc.ea.http.opensdk.core.crypto.CryptoProcessor;
 import com.bugjc.ea.http.opensdk.core.crypto.input.AccessPartyDecryptParam;
 import com.bugjc.ea.http.opensdk.core.crypto.input.AccessPartyEncryptParam;
 import com.bugjc.ea.http.opensdk.core.crypto.output.AccessPartyDecryptObj;
 import com.bugjc.ea.http.opensdk.core.crypto.output.AccessPartyEncryptObj;
+import com.bugjc.ea.http.opensdk.core.dto.Result;
 import com.bugjc.ea.http.opensdk.core.exception.HttpSecurityException;
+import com.bugjc.ea.http.opensdk.core.util.TokenUtil;
 import com.bugjc.ea.http.opensdk.model.AppParam;
 import com.bugjc.ea.http.opensdk.service.HttpService;
 import lombok.Getter;
@@ -17,7 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
 
 import java.io.IOException;
+import java.util.Objects;
 
+/**
+ * @author aoki
+ */
 @Slf4j
 public class HttpServiceImpl implements HttpService {
 
@@ -32,7 +39,7 @@ public class HttpServiceImpl implements HttpService {
     private OkHttpClient httpClient;;
 
     @Override
-    public String post(String url, String version, String body) throws IOException {
+    public Result post(String url, String version, String body) throws IOException {
         if (this.appParam == null){
             throw new HttpSecurityException("参数不能为空");
         }
@@ -69,6 +76,7 @@ public class HttpServiceImpl implements HttpService {
                 .header(HttpHeaderKeyConstants.TIMESTAMP,accessPartyEncryptObj.getTimestamp())
                 .header(HttpHeaderKeyConstants.NONCE, accessPartyEncryptObj.getNonce())
                 .header(HttpHeaderKeyConstants.SIGNATURE, accessPartyEncryptObj.getSignature())
+                .header(HttpHeaderKeyConstants.AUTHORIZATION, Objects.requireNonNull(TokenUtil.getToken(this, appParam)))
                 .build();
 
         //执行请求
@@ -89,9 +97,9 @@ public class HttpServiceImpl implements HttpService {
         try {
             String resultJson = httpResponse.body().string();
 
-            if (StrUtil.isNotBlank(httpResponse.header(HttpHeaderKeyConstants.EA_FALLBACK))){
+            if (StrUtil.isNotBlank(httpResponse.header(HttpHeaderKeyConstants.GATEWAY_ERROR_FLAG))){
                 //直接返回
-                return resultJson;
+                return JSON.parseObject(resultJson,Result.class);
             }
 
             /**获取response header**/
@@ -112,10 +120,12 @@ public class HttpServiceImpl implements HttpService {
             AccessPartyDecryptObj accessPartyDecryptObj = cryptoProcessor.accessPartyDecrypt(accessPartyDecryptParam);
             if (accessPartyDecryptObj.isSignSuccessful()){
                 log.info("解密成功");
+            }else {
+                log.info("解密失败");
             }
 
             /**返回结果**/
-            return accessPartyDecryptObj.getBody();
+            return JSON.parseObject(accessPartyDecryptObj.getBody(),Result.class);
         }finally {
             if (httpResponse.body() != null) {
                 httpResponse.close();

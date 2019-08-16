@@ -1,7 +1,8 @@
 package com.bugjc.ea.gateway.core.filter.post;
 
 import cn.hutool.core.util.StrUtil;
-import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
+import com.bugjc.ea.gateway.core.constants.ApiGatewayKeyConstants;
+import com.bugjc.ea.gateway.core.util.FilterChainReturnResultUtil;
 import com.bugjc.ea.gateway.model.App;
 import com.bugjc.ea.gateway.service.AppSecurityConfigService;
 import com.bugjc.ea.gateway.service.AppService;
@@ -19,7 +20,6 @@ import org.springframework.util.StreamUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
@@ -65,13 +65,19 @@ public class AuthorizationResponseFilter extends ZuulFilter {
             String appId = request.getHeader(HttpHeaderKeyConstants.APP_ID);
             if (StrUtil.isBlank(appId)){
                 //针对回调类请求
-                ResponseResultUtil.genSuccessResult(context, "无需签名");
+                FilterChainReturnResultUtil.genSuccessResult(context, "无需签名");
                 return null;
             }
 
             InputStream stream = context.getResponseDataStream();
             String body = StreamUtils.copyToString(stream, Charset.forName("UTF-8"));
-            log.info("应答结果：{}", body);
+            if (StrUtil.isBlank(body) && !(boolean)context.get(ApiGatewayKeyConstants.IS_SUCCESS)){
+                body = context.getResponseBody();
+                log.info("过滤器应答结果：{}", body);
+            }else{
+                log.info("服务应答结果：{}", body);
+            }
+
 
             App app = appService.findByAppId(appId);
             ServicePartyEncryptParam servicePartyEncryptParam = new ServicePartyEncryptParam();
@@ -84,10 +90,10 @@ public class AuthorizationResponseFilter extends ZuulFilter {
             context.setResponseBody(servicePartyEncryptObj.getBody());
 
             HttpServletResponse response = context.getResponse();
-            response.setHeader(HttpHeaderKeyConstants.SEQUENCE,servicePartyEncryptObj.getSequence());
-            response.setHeader(HttpHeaderKeyConstants.TIMESTAMP,servicePartyEncryptObj.getTimestamp());
-            response.setHeader(HttpHeaderKeyConstants.NONCE,servicePartyEncryptObj.getNonce());
-            response.setHeader(HttpHeaderKeyConstants.SIGNATURE,servicePartyEncryptObj.getSignature());
+            response.setHeader(HttpHeaderKeyConstants.SEQUENCE, servicePartyEncryptObj.getSequence());
+            response.setHeader(HttpHeaderKeyConstants.TIMESTAMP, servicePartyEncryptObj.getTimestamp());
+            response.setHeader(HttpHeaderKeyConstants.NONCE, servicePartyEncryptObj.getNonce());
+            response.setHeader(HttpHeaderKeyConstants.SIGNATURE, servicePartyEncryptObj.getSignature());
             context.setResponse(response);
             log.info("生成应答签名成功！");
         } catch (IOException e) {

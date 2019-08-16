@@ -3,7 +3,8 @@ package com.bugjc.ea.gateway.core.filter.error;
 import com.bugjc.ea.gateway.core.component.RibbonComponent;
 import com.bugjc.ea.gateway.core.constants.ApiGatewayKeyConstants;
 import com.bugjc.ea.gateway.core.dto.ApiGatewayServerResultCode;
-import com.bugjc.ea.gateway.core.util.ResponseResultUtil;
+import com.bugjc.ea.gateway.core.util.FilterChainReturnResultUtil;
+import com.bugjc.ea.http.opensdk.core.constants.HttpHeaderKeyConstants;
 import com.bugjc.ea.http.opensdk.core.dto.ResultCode;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -38,7 +39,7 @@ public class RouteErrorFilter extends SendErrorFilter {
     public boolean shouldFilter() {
         // 判断：仅处理来自route过滤器引起的异常
         RequestContext ctx = RequestContext.getCurrentContext();
-        ZuulFilter failedFilter = (ZuulFilter) ctx.get("failed.filter");
+        ZuulFilter failedFilter = (ZuulFilter) ctx.get(ApiGatewayKeyConstants.FAILED_FILTER);
         return failedFilter != null && failedFilter.filterType().equals(FilterConstants.ROUTE_TYPE) ;
                 //&& ctx.getBoolean(ApiGatewayKeyConstants.CUSTOM_ROUTE_TAG);
     }
@@ -52,17 +53,17 @@ public class RouteErrorFilter extends SendErrorFilter {
             //直接复用异常处理类
             if (ctx.getThrowable().getCause().getCause().getCause() instanceof HttpHostConnectException) {
                 //生成唯一服务key
-                String appId = request.getHeader("AppId");
+                String appId = request.getHeader(HttpHeaderKeyConstants.APP_ID);
                 String uri = request.getRequestURI();
-                String url = String.valueOf(ctx.get("ribbonRouteUrl"));
+                String url = String.valueOf(ctx.get(ApiGatewayKeyConstants.PHYSICAL_ROUTING_ADDRESS));
                 //移除无效的服务
                 ribbonComponent.markServerDown(appId, uri, url);
             }
 
-            ResponseResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), ctx.getThrowable().getMessage());
+            FilterChainReturnResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), ctx.getThrowable().getMessage());
             return null;
         }catch (Exception ex) {
-            ResponseResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.ROUTE_FAILURE.getCode(), ApiGatewayServerResultCode.ROUTE_FAILURE.getMessage()+":"+ex.getMessage());
+            FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.ROUTE_FAILURE.getCode(), ApiGatewayServerResultCode.ROUTE_FAILURE.getMessage()+":"+ex.getMessage());
             ReflectionUtils.rethrowRuntimeException(ex);
         }
         return null;

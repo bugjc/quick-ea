@@ -22,7 +22,7 @@ public class MemberInfoServiceImpl implements MemberInfoService {
     @NewSpan
     @Override
     public Result get(GetBody.RequestBody requestBody) {
-        return ResultGenerator.genSuccessResult(new MemberInfo(1001L,"aoki",26));
+        return ResultGenerator.genSuccessResult(new GetBody.ResponseBody("aoki","18"));
     }
 
 

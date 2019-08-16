@@ -1,7 +1,10 @@
 package com.glcxw.util;
 
 import com.bugjc.ea.http.opensdk.APIBuilder;
+import com.bugjc.ea.http.opensdk.core.dto.Result;
+import com.bugjc.ea.http.opensdk.model.AppParam;
 import com.bugjc.ea.http.opensdk.service.HttpService;
+import com.glcxw.env.EnvUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -13,12 +16,9 @@ public class HttpUtil {
      * 获取http服务对象
      * @return
      */
-    public static HttpService getHttpService() {
+    public static HttpService getHttpService(AppParam appParam) {
         return new APIBuilder()
-                .setAppId("1111")
-                .setBaseUrl("http://127.0.0.1")
-                .setRsaPrivateKey("")
-                .setRsaPublicKey("")
+                .setAppParam(appParam)
                 .setHttpConnTimeout(5000)
                 .build();
     }
@@ -28,8 +28,8 @@ public class HttpUtil {
         String path = "/test/v1";
         String version = "1.0";
         String body = "{}";
-        String result = getHttpService().post(path,version,body);
-        log.info(result);
+        Result result = getHttpService(EnvUtil.getDevServer()).post(path,version,body);
+        log.info(result.toString());
     }
 
 
