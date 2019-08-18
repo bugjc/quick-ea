@@ -74,12 +74,7 @@ public class APIBuilder {
 
                 try {
                     this.httpClientBuilder.sslSocketFactory(SSLUtil.getAllTrustContext().getSocketFactory(), SSLUtil.getAllTrustManager());
-                    this.httpClientBuilder.hostnameVerifier(new HostnameVerifier() {
-                        @Override
-                        public boolean verify(String s, SSLSession sslSession) {
-                            return true;
-                        }
-                    });
+                    this.httpClientBuilder.hostnameVerifier((s, sslSession) -> true);
                 } catch (Exception var2) {
                     throw new RuntimeException(var2);
                 }
