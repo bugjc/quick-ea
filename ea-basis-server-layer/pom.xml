@@ -16,7 +16,7 @@
 
     <modules>
         <module>eureka-basis-server</module>
-        <module>jwt-basic-server</module>
+        <module>auth-basic-server</module>
     </modules>
     
 </project>

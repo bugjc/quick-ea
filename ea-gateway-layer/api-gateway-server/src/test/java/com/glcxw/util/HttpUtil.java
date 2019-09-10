@@ -28,7 +28,7 @@ public class HttpUtil {
         String path = "/test/v1";
         String version = "1.0";
         String body = "{}";
-        Result result = getHttpService(EnvUtil.getDevServer()).post(path,version,body);
+        Result result = getHttpService(EnvUtil.getTestServer()).post(path,version,body);
         log.info(result.toString());
     }
 

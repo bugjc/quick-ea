@@ -182,7 +182,7 @@
 
 
                         <!--Springboot 启动类-->
-                        <mainClass>com.bugjc.ea.gateway.ApiGatewayServerApplication</mainClass>
+                        <mainClass>com.bugjc.ea.auth.ApiGatewayServerApplication</mainClass>
 
                         <!--<format>OCI</format>-->
                         <!--使用实际创建时间-->

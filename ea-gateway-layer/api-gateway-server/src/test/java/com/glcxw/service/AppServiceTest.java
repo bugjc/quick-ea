@@ -1,19 +1,19 @@
 package com.glcxw.service;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
-import com.bugjc.ea.gateway.mapper.*;
-import com.bugjc.ea.gateway.model.*;
-import com.bugjc.ea.gateway.service.AppService;
+import com.bugjc.ea.auth.mapper.*;
+import com.bugjc.ea.auth.model.*;
 import com.glcxw.Tester;
 import com.glcxw.util.CreateSecurityKey;
 import com.glcxw.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.UUID;
 
 @Slf4j
 public class AppServiceTest extends Tester {
@@ -34,23 +34,24 @@ public class AppServiceTest extends Tester {
      */
     @Test
     public void testCreateBusinessApp(){
-        String desc = "授权认证业务";
-        String appCode = "DDDD";
+        String desc = "用户服务";
+        String appCode = "USER";
         Date date = new Date();
         //1.创建APP
         App app = new App();
+        app.setAppSecret(RandomUtil.randomNumbers(24));
         app.setCreateTime(date);
         app.setDescription(desc);
         app.setType(1);
         app.setEnabled(true);
-        app.setAppId(appCode.concat(IdWorker.getNextId()));
+        app.setId(appCode.concat(IdWorker.getNextId()));
         BeanUtil.copyProperties(CreateSecurityKey.getKeyPair(),app);
         log.info("APP：{}",JSON.toJSONString(app));
         appMapper.insert(app);
 
         //2.创建业务路由配置
-        String path = "/jwt/**";
-        String applicationName = "jwt-server";
+        String path = "/user/**";
+        String applicationName = "user-server";
         CustomZuulRoute customZuulRoute = new CustomZuulRoute();
         customZuulRoute.setId(applicationName);
         customZuulRoute.setPath(path);
@@ -65,7 +66,8 @@ public class AppServiceTest extends Tester {
 
         //3.创建应用路由类
         AppRoute appRoute = new AppRoute();
-        appRoute.setAppId(app.getAppId());
+        appRoute.setId(appCode.concat(IdWorker.getNextId()));
+        appRoute.setAppId(app.getId());
         appRoute.setRouteId(customZuulRoute.getId());
         appRoute.setIsDebug(false);
         appRoute.setEnabled(true);
@@ -75,7 +77,8 @@ public class AppServiceTest extends Tester {
         //4.创建版本映射表
         String defaultVersion = "1.0";
         AppVersionMap appVersionMap = new AppVersionMap();
-        appVersionMap.setAppId(app.getAppId());
+        appVersionMap.setId(appCode.concat(IdWorker.getNextId()));
+        appVersionMap.setAppId(app.getId());
         appVersionMap.setVersionNo(defaultVersion);
         appVersionMap.setPath("/");
         appVersionMap.setMapPath("/");
@@ -85,7 +88,8 @@ public class AppServiceTest extends Tester {
 
         //5.创建安全配置
         AppSecurityConfig appSecurityConfig = new AppSecurityConfig();
-        appSecurityConfig.setAppId(app.getAppId());
+        appSecurityConfig.setId(appCode.concat(IdWorker.getNextId()));
+        appSecurityConfig.setAppId(app.getId());
         appSecurityConfig.setPath(path);
         appSecurityConfig.setVerifySignature(true);
         appSecurityConfig.setVerifyToken(true);

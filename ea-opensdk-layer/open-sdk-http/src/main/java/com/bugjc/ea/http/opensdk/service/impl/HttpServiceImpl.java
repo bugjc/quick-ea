@@ -2,6 +2,7 @@ package com.bugjc.ea.http.opensdk.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.http.opensdk.core.constants.HttpHeaderKeyConstants;
 import com.bugjc.ea.http.opensdk.core.crypto.CryptoProcessor;
@@ -39,13 +40,28 @@ public class HttpServiceImpl implements HttpService {
     private OkHttpClient httpClient;;
 
     @Override
-    public Result post(String url, String version, String body) throws IOException {
+    public Result post(String path, String version, String body) throws IOException {
+        return post(path,version,TokenUtil.getToken(this,appParam),body);
+    }
+
+
+    /**
+     * http 接口调用方法
+     * @param path
+     * @param version
+     * @param token
+     * @param body
+     * @return
+     * @throws IOException
+     */
+    @Override
+    public Result post(String path, String version,String token,String body) throws IOException {
         if (this.appParam == null){
             throw new HttpSecurityException("参数不能为空");
         }
 
-        if (StrUtil.isBlank(url)){
-            throw new HttpSecurityException("URL参数未设置");
+        if (StrUtil.isBlank(path)){
+            throw new HttpSecurityException("PATH 参数未设置");
         }
 
         //,.,参数判断
@@ -64,25 +80,32 @@ public class HttpServiceImpl implements HttpService {
         MediaType mediaType = MediaType.parse(HttpHeaderKeyConstants.CONTENT_TYPE_APPLICATION_JSON_VALUE);
         RequestBody requestBody = RequestBody.create(mediaType, body.getBytes());
 
+        //完整地址
+        String url = appParam.getBaseUrl().concat(path);
+        log.debug("URL:{}",url);
+        log.debug("RequestBody:{}",body);
+
         //构建请求
-        Request httpRequest = new Request.Builder()
+        Request.Builder builder = new Request.Builder()
                 .url(url)
-                .post(requestBody)
-                .header(HttpHeaderKeyConstants.VERSION, version)
-                .header(HttpHeaderKeyConstants.CONTENT_TYPE,HttpHeaderKeyConstants.CONTENT_TYPE_APPLICATION_JSON_VALUE)
+                .post(requestBody);
+        builder.header(HttpHeaderKeyConstants.VERSION, version)
+                .header(HttpHeaderKeyConstants.CONTENT_TYPE, HttpHeaderKeyConstants.CONTENT_TYPE_APPLICATION_JSON_VALUE)
                 .header(HttpHeaderKeyConstants.ACCEPT, HttpHeaderKeyConstants.CONTENT_TYPE_APPLICATION_JSON_VALUE)
-                .header(HttpHeaderKeyConstants.APP_ID,appParam.getAppId())
-                .header(HttpHeaderKeyConstants.SEQUENCE,accessPartyEncryptObj.getSequence())
-                .header(HttpHeaderKeyConstants.TIMESTAMP,accessPartyEncryptObj.getTimestamp())
+                .header(HttpHeaderKeyConstants.APP_ID, appParam.getAppId())
+                .header(HttpHeaderKeyConstants.SEQUENCE, accessPartyEncryptObj.getSequence())
+                .header(HttpHeaderKeyConstants.TIMESTAMP, accessPartyEncryptObj.getTimestamp())
                 .header(HttpHeaderKeyConstants.NONCE, accessPartyEncryptObj.getNonce())
-                .header(HttpHeaderKeyConstants.SIGNATURE, accessPartyEncryptObj.getSignature())
-                .header(HttpHeaderKeyConstants.AUTHORIZATION, Objects.requireNonNull(TokenUtil.getToken(this, appParam)))
-                .build();
+                .header(HttpHeaderKeyConstants.SIGNATURE, accessPartyEncryptObj.getSignature());
+        if (StrUtil.isNotBlank(token)){
+            builder.header(HttpHeaderKeyConstants.AUTHORIZATION, token);
+        }
 
+        Request request =  builder.build();
         //执行请求
-        Response httpResponse = this.httpClient.newCall(httpRequest).execute();
+        Response httpResponse = this.httpClient.newCall(request).execute();
 
-        if (httpResponse.code() != 200){
+        if (httpResponse.code() != HttpStatus.HTTP_OK){
             throw new HttpSecurityException(httpResponse.code(),"服务器端错误: " + httpResponse.message());
         }
 
@@ -96,7 +119,7 @@ public class HttpServiceImpl implements HttpService {
 
         try {
             String resultJson = httpResponse.body().string();
-
+            log.debug("ResponseBody:{}",resultJson);
             if (StrUtil.isNotBlank(httpResponse.header(HttpHeaderKeyConstants.GATEWAY_ERROR_FLAG))){
                 //直接返回
                 return JSON.parseObject(resultJson,Result.class);
@@ -132,6 +155,5 @@ public class HttpServiceImpl implements HttpService {
             }
         }
     }
-
 
 }

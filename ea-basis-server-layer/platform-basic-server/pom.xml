@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<artifactId>ea-basis-server-layer</artifactId>
+		<groupId>com.bugjc.ea</groupId>
+		<version>1.0</version>
+	</parent>
+
+
+	<groupId>com.bugjc.ea.jwt</groupId>
+	<artifactId>jwt-basic-server</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+
+	<properties>
+		<docker.repository>192.168.8.18/bugjc</docker.repository>
+
+		<jjwt.version>0.9.1</jjwt.version>
+		<jacoco.version>0.8.1</jacoco.version>
+		<lombok.version>1.18.2</lombok.version>
+		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<findbugs-maven-plugin.version>3.0.5</findbugs-maven-plugin.version>
+		<findbugs.version>3.0.1</findbugs.version>
+		<mysql-connector-java.version>8.0.11</mysql-connector-java.version>
+	</properties>
+
+	<dependencies>
+
+		<!--opensdk-->
+		<dependency>
+			<groupId>com.bugjc.ea</groupId>
+			<artifactId>open-sdk-all</artifactId>
+			<version>1.0</version>
+		</dependency>
+
+		<!--jdbc驱动-->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql-connector-java.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+			<version>${spring-cloud-starter-netflix-eureka-client.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>javax.xml.bind</groupId>
+			<artifactId>jaxb-api</artifactId>
+			<version>2.3.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-rest</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>${jjwt.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.code.findbugs</groupId>
+			<artifactId>findbugs</artifactId>
+			<version>${findbugs.version}</version>
+		</dependency>
+
+		<!--注解工具-->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>${fastjson.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.1.19</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>3.14.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+	<build>
+		<plugins>
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<executable>true</executable>
+				</configuration>
+			</plugin>
+
+			<!--jib-->
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>1.3.0</version>
+				<configuration>
+					<from>
+						<image>registry.hub.docker.com/adoptopenjdk/openjdk8-openj9</image>
+					</from>
+					<to>
+						<image>${docker.repository}/${project.artifactId}</image>
+					</to>
+					<!--可以设置容器启动时执行的命令-->
+					<container>
+						<!--jvm命令参数-->
+						<jvmFlags>
+							<!--大量使用随机数设置-->
+							<jvmFlag>-Djava.security.egd=file:/dev/./urandom</jvmFlag>
+							<jvmFlag>-Xms256m</jvmFlag>
+							<jvmFlag>-Xmx512m</jvmFlag>
+							<jvmFlag>-Xdebug</jvmFlag>
+							<jvmFlag>-XX:+UnlockExperimentalVMOptions</jvmFlag>
+							<jvmFlag>-XX:+UseCGroupMemoryLimitForHeap</jvmFlag>
+						</jvmFlags>
+
+						<environment>
+<!--							<spring.profiles.active>test</spring.profiles.active>-->
+							<!--配置使用的时区-->
+							<TZ>Asia/Shanghai</TZ>
+						</environment>
+
+
+						<!--Springboot 启动类-->
+						<mainClass>com.bugjc.ea.auth.AucApplication</mainClass>
+
+						<!--<format>OCI</format>-->
+						<!--使用实际创建时间-->
+						<useCurrentTimestamp>true</useCurrentTimestamp>
+					</container>
+					<!--如果私有镜像仓库没有启用https，设置allowInsecureRegistries参数为true-->
+					<allowInsecureRegistries>true</allowInsecureRegistries>
+				</configuration>
+				<!--绑定jib:build到 Maven生命周期，例如package-->
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>build</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+
+</project>

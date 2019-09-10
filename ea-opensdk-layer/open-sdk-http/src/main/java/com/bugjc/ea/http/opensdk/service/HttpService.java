@@ -12,11 +12,22 @@ public interface HttpService {
 
     /**
      * http post方式调用接口
-     * @param url       --接口地址
-     * @param version   --接口版本
-     * @param body      --接口参数
+     * @param path       --接口地址
+     * @param version    --接口版本
+     * @param body       --接口参数
      * @return
      * @throws IOException
      */
-    Result post(String url, String version, String body) throws IOException;
+    Result post(String path, String version, String body) throws IOException;
+
+    /**
+     * http post方式调用接口
+     * @param path       --接口地址
+     * @param version    --接口版本
+     * @param token      --访问令牌
+     * @param body       --接口参数
+     * @return
+     * @throws IOException
+     */
+    Result post(String path, String version,String token,String body) throws IOException;
 }

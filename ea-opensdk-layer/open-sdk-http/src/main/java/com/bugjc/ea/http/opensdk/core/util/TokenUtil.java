@@ -5,6 +5,7 @@ import cn.hutool.cache.impl.TimedCache;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.http.opensdk.core.dto.Result;
+import com.bugjc.ea.http.opensdk.core.dto.ResultCode;
 import com.bugjc.ea.http.opensdk.model.AppParam;
 import com.bugjc.ea.http.opensdk.service.HttpService;
 import lombok.Data;
@@ -43,10 +44,10 @@ public class TokenUtil{
         /**
          * JWT授权接口
          */
-        final static String JWT_AUTH_PATH_INFO = "/authenticate/query_token:1.0";
+        final static String JWT_AUTH_PATH_INFO = "/auth/query_token:1.0";
 
         @Data
-        private static class PathInfo implements Serializable {
+        public static class PathInfo implements Serializable {
             private String path;
             private String version;
         }
@@ -55,7 +56,7 @@ public class TokenUtil{
          * 解析token路径
          * @return
          */
-        static PathInfo resolveTokenPath(){
+        public static PathInfo resolveTokenPath(){
             String[] pathInfoArr = ContentPathInfo.JWT_AUTH_PATH_INFO.split(":");
             PathInfo pathInfo = new PathInfo();
             pathInfo.setPath(pathInfoArr[0]);
@@ -72,6 +73,13 @@ public class TokenUtil{
         private String token;
     }
 
+    /**
+     * 获取平台认证凭据，TODO,需增加远程管理凭证数据
+     * @param httpService
+     * @param appParam
+     * @return
+     * @throws IOException
+     */
     public static String getToken(HttpService httpService, AppParam appParam) throws IOException {
         String cacheValue = ACCESS_TOKEN_CACHE.get(ACCESS_TOKEN_KEY);
         if (cacheValue == null){
@@ -114,10 +122,10 @@ public class TokenUtil{
         ContentPathInfo.PathInfo pathInfo = ContentPathInfo.resolveTokenPath();
 
         //调用接口
-        String url = appParam.getBaseUrl().concat(pathInfo.getPath());
-        Result result = httpService.post(url,pathInfo.getVersion(), JSON.toJSONString(params));
+        Result result = httpService.post(pathInfo.getPath(), pathInfo.getVersion(),null, JSON.toJSONString(params));
 
-        if (result != null) {
+        //TODO,根据特定应答码返回正常、重试和忽略状态，获取token在根据状态做相应处理。
+        if (result != null && result.getCode() == ResultCode.SUCCESS.getCode()) {
             return ((JSONObject)result.getData()).toJavaObject(AccessToken.class);
         }
         return null;
