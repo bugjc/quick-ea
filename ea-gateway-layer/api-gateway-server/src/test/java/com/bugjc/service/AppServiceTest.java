@@ -1,19 +1,18 @@
-package com.glcxw.service;
+package com.bugjc.service;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.auth.mapper.*;
 import com.bugjc.ea.auth.model.*;
-import com.glcxw.Tester;
-import com.glcxw.util.CreateSecurityKey;
-import com.glcxw.util.IdWorker;
+import com.bugjc.Tester;
+import com.bugjc.util.CreateSecurityKey;
+import com.bugjc.util.IdWorker;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.UUID;
 
 @Slf4j
 public class AppServiceTest extends Tester {

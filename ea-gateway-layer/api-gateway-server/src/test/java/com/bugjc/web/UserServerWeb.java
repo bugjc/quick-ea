@@ -1,9 +1,9 @@
-package com.glcxw.web;
+package com.bugjc.web;
 
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.http.opensdk.core.dto.Result;
-import com.glcxw.env.EnvUtil;
-import com.glcxw.util.HttpUtil;
+import com.bugjc.env.EnvUtil;
+import com.bugjc.util.HttpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 

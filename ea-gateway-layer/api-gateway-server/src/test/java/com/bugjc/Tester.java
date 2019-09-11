@@ -1,4 +1,4 @@
-package com.glcxw;
+package com.bugjc;
 
 import com.bugjc.ea.auth.ApiGatewayServerApplication;
 import org.junit.runner.RunWith;

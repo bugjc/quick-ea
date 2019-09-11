@@ -1,4 +1,4 @@
-package com.glcxw.env;
+package com.bugjc.env;
 
 import com.bugjc.ea.http.opensdk.model.AppParam;
 

@@ -1,4 +1,4 @@
-package com.glcxw.util;
+package com.bugjc.util;
 
 import cn.hutool.core.util.RandomUtil;
 import org.springframework.stereotype.Component;

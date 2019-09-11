@@ -1,4 +1,4 @@
-package com.glcxw.util;
+package com.bugjc.util;
 
 import org.junit.Rule;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package com.glcxw.util;
+package com.bugjc.util;
 
 /**
  * 引进的包都是Java自带的jar包
@@ -58,6 +58,7 @@ public class CreateSecurityKey {
     private static String encryptBASE64(byte[] key) throws Exception {
         return Base64.encode(key);
     }
+
 
     //map对象中存放公私钥
     private static Map<String, Object> initKey() throws Exception {

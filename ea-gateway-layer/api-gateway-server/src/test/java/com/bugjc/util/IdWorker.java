@@ -1,4 +1,4 @@
-package com.glcxw.util;
+package com.bugjc.util;
 
 import cn.hutool.core.util.HashUtil;
 import lombok.extern.slf4j.Slf4j;
