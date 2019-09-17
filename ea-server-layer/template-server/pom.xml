@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>sboot-template-server</artifactId>
+    <artifactId>template-server</artifactId>
     <packaging>jar</packaging>
 
     <properties>
