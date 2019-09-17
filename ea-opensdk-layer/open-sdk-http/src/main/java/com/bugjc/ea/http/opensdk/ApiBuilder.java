@@ -4,25 +4,26 @@ import cn.hutool.core.util.StrUtil;
 import com.bugjc.ea.http.opensdk.core.util.SSLUtil;
 import com.bugjc.ea.http.opensdk.model.AppParam;
 import com.bugjc.ea.http.opensdk.service.HttpService;
+import com.bugjc.ea.http.opensdk.service.UserService;
 import com.bugjc.ea.http.opensdk.service.impl.HttpServiceImpl;
+import com.bugjc.ea.http.opensdk.service.impl.UserServiceImpl;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
 import java.util.concurrent.TimeUnit;
 
 /**
  * 构建API
  * @author aoki
  */
-public class APIBuilder {
+public class ApiBuilder {
     private AppParam appParam = null;
+    private UserServiceImpl userServiceImpl = new UserServiceImpl();
     private HttpServiceImpl httpServiceImpl = new HttpServiceImpl();
     private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
     private OkHttpClient httpClient;
 
-    public APIBuilder(){
+    public ApiBuilder(){
         this.httpClientBuilder.connectTimeout(30L, TimeUnit.SECONDS).readTimeout(30L, TimeUnit.SECONDS);
     }
 
@@ -31,7 +32,7 @@ public class APIBuilder {
      * @param timeout
      * @return
      */
-    public APIBuilder setHttpConnTimeout(int timeout) {
+    public ApiBuilder setHttpConnTimeout(int timeout) {
         if (timeout <= 0) {
             throw new IllegalArgumentException("timeout should great than 0");
         } else {
@@ -45,7 +46,7 @@ public class APIBuilder {
      * @param appParam
      * @return
      */
-    public APIBuilder setAppParam(AppParam appParam) {
+    public ApiBuilder setAppParam(AppParam appParam) {
         this.appParam = appParam;
         this.httpServiceImpl.setAppParam(this.appParam);
         return this;
@@ -85,6 +86,15 @@ public class APIBuilder {
             this.httpServiceImpl.setHttpClient(this.httpClient);
             return this.httpServiceImpl;
         }
+    }
+
+    /**
+     * 构建用户API调用对象
+     * @return
+     */
+    public UserService buildUserApi(){
+        userServiceImpl.setHttpService(this.build());
+        return userServiceImpl;
     }
 
 }

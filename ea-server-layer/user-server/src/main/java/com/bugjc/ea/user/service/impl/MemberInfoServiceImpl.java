@@ -3,7 +3,7 @@ package com.bugjc.ea.user.service.impl;
 import com.bugjc.ea.http.opensdk.core.dto.Result;
 import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
 import com.bugjc.ea.user.service.MemberInfoService;
-import com.bugjc.ea.user.web.http.body.memberinfo.GetBody;
+import com.bugjc.ea.user.web.io.info.GetBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.sleuth.annotation.NewSpan;
 import org.springframework.cloud.sleuth.annotation.SpanTag;

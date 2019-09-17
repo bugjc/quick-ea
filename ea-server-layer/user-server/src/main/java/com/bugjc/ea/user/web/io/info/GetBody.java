@@ -1,4 +1,4 @@
-package com.bugjc.ea.user.web.http.body.memberinfo;
+package com.bugjc.ea.user.web.io.info;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +15,8 @@ public class GetBody implements Serializable {
      */
     @Data
     public static class RequestBody implements Serializable{
-        @NotBlank(message = "会员ID不能为空")
-        private String memberId;
+        @NotBlank(message = "用户ID不能为空")
+        private String userId;
     }
 
     /**

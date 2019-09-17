@@ -10,8 +10,11 @@ import java.io.IOException;
  */
 public interface HttpService {
 
+
+
+
     /**
-     * http post方式调用接口
+     * http post方式调用接口(自动获取token)
      * @param path       --接口地址
      * @param version    --接口版本
      * @param body       --接口参数
@@ -21,7 +24,7 @@ public interface HttpService {
     Result post(String path, String version, String body) throws IOException;
 
     /**
-     * http post方式调用接口
+     * http post方式调用接口（手动设置token）
      * @param path       --接口地址
      * @param version    --接口版本
      * @param token      --访问令牌

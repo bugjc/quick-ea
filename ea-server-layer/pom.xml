@@ -15,6 +15,7 @@
     <modules>
         <module>user-server</module>
         <module>qrcode-server</module>
+        <module>sboot-template-server</module>
     </modules>
 
 

@@ -4,6 +4,7 @@ import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.TimedCache;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.bugjc.ea.http.opensdk.api.AuthPathInfo;
 import com.bugjc.ea.http.opensdk.core.dto.Result;
 import com.bugjc.ea.http.opensdk.core.dto.ResultCode;
 import com.bugjc.ea.http.opensdk.model.AppParam;
@@ -11,7 +12,6 @@ import com.bugjc.ea.http.opensdk.service.HttpService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
@@ -33,37 +33,6 @@ public class TokenUtil{
      */
     private static TimedCache<String, String> ACCESS_TOKEN_CACHE = CacheUtil.newTimedCache(EXPIRE_DATE);
     private static final String ACCESS_TOKEN_KEY = "AccessTokenKey";
-
-
-    /**
-     * 接口路径信息，路径：版本
-     */
-    public static class ContentPathInfo{
-
-
-        /**
-         * JWT授权接口
-         */
-        final static String JWT_AUTH_PATH_INFO = "/auth/query_token:1.0";
-
-        @Data
-        public static class PathInfo implements Serializable {
-            private String path;
-            private String version;
-        }
-
-        /**
-         * 解析token路径
-         * @return
-         */
-        public static PathInfo resolveTokenPath(){
-            String[] pathInfoArr = ContentPathInfo.JWT_AUTH_PATH_INFO.split(":");
-            PathInfo pathInfo = new PathInfo();
-            pathInfo.setPath(pathInfoArr[0]);
-            pathInfo.setVersion(pathInfoArr[1]);
-            return pathInfo;
-        }
-    }
 
     /**
      * token对象
@@ -118,11 +87,8 @@ public class TokenUtil{
         params.put("appId", appParam.getAppId());
         params.put("appSecret", appParam.getAppSecret());
 
-
-        ContentPathInfo.PathInfo pathInfo = ContentPathInfo.resolveTokenPath();
-
         //调用接口
-        Result result = httpService.post(pathInfo.getPath(), pathInfo.getVersion(),null, JSON.toJSONString(params));
+        Result result = httpService.post(AuthPathInfo.QUERY_TOKEN_V1.getPath(), AuthPathInfo.QUERY_TOKEN_V1.getVersion(),null, JSON.toJSONString(params));
 
         //TODO,根据特定应答码返回正常、重试和忽略状态，获取token在根据状态做相应处理。
         if (result != null && result.getCode() == ResultCode.SUCCESS.getCode()) {

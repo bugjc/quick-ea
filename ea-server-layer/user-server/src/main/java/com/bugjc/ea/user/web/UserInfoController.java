@@ -2,7 +2,7 @@ package com.bugjc.ea.user.web;
 
 import com.bugjc.ea.http.opensdk.core.dto.Result;
 import com.bugjc.ea.user.service.MemberInfoService;
-import com.bugjc.ea.user.web.http.body.memberinfo.GetBody;
+import com.bugjc.ea.user.web.io.info.GetBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;

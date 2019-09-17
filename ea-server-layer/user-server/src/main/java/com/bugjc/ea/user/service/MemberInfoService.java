@@ -1,7 +1,7 @@
 package com.bugjc.ea.user.service;
 
 import com.bugjc.ea.http.opensdk.core.dto.Result;
-import com.bugjc.ea.user.web.http.body.memberinfo.GetBody;
+import com.bugjc.ea.user.web.io.info.GetBody;
 import feign.Param;
 
 /**

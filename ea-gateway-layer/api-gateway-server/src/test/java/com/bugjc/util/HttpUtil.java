@@ -1,6 +1,6 @@
 package com.bugjc.util;
 
-import com.bugjc.ea.http.opensdk.APIBuilder;
+import com.bugjc.ea.http.opensdk.ApiBuilder;
 import com.bugjc.ea.http.opensdk.core.dto.Result;
 import com.bugjc.ea.http.opensdk.model.AppParam;
 import com.bugjc.ea.http.opensdk.service.HttpService;
@@ -17,7 +17,7 @@ public class HttpUtil {
      * @return
      */
     public static HttpService getHttpService(AppParam appParam) {
-        return new APIBuilder()
+        return new ApiBuilder()
                 .setAppParam(appParam)
                 .setHttpConnTimeout(5000)
                 .build();

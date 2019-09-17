@@ -24,6 +24,7 @@
         <spring-boot-starter-test.version>2.0.3.RELEASE</spring-boot-starter-test.version>
         <spring-boot-starter-data-redis.version>2.0.3.RELEASE</spring-boot-starter-data-redis.version>
         <spring-boot-starter-jdbc.version>2.0.3.RELEASE</spring-boot-starter-jdbc.version>
+        <spring-boot-starter-undertow.version>2.0.3.RELEASE</spring-boot-starter-undertow.version>
 
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <spring-cloud-starter-netflix-zuul.version>2.0.3.RELEASE</spring-cloud-starter-netflix-zuul.version>
@@ -40,11 +41,12 @@
 
         <spring-rabbit.version>2.0.3.RELEASE</spring-rabbit.version>
         <fastjson.version>1.2.47</fastjson.version>
-        <hutool-all.version>4.1.4</hutool-all.version>
+        <hutool-all.version>4.5.10</hutool-all.version>
         <lombok.version>1.18.2</lombok.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
         <log4j-over-slf4j.version>1.7.25</log4j-over-slf4j.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
+        <mysql-connector-java.version>8.0.11</mysql-connector-java.version>
     </properties>
 
     <parent>
@@ -73,6 +75,17 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/12004-release-hKdPYd/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/12004-snapshot-ZF1YTz/</url>
+        </snapshotRepository>
+    </distributionManagement>
 
     <repositories>
         <repository>
