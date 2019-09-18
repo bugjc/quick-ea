@@ -33,7 +33,7 @@ public class ApiClient {
         /**
          * 地图列表
          */
-        public static final String CHARGE_MAP_LIST_PATH = "/map/list";
+        public static final String USER_LOGIN_PATH = "/user/login";
     }
 
     /**

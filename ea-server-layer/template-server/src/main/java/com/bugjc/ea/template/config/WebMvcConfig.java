@@ -119,10 +119,11 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(notificationInterceptor)
-                .addPathPatterns("/teld/notification*")
-                .excludePathPatterns("/charge/**","/teld/query_token");;
-        super.addInterceptors(registry);
+          //添加拦截器
+//        registry.addInterceptor(notificationInterceptor)
+//                .addPathPatterns("/test/notification*")
+//                .excludePathPatterns("/test/**","/teld/query_token");
+//        super.addInterceptors(registry);
     }
 
 }

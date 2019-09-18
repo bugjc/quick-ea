@@ -32,6 +32,12 @@ public class User implements Serializable {
     private String name;
 
     /**
+     * 密码
+     * isNullAble:1
+     */
+    private String pwd;
+
+    /**
     * 年龄
     * isNullAble:1
     */

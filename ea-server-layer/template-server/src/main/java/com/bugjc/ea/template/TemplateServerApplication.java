@@ -33,6 +33,6 @@ public class TemplateServerApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        log.info("spring boot maven template");
+        log.info("XXX 服务启动成功！");
     }
 }

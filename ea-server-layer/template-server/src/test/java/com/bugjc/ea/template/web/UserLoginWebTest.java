@@ -16,7 +16,7 @@ import org.junit.Test;
  * @date ${date}
  */
 @Slf4j
-public class ChargeMapWebTest {
+public class UserLoginWebTest {
 
     private ApiClient apiClient =  new ApiClient(EnvUtil.EnvType.DEV);
 
@@ -26,13 +26,13 @@ public class ChargeMapWebTest {
     @Test
     public void testMap() {
         UserLoginBody.RequestBody requestBody = new UserLoginBody.RequestBody();
-        requestBody.setLat(25.112000);
-        requestBody.setLng(110.121000);
+        requestBody.setUsername("Jack");
+        requestBody.setPassword("123456");
 
         String bodyData = JSON.toJSONString(requestBody);
         log.info("Parameter:{}",bodyData);
 
-        Result result = apiClient.doPost(ApiClient.ContentPath.CHARGE_MAP_LIST_PATH, bodyData);
+        Result result = apiClient.doPost(ApiClient.ContentPath.USER_LOGIN_PATH, bodyData);
         if (result.getCode() != ResultCode.SUCCESS.getCode()){
             log.error("系统错误：{}",result.getMessage());
             return;

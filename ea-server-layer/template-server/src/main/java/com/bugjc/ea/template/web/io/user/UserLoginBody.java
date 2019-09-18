@@ -21,9 +21,9 @@ public class UserLoginBody implements Serializable {
     @Data
     public static class RequestBody implements Serializable{
         @NotNull(message = "用户名不能为空")
-        private double username;
+        private String username;
         @NotNull(message="用户密码不能为空")
-        private double password;
+        private String password;
     }
 
     /**

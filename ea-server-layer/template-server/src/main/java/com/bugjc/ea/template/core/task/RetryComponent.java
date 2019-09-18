@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 
 /**
- * 重试组件使用示例
+ * 重试组件使用示例，重试涉及的业务逻辑需最好保证高密集
  * @Author yangqing
  * @Date 2019/7/5 17:15
  **/

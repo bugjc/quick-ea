@@ -17,8 +17,8 @@ import java.util.concurrent.*;
 @EnableAsync
 public class ExecutorConfig {
 
-    @Bean
-    public Executor executor() {
+    @Bean("threadPoolExecutor")
+    public ThreadPoolExecutor threadPoolExecutor() {
         log.info("初始化线程池");
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("template-pool-%d").build();
         //允许的空闲时间
