@@ -152,7 +152,7 @@
 
 
                         <!--Springboot 启动类-->
-                        <mainClass>com.bugjc.ea.user.UserServerApplication</mainClass>
+                        <mainClass>com.bugjc.ea.server.user.UserServerApplication</mainClass>
 
                         <!--可以设置多个容器标签-->
                         <labels>

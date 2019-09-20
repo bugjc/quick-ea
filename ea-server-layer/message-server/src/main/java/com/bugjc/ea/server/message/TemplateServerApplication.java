@@ -1,4 +1,4 @@
-package springboot.maven.template;
+package com.bugjc.ea.server.message;
 
 import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
 import com.alicp.jetcache.anno.config.EnableMethodCache;
@@ -21,8 +21,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableAsync
 @EnableScheduling
 @EnableEurekaClient
-@EnableMethodCache(basePackages = "springboot.maven.template")
-@MapperScan("springboot.maven.template.mapper")
+@EnableMethodCache(basePackages = "com.bugjc.ea.server.message")
+@MapperScan("com.bugjc.ea.server.message.mapper")
 @EnableCreateCacheAnnotation
 @SpringBootApplication
 public class TemplateServerApplication implements CommandLineRunner {
