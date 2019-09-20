@@ -6,7 +6,7 @@ import com.bugjc.ea.auth.core.constants.ApiGatewayKeyConstants;
 import com.bugjc.ea.auth.service.ZuulRouteService;
 import com.bugjc.ea.auth.core.enums.ResultErrorEnum;
 import com.bugjc.ea.auth.core.util.FilterChainReturnResultUtil;
-import com.bugjc.ea.http.opensdk.core.constants.HttpHeaderKeyConstants;
+import com.bugjc.ea.opensdk.http.core.constants.HttpHeaderKeyConstants;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;

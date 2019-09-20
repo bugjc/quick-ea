@@ -1,7 +1,7 @@
 package com.bugjc.ea.user.service.impl;
 
-import com.bugjc.ea.http.opensdk.core.dto.Result;
-import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.dto.Result;
+import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import com.bugjc.ea.user.service.MemberInfoService;
 import com.bugjc.ea.user.web.io.info.GetBody;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.bugjc.env;
 
-import com.bugjc.ea.http.opensdk.model.AppParam;
+import com.bugjc.ea.opensdk.http.model.AppParam;
 
 import java.util.HashMap;
 import java.util.Map;

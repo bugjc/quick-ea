@@ -1,8 +1,8 @@
 package com.bugjc.ea.auth.core.fallback;
 
 import com.bugjc.ea.auth.core.dto.ApiGatewayServerResultCode;
-import com.bugjc.ea.http.opensdk.core.constants.HttpHeaderKeyConstants;
-import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.constants.HttpHeaderKeyConstants;
+import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.http.HttpHeaders;

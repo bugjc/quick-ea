@@ -1,8 +1,8 @@
 package com.bugjc.ea.user.web;
 
 import cn.hutool.core.util.RandomUtil;
-import com.bugjc.ea.http.opensdk.core.dto.Result;
-import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.dto.Result;
+import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import com.bugjc.ea.user.core.enums.BalancePayFailCode;
 import com.bugjc.ea.user.service.MemberInfoService;
 import com.bugjc.ea.user.web.io.balance.PayBody;

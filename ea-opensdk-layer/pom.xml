@@ -9,6 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>com.bugjc.ea.opensdk</groupId>
     <artifactId>ea-opensdk-layer</artifactId>
     <packaging>pom</packaging>
     <modules>

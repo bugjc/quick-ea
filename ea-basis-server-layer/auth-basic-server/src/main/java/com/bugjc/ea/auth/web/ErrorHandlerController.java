@@ -1,8 +1,8 @@
 package com.bugjc.ea.auth.web;
 
-import com.bugjc.ea.http.opensdk.core.dto.Result;
-import com.bugjc.ea.http.opensdk.core.dto.ResultCode;
-import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.dto.Result;
+import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
+import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

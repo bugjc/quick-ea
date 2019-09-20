@@ -2,12 +2,11 @@ package com.bugjc.ea.auth.web;
 
 import com.bugjc.ea.auth.biz.TokenBiz;
 import com.bugjc.ea.auth.web.io.platform.auth.QueryTokenBody;
-import com.bugjc.ea.http.opensdk.core.dto.Result;
+import com.bugjc.ea.opensdk.http.core.dto.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;

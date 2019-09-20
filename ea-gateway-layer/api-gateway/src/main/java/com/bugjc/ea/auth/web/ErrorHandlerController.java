@@ -1,7 +1,7 @@
 package com.bugjc.ea.auth.web;
 
-import com.bugjc.ea.http.opensdk.core.dto.Result;
-import com.bugjc.ea.http.opensdk.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.dto.Result;
+import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import com.netflix.zuul.exception.ZuulException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;

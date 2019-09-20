@@ -47,6 +47,9 @@
         <log4j-over-slf4j.version>1.7.25</log4j-over-slf4j.version>
         <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
         <mysql-connector-java.version>8.0.11</mysql-connector-java.version>
+
+        <!--插件开关-->
+        <skip-jib-plugin>true</skip-jib-plugin>
     </properties>
 
     <parent>
