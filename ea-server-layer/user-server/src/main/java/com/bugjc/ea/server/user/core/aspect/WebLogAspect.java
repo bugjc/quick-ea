@@ -39,7 +39,7 @@ public class WebLogAspect {
     private ThreadLocal<Long> startTime = new ThreadLocal<>();
 
 
-    @Pointcut("execution(public * com.bugjc.ea.user.web..*.*(..))")
+    @Pointcut("execution(public * com.bugjc.ea.server.user.web..*.*(..))")
     public void webLog(){}
 
     @Before("webLog()")

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ugiant.job.mapper.JobLogMapper">
+  <resultMap id="BaseResultMap" type="com.ugiant.job.model.JobLog">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="job_log_id" jdbcType="INTEGER" property="jobLogId" />
+    <result column="job_id" jdbcType="VARCHAR" property="jobId" />
+    <result column="http_address" jdbcType="VARCHAR" property="httpAddress" />
+    <result column="http_param" jdbcType="VARCHAR" property="httpParam" />
+    <result column="trigger_time" jdbcType="TIMESTAMP" property="triggerTime" />
+    <result column="trigger_code" jdbcType="VARCHAR" property="triggerCode" />
+    <result column="trigger_msg" jdbcType="VARCHAR" property="triggerMsg" />
+    <result column="time_consuming" jdbcType="INTEGER" property="timeConsuming" />
+  </resultMap>
+</mapper>

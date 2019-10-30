@@ -27,7 +27,6 @@ public class NotificationInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         //拦截接口
-        //responseResult(response, ResultGenerator.genFailResult("无效的请求参数"));
         return true;
     }
 

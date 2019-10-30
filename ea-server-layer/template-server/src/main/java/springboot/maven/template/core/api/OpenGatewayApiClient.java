@@ -22,7 +22,7 @@ public class OpenGatewayApiClient {
 
     @Data
     @Configuration
-    class Config{
+   private class Config{
         @Value("${gateway.server.base-url}")
         private String baseUrl;
         @Value("${gateway.server.rsa-public-key}")

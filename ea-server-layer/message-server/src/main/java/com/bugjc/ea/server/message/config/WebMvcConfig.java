@@ -81,7 +81,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
                     result.setCode(ResultCode.FAIL).setMessage(e.getMessage());
                 } else if (e instanceof MethodArgumentNotValidException){
                     result.setCode(ResultCode.INTERNAL_SERVER_ERROR).setMessage(e.getMessage());
-                }else if (e instanceof BizException) {
+                } else if (e instanceof BizException) {
                     result.setCode(((BizException) e).getCode());
                     result.setMessage(e.getMessage());
                 } else {

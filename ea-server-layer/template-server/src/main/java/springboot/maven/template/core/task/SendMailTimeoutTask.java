@@ -12,8 +12,8 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 
 /**
- * @Author yangqing
- * @Date 2019/7/19 14:39
+ * @author aoki
+ * @date 2019/7/19 14:39
  **/
 @Slf4j
 @Scope("prototype")

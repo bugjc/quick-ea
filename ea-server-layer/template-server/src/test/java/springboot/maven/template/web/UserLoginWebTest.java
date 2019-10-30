@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 /**
- * 充电业务
+ * 用户登录业务
  * @author aoki
  * @date ${date}
  */
@@ -21,10 +21,10 @@ public class UserLoginWebTest {
     private ApiClient apiClient =  new ApiClient(EnvUtil.EnvType.DEV);
 
     /**
-     * 充电地图
+     * 用户登录测试
      */
     @Test
-    public void testMap() {
+    public void testUserLogin() {
         UserLoginBody.RequestBody requestBody = new UserLoginBody.RequestBody();
         requestBody.setUsername("Jack");
         requestBody.setPassword("123456");

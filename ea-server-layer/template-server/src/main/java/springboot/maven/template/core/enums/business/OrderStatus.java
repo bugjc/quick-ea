@@ -2,7 +2,7 @@ package springboot.maven.template.core.enums.business;
 
 /**
  * 订单状态
- * @author yangqing
+ * @author aoki
  */
 public enum OrderStatus {
     /**

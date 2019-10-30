@@ -1,7 +1,9 @@
 package springboot.maven.template.config;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableAsync;
@@ -14,21 +16,22 @@ import java.util.concurrent.*;
  */
 @Slf4j
 @Configuration
-@EnableAsync
+@Data
 public class ExecutorConfig {
+
+    @Value("${thread-pool.keep-alive}")
+    private int keepAlive = 60;
+    @Value("${thread-pool.max-pool-size}")
+    private int maxPoolSize = 20;
+    @Value("${thread-pool.core-pool-size}")
+    private int corePoolSize = 10;
+    @Value("${thread-pool.queue-capacity}")
+    private int queueCapacity = 2048;
 
     @Bean("threadPoolExecutor")
     public ThreadPoolExecutor threadPoolExecutor() {
         log.info("初始化线程池");
         ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("template-pool-%d").build();
-        //允许的空闲时间
-        int keepAlive = 60;
-        //线程池维护线程的最大数量
-        int maxPoolSize = 200;
-        //线程池维护线程的最少数量
-        int corePoolSize = 10;
-        //缓存队列
-        int queueCapacity = 1024;
         return new ThreadPoolExecutor(corePoolSize, maxPoolSize,
                 keepAlive, TimeUnit.MILLISECONDS,
                 new LinkedBlockingQueue<>(queueCapacity), namedThreadFactory, new ThreadPoolExecutor.AbortPolicy());

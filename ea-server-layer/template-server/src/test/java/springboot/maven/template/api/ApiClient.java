@@ -31,7 +31,7 @@ public class ApiClient {
     public class ContentPath{
 
         /**
-         * 地图列表
+         * 用户登录接口
          */
         public static final String USER_LOGIN_PATH = "/user/login";
     }

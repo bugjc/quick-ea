@@ -16,11 +16,13 @@ import com.bugjc.ea.opensdk.http.core.crypto.output.ServicePartyDecryptObj;
 import com.bugjc.ea.opensdk.http.core.crypto.output.ServicePartyEncryptObj;
 import com.bugjc.ea.opensdk.http.core.util.SequenceUtil;
 import com.bugjc.ea.opensdk.http.core.util.StrSortUtil;
+import lombok.extern.slf4j.Slf4j;
 
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Slf4j
 public class CryptoProcessor {
 
     /**
@@ -38,10 +40,12 @@ public class CryptoProcessor {
         accessPartyEncryptObj.setBody(body);
 
         String requestSign = "appid="+accessPartyEncryptParam.getAppId()+"&message="+ StrSortUtil.sortString(body)+"&nonce="+accessPartyEncryptObj.getNonce()+"&timestamp="+accessPartyEncryptObj.getTimestamp()+"&Sequence="+accessPartyEncryptObj.getSequence();
+        log.error("签名字符串：{}",requestSign);
         /**生成签名**/
         Sign sign = SecureUtil.sign(SignAlgorithm.SHA1withRSA,accessPartyEncryptParam.getRsaPrivateKey(),null);
         byte[] signed = sign.sign(requestSign.getBytes(CharsetUtil.CHARSET_UTF_8));
         accessPartyEncryptObj.setSignature(Base64.encode(signed));
+        log.error(Base64.encode(signed));
         return accessPartyEncryptObj;
     }
 
@@ -53,6 +57,7 @@ public class CryptoProcessor {
     public ServicePartyDecryptObj servicePartyDecrypt(ServicePartyDecryptParam servicePartyDecryptParam){
         String responseSign = "appid="+servicePartyDecryptParam.getAppId()+"&message="+ StrSortUtil.sortString(servicePartyDecryptParam.getBody())+"&nonce="+servicePartyDecryptParam.getNonce()+"&timestamp="+servicePartyDecryptParam.getTimestamp()+"&Sequence="+servicePartyDecryptParam.getSequence();
         Sign sign = SecureUtil.sign(SignAlgorithm.SHA1withRSA,null,servicePartyDecryptParam.getRsaPublicKey());
+        log.error(servicePartyDecryptParam.getSignature());
         boolean verify = sign.verify(responseSign.getBytes(CharsetUtil.CHARSET_UTF_8), Base64.decode(servicePartyDecryptParam.getSignature()));
         ServicePartyDecryptObj servicePartyDecryptObj = new ServicePartyDecryptObj();
         //TODO 解密body
@@ -101,4 +106,7 @@ public class CryptoProcessor {
         return accessPartyDecryptObj;
     }
 
+    public static void main(String[] args) {
+        System.out.println(Base64.decode("B9U7fNB9761swqy3GsOZEaE1n+1wYDgri/ypWqMr/depQ8RBi6IAFHYzirHz5w3zFYBnwPATiDEpd6yT4oLYdMGkEx758uJGIXJJnP3vi7vdxgew5JefqbI7tNOOlYLa0iowdnaWXAcc1hte/LdgE90+vLhOOXLvMwBO9z6+dJ1H9B/C5HSpixNlceawtMQHbrzhi65Fm9ZW8Z6SSr5Qsw2VFVcGAqMk8D6kbEvmtpcdzsdSMJ4xpK6SUFpo14pXxgopoaoQ5Jf2yI93h82+QABYjfokB49UzlMcvln5EUhBo/VVh09jFLmAqRZ9TAttV1okBB6f8jRMpXw6FYDAQg=="));
+    }
 }

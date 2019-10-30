@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ugiant.job.mapper.JobMapper">
+    <resultMap id="BaseResultMap" type="com.ugiant.job.model.Job">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="job_id" jdbcType="VARCHAR" property="jobId"/>
+        <result column="exec_time" jdbcType="TIMESTAMP" property="execTime"/>
+        <result column="http_callback_info" jdbcType="VARCHAR" property="httpCallbackInfo"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+    </resultMap>
+
+    <!--查询指定状态且最近（时间范围内）待执行的任务-->
+    <select id="selRecentlyByStatusAndExecTime" resultMap="BaseResultMap">
+        SELECT * FROM `tbs_job`
+        WHERE exec_time <![CDATA[ >= ]]>  #{startTime}
+        AND exec_time <![CDATA[ <= ]]>  #{endTime}
+        AND STATUS = #{status}
+    </select>
+
+    <!--统计今日新增任务数-->
+    <select id="countNewNumberAddedToday" resultType="int">
+        SELECT
+        COUNT(1)
+        FROM tbs_job job
+        WHERE  job.`create_time` <![CDATA[ >= ]]> (SELECT STR_TO_DATE(DATE_FORMAT(NOW(),'%Y-%m-%d'),'%Y-%m-%d %H:%i:%s'))
+        AND job.`create_time` <![CDATA[ <= ]]> (SELECT DATE_ADD(DATE_ADD(STR_TO_DATE(DATE_FORMAT(NOW(),'%Y-%m-%d'),'%Y-%m-%d %H:%i:%s'),INTERVAL 1 DAY),INTERVAL -1 SECOND))
+    </select>
+
+    <!--统计等待执行的任务总数-->
+    <select id="countNumberOfTasksWaitingToBeExecuted" resultType="int">
+        SELECT COUNT(1) FROM  tbs_job
+        WHERE STATUS in (0,1)
+    </select>
+
+    <!--查询任务分页列表数据-->
+    <select id="selPage" resultType="com.ugiant.job.model.bo.JobBO">
+        SELECT
+        CAST(@rowNum:=@rowNum + 1 AS signed) AS jobId,DATE_FORMAT(job.exec_time,'%Y-%m-%d %H:%i:%s') AS execTime,
+        job.status,DATE_FORMAT(job.update_time,'%Y-%m-%d %H:%i:%s') AS updateTime,DATE_FORMAT(job.create_time,'%Y-%m-%d %H:%i:%s') AS createTime
+        FROM tbs_job job,(SELECT @rowNum:=0) num
+        WHERE 1 = 1
+        <if test="pg.status != null">
+            <choose>
+                <when test="pg.status == 0 or pg.status == 1">
+                    AND job.`status` in (0,1)
+                </when>
+                <otherwise>
+                    AND job.`status` = #{pg.status,jdbcType=INTEGER}
+                </otherwise>
+            </choose>
+
+        </if>
+
+        ORDER BY job.`create_time` DESC
+    </select>
+</mapper>
