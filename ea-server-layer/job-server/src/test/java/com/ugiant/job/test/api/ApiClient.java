@@ -32,7 +32,7 @@ public class ApiClient {
     /**
      * 接口路径
      */
-    public class ContentPath{
+    public static class ContentPath {
 
         /**
          * 创建任务接口
@@ -80,9 +80,9 @@ public class ApiClient {
             httpRequest.contentType("application/json;charset=utf-8");
             String result;
             if (bodyData == null){
-                result = httpRequest.timeout(8000).execute().body();
+                result = httpRequest.timeout(6000).execute().body();
             } else {
-                result = httpRequest.timeout(8000).body(bodyData).execute().body();
+                result = httpRequest.timeout(6000).body(bodyData).execute().body();
             }
             log.info("Successful Response Message:{}", result);
             return JSON.parseObject(result,Result.class);

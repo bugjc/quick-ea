@@ -1,23 +1,24 @@
 package com.ugiant.job.test.web;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.thread.ThreadFactoryBuilder;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
 import com.ugiant.job.core.dto.Result;
 import com.ugiant.job.core.enums.business.JobStatus;
-import com.ugiant.job.core.enums.business.JobType;
 import com.ugiant.job.test.api.ApiClient;
+import com.ugiant.job.test.core.component.cyclic.barrier.CyclicBarrierComponent;
 import com.ugiant.job.test.env.EnvUtil;
-import com.ugiant.job.test.web.task.CreateJobTask;
-import com.ugiant.job.web.io.job.*;
+import com.ugiant.job.test.web.task.CreateJobCyclicBarrierTaskImpl;
+import com.ugiant.job.web.io.job.DelBody;
+import com.ugiant.job.web.io.job.FindBody;
+import com.ugiant.job.web.io.job.ListBody;
+import com.ugiant.job.web.io.job.UpdBody;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.*;
 
 /**
  * JOB业务
@@ -27,28 +28,21 @@ import java.util.concurrent.*;
 @Slf4j
 public class JobWebTest {
 
-    private ApiClient apiClient =  new ApiClient(EnvUtil.EnvType.DEV);
+    private ApiClient apiClient = new ApiClient(EnvUtil.EnvType.DEV);
 
-    private static ThreadPoolExecutor threadPoolExecutor = new ThreadPoolExecutor(10, 200,
-            60, TimeUnit.MILLISECONDS,
-                new LinkedBlockingQueue<>(1024), new ThreadFactoryBuilder().setNamePrefix("job-pool").build(), new ThreadPoolExecutor.AbortPolicy());
 
     /**
      * 任务创建测试
      */
     @Test
     public void testJobCreate() throws InterruptedException {
-        int count = 20;
-        CyclicBarrier cyclicBarrier = new CyclicBarrier(count);
-        for (int i = 0; i < count; i++) {
-            threadPoolExecutor.execute(new CreateJobTask(apiClient,cyclicBarrier));
-        }
-        threadPoolExecutor.shutdown();
-
-        while (!threadPoolExecutor.isTerminated()){
-            Thread.sleep(10);
-            log.info("任务暂停10毫秒");
-        }
+        //同时发起 10 个创建任务请求
+        int total = 5000;
+        //任务等待超时时间
+        int timeout = 1;
+        CreateJobCyclicBarrierTaskImpl createJobCyclicBarrierTask = new CreateJobCyclicBarrierTaskImpl(apiClient);
+        CyclicBarrierComponent cyclicBarrierComponent = new CyclicBarrierComponent(total, timeout, createJobCyclicBarrierTask);
+        cyclicBarrierComponent.run();
     }
 
     /**
