@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ugiant.job.mapper.JobMapper">
-    <resultMap id="BaseResultMap" type="com.ugiant.job.model.Job">
+<mapper namespace="com.bugjc.ea.server.job.mapper.JobMapper">
+    <resultMap id="BaseResultMap" type="com.bugjc.ea.server.job.model.Job">
         <!--
           WARNING - @mbg.generated
         -->
@@ -37,7 +37,7 @@
     </select>
 
     <!--查询任务分页列表数据-->
-    <select id="selPage" resultType="com.ugiant.job.model.bo.JobBO">
+    <select id="selPage" resultType="com.bugjc.ea.server.job.model.bo.JobBO">
         SELECT
         CAST(@rowNum:=@rowNum + 1 AS signed) AS jobId,DATE_FORMAT(job.exec_time,'%Y-%m-%d %H:%i:%s') AS execTime,
         job.status,DATE_FORMAT(job.update_time,'%Y-%m-%d %H:%i:%s') AS updateTime,DATE_FORMAT(job.create_time,'%Y-%m-%d %H:%i:%s') AS createTime
