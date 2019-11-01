@@ -14,7 +14,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>api-gateway-server</module>
+        <module>zuul-api-gateway</module>
     </modules>
 
 
