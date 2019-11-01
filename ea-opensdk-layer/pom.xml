@@ -15,6 +15,7 @@
     <modules>
         <module>open-sdk-all</module>
         <module>open-sdk-http</module>
+        <module>open-sdk-test</module>
     </modules>
 
 

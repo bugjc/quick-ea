@@ -2,13 +2,11 @@ package springboot.maven.template.web.io.user;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.List;
 
 /**
- * 附近充电站列表接口请求响应参数对象
+ * 用户登录接口请求响应参数对象
  * @author aoki
  * @date ${date}
  */

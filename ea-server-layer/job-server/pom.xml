@@ -157,11 +157,11 @@
                     <testFailureIgnore>true</testFailureIgnore>
                 </configuration>
             </plugin>
+
             <!--指定maven编译的版本-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <!-- since 2.0 -->
                 <version>3.7.0</version>
                 <configuration>
                     <source>${java.version}</source>
@@ -169,6 +169,7 @@
                     <encoding>UTF8</encoding>
                 </configuration>
             </plugin>
+
             <!---->
             <plugin>
                 <groupId>org.springframework.boot</groupId>

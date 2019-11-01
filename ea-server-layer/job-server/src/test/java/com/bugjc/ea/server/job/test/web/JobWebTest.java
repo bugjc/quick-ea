@@ -4,9 +4,10 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
+import com.bugjc.ea.opensdk.test.TestBuilder;
+import com.bugjc.ea.opensdk.test.component.CyclicBarrierComponent;
 import com.bugjc.ea.server.job.core.enums.business.JobStatus;
 import com.bugjc.ea.server.job.test.api.ApiClient;
-import com.bugjc.ea.server.job.test.core.component.cyclic.barrier.CyclicBarrierComponent;
 import com.bugjc.ea.server.job.test.env.EnvUtil;
 import com.bugjc.ea.server.job.test.web.task.CreateJobCyclicBarrierTaskImpl;
 import com.bugjc.ea.server.job.web.io.job.DelBody;
@@ -36,12 +37,12 @@ public class JobWebTest {
      */
     @Test
     public void testJobCreate() throws InterruptedException {
-        //同时发起 10 个创建任务请求
-        int total = 5000;
-        //任务等待超时时间
-        int timeout = 1;
-        CreateJobCyclicBarrierTaskImpl createJobCyclicBarrierTask = new CreateJobCyclicBarrierTaskImpl(apiClient);
-        CyclicBarrierComponent cyclicBarrierComponent = new CyclicBarrierComponent(total, timeout, createJobCyclicBarrierTask);
+        //同时发起 500 个创建任务请求
+        int total = 500;
+        CyclicBarrierComponent cyclicBarrierComponent = new TestBuilder()
+                .setTotal(total)
+                .setCyclicBarrierTask(new CreateJobCyclicBarrierTaskImpl(apiClient))
+                .build();
         cyclicBarrierComponent.run();
     }
 

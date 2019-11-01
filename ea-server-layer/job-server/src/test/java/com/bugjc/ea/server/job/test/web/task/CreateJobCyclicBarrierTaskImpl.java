@@ -4,8 +4,8 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.RandomUtil;
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
+import com.bugjc.ea.opensdk.test.service.CyclicBarrierTask;
 import com.bugjc.ea.server.job.test.api.ApiClient;
-import com.bugjc.ea.server.job.test.core.component.cyclic.barrier.CyclicBarrierTask;
 import com.bugjc.ea.server.job.test.env.EnvUtil;
 import com.bugjc.ea.server.job.web.io.job.CreateBody;
 import com.bugjc.ea.server.job.web.io.job.FindBody;
@@ -19,7 +19,7 @@ import java.util.Map;
  * 默认测试的业务逻辑
  */
 @Slf4j
-public class CreateJobCyclicBarrierTaskImpl implements CyclicBarrierTask{
+public class CreateJobCyclicBarrierTaskImpl implements CyclicBarrierTask {
 
     private ApiClient apiClient;
     public CreateJobCyclicBarrierTaskImpl(ApiClient apiClient){

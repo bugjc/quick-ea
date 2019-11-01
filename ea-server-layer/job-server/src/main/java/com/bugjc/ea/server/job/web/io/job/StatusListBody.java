@@ -32,7 +32,7 @@ public class StatusListBody implements Serializable {
         @NoArgsConstructor
         @AllArgsConstructor
         static class Status implements Serializable {
-            private String type;
+            private String status;
             private String title;
         }
 

@@ -9,9 +9,8 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.bugjc.ea.opensdk.http</groupId>
-    <artifactId>open-sdk-http</artifactId>
-
+    <artifactId>open-sdk-test</artifactId>
+    <groupId>com.bugjc.ea.opensdk.test</groupId>
 
     <dependencies>
         <!--注解工具-->
@@ -19,13 +18,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
-        </dependency>
-
-        <!--json工具-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>${fastjson.version}</version>
         </dependency>
 
         <!--常用库依赖-->
@@ -51,21 +43,5 @@
             <artifactId>jcl-over-slf4j</artifactId>
             <version>${jcl-over-slf4j.version}</version>
         </dependency>
-
-        <!--http client-->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>3.14.1</version>
-
-            <exclusions>
-                <exclusion>
-                    <groupId>com.google.android</groupId>
-                    <artifactId>android</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
     </dependencies>
-
 </project>
