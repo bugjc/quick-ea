@@ -12,10 +12,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>user-server</module>
-        <module>qrcode-server</module>
         <module>template-server</module>
-        <module>message-server</module>
         <module>job-server</module>
   </modules>
 

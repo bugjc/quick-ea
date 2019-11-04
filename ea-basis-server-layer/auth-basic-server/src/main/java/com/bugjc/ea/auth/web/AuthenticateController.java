@@ -2,6 +2,7 @@ package com.bugjc.ea.auth.web;
 
 import com.bugjc.ea.auth.biz.TokenBiz;
 import com.bugjc.ea.auth.web.io.platform.auth.QueryTokenBody;
+import com.bugjc.ea.auth.web.io.platform.auth.VerifyTokenBody;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +30,15 @@ public class AuthenticateController {
     @PostMapping("query_token")
     public Result queryToken(@Validated @RequestBody QueryTokenBody.RequestBody requestBody) throws Exception {
         return tokenBiz.getToken(requestBody);
+    }
+
+    /**
+     * 校验 token
+     * @return
+     */
+    @PostMapping("verify_token")
+    public Result verifyToken(@Validated @RequestBody VerifyTokenBody.RequestBody requestBody) throws Exception {
+        return tokenBiz.verifyToken(requestBody);
     }
 
 

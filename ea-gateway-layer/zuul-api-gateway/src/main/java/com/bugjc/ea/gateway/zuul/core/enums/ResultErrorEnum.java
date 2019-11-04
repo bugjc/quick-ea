@@ -39,6 +39,7 @@ public enum ResultErrorEnum {
 
     //重放限制
     LOGIN_REPLAY_COUNT_OVER_LIMIT(527, "请求不能重放"),
+
     //token过期
     TOKEN_EXPIRE(403, "token已过期"),
 

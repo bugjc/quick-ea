@@ -3,6 +3,7 @@ package com.bugjc.ea.auth.service.impl;
 import cn.hutool.core.date.DateUtil;
 import com.bugjc.ea.auth.core.constants.AppTokenConstants;
 import com.bugjc.ea.auth.core.enums.business.AppTokenStatus;
+import com.bugjc.ea.auth.core.util.IdWorker;
 import com.bugjc.ea.auth.mapper.AppTokenMapper;
 import com.bugjc.ea.auth.model.AppToken;
 import com.bugjc.ea.auth.service.AppTokenService;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.UUID;
 
 /**
   * 令牌服务
@@ -44,9 +44,7 @@ public class AppTokenServiceImpl implements AppTokenService {
 
         //生成新的token
         AppToken newToken = new AppToken();
-        String id = UUID.randomUUID().toString();
-        newToken.setId(id);
-        newToken.setAccessToken(id);
+        newToken.setAccessToken(IdWorker.getNextId());
         newToken.setAppId(appId);
         newToken.setTokenAvailableTime(AppTokenConstants.CURRENT_LATEST_TOKEN_AVAILABLE_TIME);
         newToken.setCreateTime(date);

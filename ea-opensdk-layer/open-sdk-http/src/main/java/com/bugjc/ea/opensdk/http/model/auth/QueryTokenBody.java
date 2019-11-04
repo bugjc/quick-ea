@@ -1,8 +1,8 @@
-package com.bugjc.ea.auth.web.io.platform.auth;
+package com.bugjc.ea.opensdk.http.model.auth;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -18,12 +18,15 @@ public class QueryTokenBody implements Serializable {
      */
     @Data
     public static class RequestBody implements Serializable {
-        //运营商标识
-        @NotNull(message = "应用编号不能为空！")
+        //应用编号
         private String appId;
-        //运营商密钥
-        @NotNull(message = "应用密钥不能为空")
+        //应用密钥
         private String appSecret;
+
+        @Override
+        public String toString(){
+            return JSON.toJSONString(this);
+        }
     }
 
     /**

@@ -1,11 +1,9 @@
 package springboot.maven.template.core.task;
 
 import com.alibaba.fastjson.JSONObject;
-import com.bugjc.ea.opensdk.http.api.UserPathInfo;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
-import springboot.maven.template.core.exception.BizException;
-import springboot.maven.template.core.api.OpenGatewayApiClient;
+import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.retry.annotation.Backoff;
@@ -13,6 +11,8 @@ import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import springboot.maven.template.core.api.OpenGatewayApiClient;
+import springboot.maven.template.core.exception.BizException;
 
 import javax.annotation.Resource;
 
@@ -40,7 +40,8 @@ public class RetryComponent {
     public void run(String userId,int amt) throws Exception {
         //注：如抛出异常则自动重试
         //1.余额支付
-        Result result = openGatewayApiClient.getUserHttpService().balancePay(UserPathInfo.BALANCE_PAY_V1,userId,amt);
+        //Result result = openGatewayApiClient.getUserHttpService().balancePay(JobPathInfo.BALANCE_PAY_V1,userId,amt);
+        Result result = ResultGenerator.genSuccessResult();
         if (result.getCode() != ResultCode.SUCCESS.getCode()){
             log.info("系统运行时异常，无需处理，快速失败。");
             return ;

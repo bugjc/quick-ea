@@ -10,9 +10,6 @@ import java.io.IOException;
  */
 public interface HttpService {
 
-
-
-
     /**
      * http post方式调用接口(自动获取token)
      * @param path       --接口地址

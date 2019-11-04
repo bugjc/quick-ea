@@ -2,13 +2,14 @@ package com.bugjc.ea.auth.biz;
 
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.util.StrUtil;
-import com.bugjc.ea.auth.core.enums.AppTokenStatus;
+import com.bugjc.ea.auth.core.enums.QueryTokenFailCode;
+import com.bugjc.ea.auth.core.enums.VerifyTokenFailCode;
 import com.bugjc.ea.auth.model.App;
 import com.bugjc.ea.auth.model.AppToken;
 import com.bugjc.ea.auth.service.AppService;
 import com.bugjc.ea.auth.service.AppTokenService;
 import com.bugjc.ea.auth.web.io.platform.auth.QueryTokenBody;
+import com.bugjc.ea.auth.web.io.platform.auth.VerifyTokenBody;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -37,48 +38,56 @@ public class TokenBiz {
     public Result getToken(QueryTokenBody.RequestBody requestBody) throws Exception {
 
         QueryTokenBody.ResponseBody responseBody = new QueryTokenBody.ResponseBody();
-        responseBody.setFailReason(AppTokenStatus.SUCCESS.getStatus());
+        responseBody.setFailCode(QueryTokenFailCode.SUCCESS.getCode());
 
         //查询运营商是否存在
         App app = appService.findByAppId(requestBody.getAppId());
         if (app == null){
             //不存在运营商
-            responseBody.setFailReason(AppTokenStatus.NoSuchCarrier.getStatus());
+            responseBody.setFailCode(QueryTokenFailCode.NoSuchCarrier.getCode());
             return ResultGenerator.genSuccessResult(responseBody);
         }
 
         if (!app.getAppSecret().equals(requestBody.getAppSecret())){
             //密钥不匹配
-            responseBody.setFailReason(AppTokenStatus.KeyError.getStatus());
-            return ResultGenerator.genFailResult(AppTokenStatus.KeyError.getDesc());
+            responseBody.setFailCode(QueryTokenFailCode.KeyError.getCode());
+            return ResultGenerator.genFailResult(QueryTokenFailCode.KeyError.getDesc());
         }
 
         try {
             AppToken token = tokenService.findToken(requestBody.getAppId());
             //设置业务成功状态
-            responseBody.setSuccessStat(AppTokenStatus.SUCCESS.getStatus());
-            responseBody.setFailReason(AppTokenStatus.SUCCESS.getStatus());
+            responseBody.setSuccessStat(QueryTokenFailCode.SUCCESS.getCode());
+            responseBody.setFailCode(QueryTokenFailCode.SUCCESS.getCode());
             BeanUtil.copyProperties(token,responseBody);
 
             return ResultGenerator.genSuccessResult(responseBody);
         } catch (Exception e) {
             //业务失败
             log.error("生成 Token 失败,错误信息：{}",e.getMessage(),e);
-            responseBody.setFailReason(AppTokenStatus.ERROR.getStatus());
-            return ResultGenerator.genFailResult(AppTokenStatus.ERROR.getDesc());
+            responseBody.setFailCode(QueryTokenFailCode.ERROR.getCode());
+            return ResultGenerator.genFailResult(QueryTokenFailCode.ERROR.getDesc());
         }
     }
 
     /**
      * 校验token
-     * @param token
+     * @param requestBody
      * @return
      */
-    public boolean verifyToken(String token){
-        if (StrUtil.isBlank(token)){
-            return false;
+    public Result verifyToken(VerifyTokenBody.RequestBody requestBody){
+        VerifyTokenBody.ResponseBody responseBody = new VerifyTokenBody.ResponseBody();
+
+        try {
+            if (!tokenService.verifyToken(requestBody.getAccessToken())){
+                responseBody.setFailCode(VerifyTokenFailCode.ERROR.getCode());
+                return ResultGenerator.genSuccessResult(responseBody);
+            }
+        }catch (Exception ex){
+            log.error("校验 token 错误信息：{}",ex.getMessage());
+            responseBody.setFailCode(VerifyTokenFailCode.ERROR.getCode());
         }
 
-        return tokenService.verifyToken(token);
+        return ResultGenerator.genSuccessResult(responseBody);
     }
 }

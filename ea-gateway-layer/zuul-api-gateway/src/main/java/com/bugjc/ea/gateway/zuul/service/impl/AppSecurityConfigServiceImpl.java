@@ -48,7 +48,7 @@ public class AppSecurityConfigServiceImpl implements AppSecurityConfigService {
     public boolean excludeNeedAuthTokenPath(String path) {
 
         final AntPathMatcher pathMatcher = new AntPathMatcher();
-        if (pathMatcher.match("/jwt/**",path)) {
+        if (pathMatcher.match("/auth/**",path)) {
             //授权认证服务不处理
             return true;
         }

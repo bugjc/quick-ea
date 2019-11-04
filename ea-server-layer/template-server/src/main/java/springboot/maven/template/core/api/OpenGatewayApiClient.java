@@ -3,7 +3,7 @@ package springboot.maven.template.core.api;
 import cn.hutool.core.bean.BeanUtil;
 import com.bugjc.ea.opensdk.http.ApiBuilder;
 import com.bugjc.ea.opensdk.http.model.AppParam;
-import com.bugjc.ea.opensdk.http.service.UserService;
+import com.bugjc.ea.opensdk.http.service.HttpService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,7 +22,7 @@ public class OpenGatewayApiClient {
 
     @Data
     @Configuration
-   private class Config{
+   private static class Config{
         @Value("${gateway.server.base-url}")
         private String baseUrl;
         @Value("${gateway.server.rsa-public-key}")
@@ -43,12 +43,12 @@ public class OpenGatewayApiClient {
      * 获取http服务对象
      * @return
      */
-    public UserService getUserHttpService() {
+    public HttpService getUserHttpService() {
         AppParam appParam = new AppParam();
         BeanUtil.copyProperties(config,appParam);
         return new ApiBuilder()
                 .setAppParam(appParam)
                 .setHttpConnTimeout(5000)
-                .buildUserApi();
+                .build();
     }
 }

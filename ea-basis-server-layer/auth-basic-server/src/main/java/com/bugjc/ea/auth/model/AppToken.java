@@ -21,7 +21,7 @@ public class AppToken implements Serializable {
      * id
      */
     @Id
-    private String id;
+    private Integer id;
 
     /**
      * 运营商 ID

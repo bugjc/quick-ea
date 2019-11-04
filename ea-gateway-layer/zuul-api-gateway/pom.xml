@@ -21,7 +21,6 @@
         <pagehelper-spring-boot-starter.version>1.2.5</pagehelper-spring-boot-starter.version>
         <log4jdbc.version>1.2</log4jdbc.version>
         <fastjson.version>1.2.47</fastjson.version>
-        <hutool-all.version>4.1.4</hutool-all.version>
 
     </properties>
 

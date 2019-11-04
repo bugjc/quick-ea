@@ -1,13 +1,17 @@
 package com.bugjc.ea.gateway.zuul.core.filter.pre;
 
 import cn.hutool.core.util.StrUtil;
-import com.bugjc.ea.gateway.zuul.core.api.JwtApiClient;
+import com.alibaba.fastjson.JSONObject;
+import com.bugjc.ea.gateway.zuul.core.api.AuthApiClient;
+import com.bugjc.ea.gateway.zuul.core.constants.ApiGatewayKeyConstants;
 import com.bugjc.ea.gateway.zuul.core.dto.ApiGatewayServerResultCode;
-import com.bugjc.ea.gateway.zuul.service.AppSecurityConfigService;
+import com.bugjc.ea.gateway.zuul.core.enums.ResultErrorEnum;
 import com.bugjc.ea.gateway.zuul.core.util.FilterChainReturnResultUtil;
+import com.bugjc.ea.gateway.zuul.service.AppSecurityConfigService;
 import com.bugjc.ea.opensdk.http.core.constants.HttpHeaderKeyConstants;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
+import com.bugjc.ea.opensdk.http.model.auth.VerifyTokenBody;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import static com.netflix.zuul.context.RequestContext.getCurrentContext;
 
 /**
- * 核查会员token
+ * 平台接口授权认证
  * @author aoki
  */
 @Slf4j
@@ -28,7 +32,7 @@ import static com.netflix.zuul.context.RequestContext.getCurrentContext;
 public class VerifyTokenRequestFilter extends ZuulFilter {
 
 	@Resource
-	private JwtApiClient jwtApiClient;
+	private AuthApiClient authApiClient;
 
 	@Resource
 	private AppSecurityConfigService appExcludeSecurityAuthenticationPathService;
@@ -46,21 +50,18 @@ public class VerifyTokenRequestFilter extends ZuulFilter {
 	@Override
 	public boolean shouldFilter() {
 		RequestContext context = getCurrentContext();
-		//TODO 用户TOKEN认证
-		//return !appExcludeSecurityAuthenticationPathService.excludeNeedAuthTokenPath(context.getRequest().getRequestURI()) && (boolean)context.get(ApiGatewayKeyConstants.IS_SUCCESS);
-		return false;
+		return !appExcludeSecurityAuthenticationPathService.excludeNeedAuthTokenPath(context.getRequest().getRequestURI()) && (boolean)context.get(ApiGatewayKeyConstants.IS_SUCCESS);
 	}
 
 	@Override
 	public Object run() {
-		log.info("filter:Token认证过滤器");
+		log.info("filter: 平台接口授权 Token认证过滤器");
 		RequestContext ctx = getCurrentContext();
 		HttpServletRequest request = ctx.getRequest();
 
 		try {
 
 			String token = request.getHeader(HttpHeaderKeyConstants.AUTHORIZATION);
-			log.info("token:{}",token);
 			if (StrUtil.isBlank(token)){
 				FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.TOKEN_MISSING.getCode(), "缺失Token参数！");
 				return null;
@@ -72,14 +73,20 @@ public class VerifyTokenRequestFilter extends ZuulFilter {
 				return null;
 			}
 
-			//调用jwt 认证服务
-			Result result = jwtApiClient.post(appId, JwtApiClient.ContentPath.VERIFY_TOKEN_PATH,token,null);
-			if (result.getCode() == ResultCode.SUCCESS.getCode()) {
-				FilterChainReturnResultUtil.genSuccessResult(ctx,"校验token成功!");
+			//调用授权认证服务
+			Result result = authApiClient.verifyToken(appId,token);
+			if (result.getCode() != ResultCode.SUCCESS.getCode()) {
+				FilterChainReturnResultUtil.genErrorResult(ctx, ResultErrorEnum.VerifyTokenError.getCode(), result.getMessage());
 				return null;
 			}
 
-			FilterChainReturnResultUtil.genErrorResult(ctx, result.getCode(), result.getMessage());
+			VerifyTokenBody.ResponseBody responseBody = ((JSONObject)result.getData()).toJavaObject(VerifyTokenBody.ResponseBody.class);
+			if (responseBody.getFailCode() != 0){
+				FilterChainReturnResultUtil.genErrorResult(ctx, ResultErrorEnum.VerifyTokenError.getCode(), "校验 token 失败");
+				return null;
+			}
+
+			FilterChainReturnResultUtil.genSuccessResult(ctx, "校验 token 成功");
 			return null;
 
 		}catch (Exception ex){

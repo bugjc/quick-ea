@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.JSON;
+import com.bugjc.ea.opensdk.http.core.component.AccessTokenComponent;
 import com.bugjc.ea.opensdk.http.core.constants.HttpHeaderKeyConstants;
 import com.bugjc.ea.opensdk.http.core.crypto.CryptoProcessor;
 import com.bugjc.ea.opensdk.http.core.crypto.input.AccessPartyDecryptParam;
@@ -12,13 +13,13 @@ import com.bugjc.ea.opensdk.http.core.crypto.output.AccessPartyDecryptObj;
 import com.bugjc.ea.opensdk.http.core.crypto.output.AccessPartyEncryptObj;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
-import com.bugjc.ea.opensdk.http.core.util.TokenUtil;
 import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.service.HttpService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
+import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
 
@@ -36,11 +37,14 @@ public class HttpServiceImpl implements HttpService {
     private AppParam appParam;
     @Getter
     @Setter
-    private OkHttpClient httpClient;;
+    private OkHttpClient httpClient;
+    @Getter
+    @Setter
+    private JedisPool jedisPool;
 
     @Override
     public Result post(String path, String version, String body) throws IOException {
-        return post(path,version, TokenUtil.getToken(this,appParam),body);
+        return post(path,version, new AccessTokenComponent(this, jedisPool).getToken(),body);
     }
 
 
@@ -63,14 +67,14 @@ public class HttpServiceImpl implements HttpService {
             throw new HttpSecurityException("PATH 参数未设置");
         }
 
-        //,.,参数判断
+        //参数判断
         if(StrUtil.isBlank(body)){
             body = "{}";
         }
 
         //接入方安全处理
         AccessPartyEncryptParam accessPartyEncryptParam = new AccessPartyEncryptParam();
-        BeanUtil.copyProperties(appParam,accessPartyEncryptParam);
+        BeanUtil.copyProperties(appParam, accessPartyEncryptParam);
         accessPartyEncryptParam.setBody(body);
         CryptoProcessor cryptoProcessor = new CryptoProcessor();
         AccessPartyEncryptObj accessPartyEncryptObj = cryptoProcessor.accessPartyEncrypt(accessPartyEncryptParam);
@@ -82,7 +86,7 @@ public class HttpServiceImpl implements HttpService {
         //完整地址
         String url = appParam.getBaseUrl().concat(path);
         log.debug("URL:{}",url);
-        log.debug("RequestBody:{}",body);
+        log.debug("RequestBody:{}", body);
 
         //构建请求
         Request.Builder builder = new Request.Builder()

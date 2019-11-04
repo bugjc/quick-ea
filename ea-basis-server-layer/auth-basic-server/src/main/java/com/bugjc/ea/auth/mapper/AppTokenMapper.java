@@ -42,7 +42,7 @@ public interface AppTokenMapper {
      * 插入token
      * @param newToken
      */
-    @Insert("INSERT INTO `app_token` (id,`app_id`,`access_token`,`token_available_time`,`status`,`create_time`) " +
-            "VALUES ( #{id},#{appId}, #{accessToken}, #{tokenAvailableTime}, #{status}, #{createTime});")
+    @Insert("INSERT INTO `app_token` (`app_id`,`access_token`,`token_available_time`,`status`,`create_time`) " +
+            "VALUES (#{appId}, #{accessToken}, #{tokenAvailableTime}, #{status}, #{createTime});")
     void insert(AppToken newToken);
 }

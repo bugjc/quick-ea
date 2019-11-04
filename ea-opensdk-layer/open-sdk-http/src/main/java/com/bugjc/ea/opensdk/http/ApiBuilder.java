@@ -3,12 +3,15 @@ package com.bugjc.ea.opensdk.http;
 import cn.hutool.core.util.StrUtil;
 import com.bugjc.ea.opensdk.http.core.util.SSLUtil;
 import com.bugjc.ea.opensdk.http.model.AppParam;
+import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
-import com.bugjc.ea.opensdk.http.service.UserService;
+import com.bugjc.ea.opensdk.http.service.JobService;
+import com.bugjc.ea.opensdk.http.service.impl.AuthServiceImpl;
 import com.bugjc.ea.opensdk.http.service.impl.HttpServiceImpl;
-import com.bugjc.ea.opensdk.http.service.impl.UserServiceImpl;
+import com.bugjc.ea.opensdk.http.service.impl.JobServiceImpl;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
+import redis.clients.jedis.JedisPool;
 
 import java.util.concurrent.TimeUnit;
 
@@ -19,8 +22,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class ApiBuilder {
     private AppParam appParam = null;
-    private UserServiceImpl userServiceImpl = new UserServiceImpl();
     private HttpServiceImpl httpServiceImpl = new HttpServiceImpl();
+    private JobServiceImpl jobServiceImpl = new JobServiceImpl();
+    private AuthServiceImpl authServiceImpl = new AuthServiceImpl();
     private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
     private OkHttpClient httpClient;
 
@@ -50,6 +54,16 @@ public class ApiBuilder {
     public ApiBuilder setAppParam(AppParam appParam) {
         this.appParam = appParam;
         this.httpServiceImpl.setAppParam(this.appParam);
+        return this;
+    }
+
+    /**
+     * 设置服务方接口调用“凭证”保存到 redis,不设置默认保存到本地内存中(非必填)
+     * @param jedisPool
+     * @return
+     */
+    public ApiBuilder setJedisPool(JedisPool jedisPool) {
+        this.httpServiceImpl.setJedisPool(jedisPool);
         return this;
     }
 
@@ -90,12 +104,21 @@ public class ApiBuilder {
     }
 
     /**
-     * 构建用户API调用对象
+     * 构建 任务调度 API调用对象
      * @return
      */
-    public UserService buildUserApi(){
-        userServiceImpl.setHttpService(this.build());
-        return userServiceImpl;
+    public JobService buildJobApi(){
+        jobServiceImpl.setHttpService(this.build());
+        return jobServiceImpl;
+    }
+
+    /**
+     * 构建 平台认证 API调用对象
+     * @return
+     */
+    public AuthService buildAuthApi(){
+        authServiceImpl.setHttpService(this.build());
+        return authServiceImpl;
     }
 
 }

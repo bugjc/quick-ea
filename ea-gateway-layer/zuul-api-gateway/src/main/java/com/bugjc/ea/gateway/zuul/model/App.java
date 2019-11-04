@@ -35,7 +35,7 @@ public class App implements Serializable {
     private String rsaPrivateKey;
 
     /**
-     * 类型：1,- 业务，2 - 平台
+     * 类型：1 - 业务,，2 - 平台
      */
     private Integer type;
 

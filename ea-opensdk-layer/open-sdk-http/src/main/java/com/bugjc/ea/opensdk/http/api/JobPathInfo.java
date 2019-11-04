@@ -1,21 +1,23 @@
 package com.bugjc.ea.opensdk.http.api;
 
 /**
- * 授权服务接口,接口路径信息，路径、版本
+ * 任务调度服务接口,接口路径信息，路径、版本
  * @author aoki
  */
-public enum AuthPathInfo {
+public enum JobPathInfo {
     /**
-     * 接口授权服务
+     * 接口信息
      */
-    QUERY_TOKEN_V1("/auth/query_token","1.0","获取接口调用凭证"),
-    VERIFY_TOKEN_V1("/auth/verify_token","1.0","校验接口调用凭证");
+    JOB_CREATE_PATH_V1("/job/create","1.0","创建任务接口"),
+    JOB_DEL_PATH_V1("/job/del","1.0","删除任务接口"),
+    JOB_UPD_PATH_V1("/job/upd","1.0","修改任务接口"),
+    JOB_FIND_PATH_V1("/job/find","1.0","获取任务信息接口");
 
     private String path;
     private String version;
     private String desc;
 
-    AuthPathInfo(String path, String version, String desc) {
+    JobPathInfo(String path, String version, String desc) {
         this.path = path;
         this.version = version;
         this.desc = desc;
@@ -33,3 +35,4 @@ public enum AuthPathInfo {
         return desc;
     }
 }
+

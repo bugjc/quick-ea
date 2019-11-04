@@ -3,14 +3,33 @@ package com.bugjc.ea.auth.core.exception;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * 自定义业务异常父类
+ * @author aoki
+ * @date 2019/11/4
+ * **/
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class BizException extends RuntimeException {
+    /**
+     * 异常状态码
+     */
+    private int code;
 
-    private int code;  //异常状态码
-    private String message;  //异常信息
-    private String method;   //发生的方法，位置等
-    private String desc;   //描述
+    /**
+     * 异常信息
+     */
+    private String message;
+
+    /**
+     * 发生的方法，位置等
+     */
+    private String method;
+
+    /**
+     * 描述
+     */
+    private String desc;
 
     public BizException(String message) {
         super(message);
