@@ -2,7 +2,6 @@ package com.bugjc.ea.opensdk.http.service;
 
 import com.bugjc.ea.opensdk.http.api.AuthPathInfo;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.model.auth.QueryTokenBody;
 import com.bugjc.ea.opensdk.http.model.auth.VerifyTokenBody;
 
 import java.io.IOException;
@@ -17,16 +16,17 @@ public interface AuthService {
     /**
      * 获取 token
      * @param authPathInfo
-     * @param requestBody
      * @return
+     * @throws IOException
      */
-    Result getToken(AuthPathInfo authPathInfo, QueryTokenBody.RequestBody requestBody) throws IOException;
+    Result getToken(AuthPathInfo authPathInfo) throws IOException;
 
     /**
      * 校验 token
      * @param authPathInfo
      * @param requestBody
      * @return
+     * @throws IOException
      */
     Result verifyToken(AuthPathInfo authPathInfo, VerifyTokenBody.RequestBody requestBody) throws IOException;
 }

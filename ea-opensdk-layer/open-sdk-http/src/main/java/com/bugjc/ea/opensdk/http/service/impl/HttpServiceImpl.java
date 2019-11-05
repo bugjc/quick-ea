@@ -4,7 +4,9 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import com.alibaba.fastjson.JSON;
-import com.bugjc.ea.opensdk.http.core.component.AccessTokenComponent;
+import com.bugjc.ea.opensdk.http.core.component.AuthConfig;
+import com.bugjc.ea.opensdk.http.core.component.impl.AuthDefaultConfigImpl;
+import com.bugjc.ea.opensdk.http.core.component.impl.AuthRedisConfigImpl;
 import com.bugjc.ea.opensdk.http.core.constants.HttpHeaderKeyConstants;
 import com.bugjc.ea.opensdk.http.core.crypto.CryptoProcessor;
 import com.bugjc.ea.opensdk.http.core.crypto.input.AccessPartyDecryptParam;
@@ -14,7 +16,9 @@ import com.bugjc.ea.opensdk.http.core.crypto.output.AccessPartyEncryptObj;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
 import com.bugjc.ea.opensdk.http.model.AppParam;
+import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
+import com.bugjc.ea.opensdk.http.service.JobService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -29,22 +33,30 @@ import java.io.IOException;
 @Slf4j
 public class HttpServiceImpl implements HttpService {
 
-    /**
-     * 应用接入参数
-     */
     @Getter
     @Setter
     private AppParam appParam;
     @Getter
     @Setter
-    private OkHttpClient httpClient;
+    private OkHttpClient okHttpClient;
     @Getter
     @Setter
     private JedisPool jedisPool;
+    @Getter
+    private AuthService authService = new AuthServiceImpl(this);
+    @Getter
+    private JobService jobService = new JobServiceImpl(this);
 
     @Override
     public Result post(String path, String version, String body) throws IOException {
-        return post(path,version, new AccessTokenComponent(this, jedisPool).getToken(),body);
+        AuthConfig authConfig = null;
+        if (jedisPool == null){
+            authConfig = AuthDefaultConfigImpl.getInstance(this);
+        } else {
+            authConfig = AuthRedisConfigImpl.getInstance(this, jedisPool);
+        }
+
+        return post(path,version, authConfig.getToken(),body);
     }
 
 
@@ -106,7 +118,7 @@ public class HttpServiceImpl implements HttpService {
 
         Request request =  builder.build();
         //执行请求
-        Response httpResponse = this.httpClient.newCall(request).execute();
+        Response httpResponse = this.okHttpClient.newCall(request).execute();
 
         if (httpResponse.code() != HttpStatus.HTTP_OK){
             throw new HttpSecurityException(httpResponse.code(),"服务器端错误: " + httpResponse.message());
@@ -151,7 +163,7 @@ public class HttpServiceImpl implements HttpService {
             }
 
             /**返回结果**/
-            return JSON.parseObject(accessPartyDecryptObj.getBody(),Result.class);
+            return JSON.parseObject(accessPartyDecryptObj.getBody(), Result.class);
         }finally {
             if (httpResponse.body() != null) {
                 httpResponse.close();

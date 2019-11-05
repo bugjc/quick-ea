@@ -8,6 +8,7 @@ import com.bugjc.ea.opensdk.http.service.HttpService;
 import com.bugjc.ea.opensdk.http.service.JobService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.io.IOException;
@@ -50,8 +51,8 @@ public class HttpUtil {
         return new ApiBuilder()
                 .setAppParam(appParam)
                 .setHttpConnTimeout(5000)
-                //.setJedisPool(new JedisPool(jedisPoolConfig, host, port, timeout,null,database))
-                .buildJobApi();
+                .setJedisPool(new JedisPool(jedisPoolConfig, host, port, timeout,null,database))
+                .build().getJobService();
     }
 
     @Test

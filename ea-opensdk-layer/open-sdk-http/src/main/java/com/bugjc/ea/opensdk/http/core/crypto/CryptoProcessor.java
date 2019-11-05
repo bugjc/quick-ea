@@ -45,12 +45,12 @@ public class CryptoProcessor {
         accessPartyEncryptObj.setBody(body);
 
         String requestSign = "appid="+accessPartyEncryptParam.getAppId()+"&message="+ StrSortUtil.sortString(body)+"&nonce="+accessPartyEncryptObj.getNonce()+"&timestamp="+accessPartyEncryptObj.getTimestamp()+"&Sequence="+accessPartyEncryptObj.getSequence();
-        log.debug("接入方待签名字符串：{}", requestSign);
+        //log.debug("接入方待签名字符串：{}", requestSign);
         /**生成签名**/
         Sign sign = SecureUtil.sign(SignAlgorithm.SHA1withRSA,accessPartyEncryptParam.getRsaPrivateKey(),null);
         byte[] signed = sign.sign(requestSign.getBytes(CharsetUtil.CHARSET_UTF_8));
         accessPartyEncryptObj.setSignature(Base64.encode(signed));
-        log.debug("接入方签名：{}", Base64.encode(signed));
+        //log.debug("接入方签名：{}", Base64.encode(signed));
         return accessPartyEncryptObj;
     }
 
@@ -61,9 +61,9 @@ public class CryptoProcessor {
      */
     public ServicePartyDecryptObj servicePartyDecrypt(ServicePartyDecryptParam servicePartyDecryptParam){
         String responseSign = "appid="+servicePartyDecryptParam.getAppId()+"&message="+ StrSortUtil.sortString(servicePartyDecryptParam.getBody())+"&nonce="+servicePartyDecryptParam.getNonce()+"&timestamp="+servicePartyDecryptParam.getTimestamp()+"&Sequence="+servicePartyDecryptParam.getSequence();
-        log.debug("服务方待签名字符串：{}", responseSign);
+        //log.debug("服务方待签名字符串：{}", responseSign);
         Sign sign = SecureUtil.sign(SignAlgorithm.SHA1withRSA,null, servicePartyDecryptParam.getRsaPublicKey());
-        log.debug("服务方签名：{}", servicePartyDecryptParam.getSignature());
+        //log.debug("服务方签名：{}", servicePartyDecryptParam.getSignature());
         boolean verify = sign.verify(responseSign.getBytes(CharsetUtil.CHARSET_UTF_8), Base64.decode(servicePartyDecryptParam.getSignature()));
         ServicePartyDecryptObj servicePartyDecryptObj = new ServicePartyDecryptObj();
         //TODO 解密body

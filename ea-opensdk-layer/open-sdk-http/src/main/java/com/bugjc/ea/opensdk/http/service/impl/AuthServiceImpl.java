@@ -1,13 +1,14 @@
 package com.bugjc.ea.opensdk.http.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.opensdk.http.api.AuthPathInfo;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
+import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
+import com.bugjc.ea.opensdk.http.core.enums.TokenResultStatusEnum;
 import com.bugjc.ea.opensdk.http.model.auth.QueryTokenBody;
 import com.bugjc.ea.opensdk.http.model.auth.VerifyTokenBody;
 import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.IOException;
 
@@ -18,13 +19,43 @@ import java.io.IOException;
  * **/
 public class AuthServiceImpl implements AuthService {
 
-    @Setter
-    @Getter
     private HttpService httpService;
+    public AuthServiceImpl(HttpService httpService){
+        this.httpService = httpService;
+    }
 
     @Override
-    public Result getToken(AuthPathInfo authPathInfo, QueryTokenBody.RequestBody requestBody) throws IOException {
-        return httpService.post(authPathInfo.getPath(), authPathInfo.getVersion(), requestBody.toString());
+    public Result getToken(AuthPathInfo authPathInfo) throws IOException {
+
+        if (httpService == null){
+            throw new IllegalStateException("httpService object not set");
+        }
+
+        //构建请求对象
+        QueryTokenBody.RequestBody requestBody = new QueryTokenBody.RequestBody();
+        requestBody.setAppId(httpService.getAppParam().getAppId());
+        requestBody.setAppSecret(httpService.getAppParam().getAppSecret());
+
+        //调用接口
+        Result result = httpService.post(AuthPathInfo.QUERY_TOKEN_V1.getPath(), AuthPathInfo.QUERY_TOKEN_V1.getVersion(),null, requestBody.toString());
+
+        //根据特定应答码返回正常、重试和忽略状态，获取token在根据状态做相应处理。
+        if (result == null){
+            result = new Result();
+            result.setCode(TokenResultStatusEnum.Retry.getStatus());
+            return result;
+        }
+
+        if (result.getCode() == ResultCode.SUCCESS.getCode()){
+            QueryTokenBody.ResponseBody responseBody = ((JSONObject)result.getData()).toJavaObject(QueryTokenBody.ResponseBody.class);
+            if (responseBody.getFailCode() == 0){
+                result.setCode(TokenResultStatusEnum.Normal.getStatus());
+            } else {
+                result.setCode(TokenResultStatusEnum.Ignorable.getStatus());
+            }
+        }
+
+        return result;
     }
 
     @Override

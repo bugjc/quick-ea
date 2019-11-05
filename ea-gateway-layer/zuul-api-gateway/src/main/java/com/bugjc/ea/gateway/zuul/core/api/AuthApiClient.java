@@ -60,7 +60,7 @@ public class AuthApiClient {
             appParam.setRsaPublicKey(app.getRsaPublicKey());
             appParam.setAppSecret(app.getAppSecret());
             appParam.setAppId(app.getId());
-            AuthService authService = HttpClient.getAuthService(appParam);
+            AuthService authService = HttpClient.getHttpService(appParam).getAuthService();
             //调用接口
             VerifyTokenBody.RequestBody requestBody = new VerifyTokenBody.RequestBody();
             requestBody.setAccessToken(token);

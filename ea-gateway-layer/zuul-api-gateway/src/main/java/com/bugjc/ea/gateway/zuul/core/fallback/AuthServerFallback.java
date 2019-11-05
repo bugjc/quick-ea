@@ -23,11 +23,11 @@ import java.nio.charset.StandardCharsets;
  */
 @Slf4j
 @Component
-public class JwtServerFallback implements FallbackProvider {
+public class AuthServerFallback implements FallbackProvider {
     @Override
     public String getRoute() {
         //表示所有服务，如果想对单个服务进行限制，写入服务ID即可。
-        return "jwt-basic-server";
+        return "auth-basic-server";
     }
 
     @Override

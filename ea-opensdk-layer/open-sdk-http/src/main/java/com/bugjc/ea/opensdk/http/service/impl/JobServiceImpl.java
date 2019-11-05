@@ -8,8 +8,6 @@ import com.bugjc.ea.opensdk.http.model.job.FindBody;
 import com.bugjc.ea.opensdk.http.model.job.UpdBody;
 import com.bugjc.ea.opensdk.http.service.HttpService;
 import com.bugjc.ea.opensdk.http.service.JobService;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.io.IOException;
 
@@ -20,9 +18,10 @@ import java.io.IOException;
  * **/
 public class JobServiceImpl implements JobService {
 
-    @Setter
-    @Getter
     private HttpService httpService;
+    public JobServiceImpl(HttpService httpService){
+        this.httpService = httpService;
+    }
     
     @Override
     public Result createJob(JobPathInfo jobPathInfo, CreateBody.RequestBody requestBody) throws IOException {
