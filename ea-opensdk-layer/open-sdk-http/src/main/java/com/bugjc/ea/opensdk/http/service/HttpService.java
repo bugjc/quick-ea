@@ -68,5 +68,5 @@ public interface HttpService {
      * @return
      * @throws IOException
      */
-    Result post(String path, String version,String token,String body) throws IOException;
+    Result post(String path, String version, String token, String body) throws IOException;
 }

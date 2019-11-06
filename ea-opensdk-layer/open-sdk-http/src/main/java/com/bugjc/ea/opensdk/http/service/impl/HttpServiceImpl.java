@@ -15,6 +15,7 @@ import com.bugjc.ea.opensdk.http.core.crypto.output.AccessPartyDecryptObj;
 import com.bugjc.ea.opensdk.http.core.crypto.output.AccessPartyEncryptObj;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
+import com.bugjc.ea.opensdk.http.core.util.IpAddressUtil;
 import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
@@ -50,18 +51,19 @@ public class HttpServiceImpl implements HttpService {
     @Override
     public Result post(String path, String version, String body) throws IOException {
         AuthConfig authConfig = null;
-        if (jedisPool == null){
+        if (jedisPool == null) {
             authConfig = AuthDefaultConfigImpl.getInstance(this);
         } else {
             authConfig = AuthRedisConfigImpl.getInstance(this, jedisPool);
         }
 
-        return post(path,version, authConfig.getToken(),body);
+        return post(path, version, authConfig.getToken(), body);
     }
 
 
     /**
      * http 接口调用方法
+     *
      * @param path
      * @param version
      * @param token
@@ -70,17 +72,17 @@ public class HttpServiceImpl implements HttpService {
      * @throws IOException
      */
     @Override
-    public Result post(String path, String version,String token,String body) throws IOException {
-        if (this.appParam == null){
+    public Result post(String path, String version, String token, String body) throws IOException {
+        if (this.appParam == null) {
             throw new HttpSecurityException("参数不能为空");
         }
 
-        if (StrUtil.isBlank(path)){
+        if (StrUtil.isBlank(path)) {
             throw new HttpSecurityException("PATH 参数未设置");
         }
 
         //参数判断
-        if(StrUtil.isBlank(body)){
+        if (StrUtil.isBlank(body)) {
             body = "{}";
         }
 
@@ -95,78 +97,86 @@ public class HttpServiceImpl implements HttpService {
         MediaType mediaType = MediaType.parse(HttpHeaderKeyConstants.CONTENT_TYPE_APPLICATION_JSON_VALUE);
         RequestBody requestBody = RequestBody.create(mediaType, body.getBytes());
 
-        //完整地址
-        String url = appParam.getBaseUrl().concat(path);
-        log.debug("URL:{}",url);
-        log.debug("RequestBody:{}", body);
+        boolean flag = IpAddressUtil.internalIp(appParam.getBaseUrl());
+        if (flag){
+            //内网调用.将请求转换成内部请求
+            log.error("内网调用.将请求转换成内部请求");
+            return null;
 
-        //构建请求
-        Request.Builder builder = new Request.Builder()
-                .url(url)
-                .post(requestBody);
-        builder.header(HttpHeaderKeyConstants.VERSION, version)
-                .header(HttpHeaderKeyConstants.CONTENT_TYPE, HttpHeaderKeyConstants.CONTENT_TYPE_APPLICATION_JSON_VALUE)
-                .header(HttpHeaderKeyConstants.ACCEPT, HttpHeaderKeyConstants.CONTENT_TYPE_APPLICATION_JSON_VALUE)
-                .header(HttpHeaderKeyConstants.APP_ID, appParam.getAppId())
-                .header(HttpHeaderKeyConstants.SEQUENCE, accessPartyEncryptObj.getSequence())
-                .header(HttpHeaderKeyConstants.TIMESTAMP, accessPartyEncryptObj.getTimestamp())
-                .header(HttpHeaderKeyConstants.NONCE, accessPartyEncryptObj.getNonce())
-                .header(HttpHeaderKeyConstants.SIGNATURE, accessPartyEncryptObj.getSignature());
-        if (StrUtil.isNotBlank(token)){
-            builder.header(HttpHeaderKeyConstants.AUTHORIZATION, token);
-        }
+        } else {
+            //完整地址
+            String url = appParam.getBaseUrl().concat(path);
+            log.debug("URL:{}", url);
+            log.debug("RequestBody:{}", body);
 
-        Request request =  builder.build();
-        //执行请求
-        Response httpResponse = this.okHttpClient.newCall(request).execute();
-
-        if (httpResponse.code() != HttpStatus.HTTP_OK){
-            throw new HttpSecurityException(httpResponse.code(),"服务器端错误: " + httpResponse.message());
-        }
-
-        if (!httpResponse.isSuccessful()) {
-            throw new HttpSecurityException("服务器端错误: " + httpResponse);
-        }
-
-        if (httpResponse.body() == null){
-            throw new HttpSecurityException("接口异常！");
-        }
-
-        try {
-            String resultJson = httpResponse.body().string();
-            log.debug("ResponseBody:{}",resultJson);
-            if (StrUtil.isNotBlank(httpResponse.header(HttpHeaderKeyConstants.GATEWAY_ERROR_FLAG))){
-                //直接返回
-                return JSON.parseObject(resultJson,Result.class);
+            //构建请求
+            Request.Builder builder = new Request.Builder()
+                    .url(url)
+                    .post(requestBody);
+            builder.header(HttpHeaderKeyConstants.VERSION, version)
+                    .header(HttpHeaderKeyConstants.CONTENT_TYPE, HttpHeaderKeyConstants.CONTENT_TYPE_APPLICATION_JSON_VALUE)
+                    .header(HttpHeaderKeyConstants.ACCEPT, HttpHeaderKeyConstants.CONTENT_TYPE_APPLICATION_JSON_VALUE)
+                    .header(HttpHeaderKeyConstants.APP_ID, appParam.getAppId())
+                    .header(HttpHeaderKeyConstants.SEQUENCE, accessPartyEncryptObj.getSequence())
+                    .header(HttpHeaderKeyConstants.TIMESTAMP, accessPartyEncryptObj.getTimestamp())
+                    .header(HttpHeaderKeyConstants.NONCE, accessPartyEncryptObj.getNonce())
+                    .header(HttpHeaderKeyConstants.SIGNATURE, accessPartyEncryptObj.getSignature());
+            if (StrUtil.isNotBlank(token)) {
+                builder.header(HttpHeaderKeyConstants.AUTHORIZATION, token);
             }
 
-            /**获取response header**/
-            String headerSequenceValue = httpResponse.header(HttpHeaderKeyConstants.SEQUENCE);
-            if (!accessPartyEncryptObj.getSequence().equals(headerSequenceValue)){
-                throw new HttpSecurityException("无效的序列号！");
+            Request request = builder.build();
+            //执行请求
+            Response httpResponse = this.okHttpClient.newCall(request).execute();
+
+            if (httpResponse.code() != HttpStatus.HTTP_OK) {
+                throw new HttpSecurityException(httpResponse.code(), "服务器端错误: " + httpResponse.message());
             }
 
-            //接入方解密处理
-            AccessPartyDecryptParam accessPartyDecryptParam = new AccessPartyDecryptParam();
-            accessPartyDecryptParam.setAppId(appParam.getAppId());
-            accessPartyDecryptParam.setRsaPublicKey(appParam.getRsaPublicKey());
-            accessPartyDecryptParam.setNonce(httpResponse.header(HttpHeaderKeyConstants.NONCE));
-            accessPartyDecryptParam.setTimestamp(httpResponse.header(HttpHeaderKeyConstants.TIMESTAMP));
-            accessPartyDecryptParam.setSequence(headerSequenceValue);
-            accessPartyDecryptParam.setBody(resultJson);
-            accessPartyDecryptParam.setSignature(httpResponse.header(HttpHeaderKeyConstants.SIGNATURE));
-            AccessPartyDecryptObj accessPartyDecryptObj = cryptoProcessor.accessPartyDecrypt(accessPartyDecryptParam);
-            if (accessPartyDecryptObj.isSignSuccessful()){
-                log.info("解密成功");
-            }else {
-                log.info("解密失败");
+            if (!httpResponse.isSuccessful()) {
+                throw new HttpSecurityException("服务器端错误: " + httpResponse);
             }
 
-            /**返回结果**/
-            return JSON.parseObject(accessPartyDecryptObj.getBody(), Result.class);
-        }finally {
-            if (httpResponse.body() != null) {
-                httpResponse.close();
+            if (httpResponse.body() == null) {
+                throw new HttpSecurityException("接口异常！");
+            }
+
+            try {
+                String resultJson = httpResponse.body().string();
+                log.debug("ResponseBody:{}", resultJson);
+                if (StrUtil.isNotBlank(httpResponse.header(HttpHeaderKeyConstants.GATEWAY_ERROR_FLAG))) {
+                    //直接返回
+                    return JSON.parseObject(resultJson, Result.class);
+                }
+
+                /**获取response header**/
+                String headerSequenceValue = httpResponse.header(HttpHeaderKeyConstants.SEQUENCE);
+                if (!accessPartyEncryptObj.getSequence().equals(headerSequenceValue)) {
+                    throw new HttpSecurityException("无效的序列号！");
+                }
+
+                //接入方解密处理
+                AccessPartyDecryptParam accessPartyDecryptParam = new AccessPartyDecryptParam();
+                accessPartyDecryptParam.setAppId(appParam.getAppId());
+                accessPartyDecryptParam.setRsaPublicKey(appParam.getRsaPublicKey());
+                accessPartyDecryptParam.setNonce(httpResponse.header(HttpHeaderKeyConstants.NONCE));
+                accessPartyDecryptParam.setTimestamp(httpResponse.header(HttpHeaderKeyConstants.TIMESTAMP));
+                accessPartyDecryptParam.setSequence(headerSequenceValue);
+                accessPartyDecryptParam.setBody(resultJson);
+                accessPartyDecryptParam.setSignature(httpResponse.header(HttpHeaderKeyConstants.SIGNATURE));
+                AccessPartyDecryptObj accessPartyDecryptObj = cryptoProcessor.accessPartyDecrypt(accessPartyDecryptParam);
+                if (accessPartyDecryptObj.isSignSuccessful()) {
+                    log.info("解密成功");
+                } else {
+                    log.info("解密失败");
+                }
+
+                /**返回结果**/
+                return JSON.parseObject(accessPartyDecryptObj.getBody(), Result.class);
+            } finally {
+                if (httpResponse.body() != null) {
+                    httpResponse.close();
+                }
             }
         }
     }

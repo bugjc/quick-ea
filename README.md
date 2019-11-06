@@ -84,3 +84,14 @@
 - 流量控制 (x)
 - 密钥自动更新分发（x）
 - 动态接口权限认证（x）
+
+## 快速开始
+
+1. 配置 /etc/hosts:
+```
+127.0.0.1  eureka1-server
+127.0.0.1  eureka2-server
+127.0.0.1  zuul-api-gateway
+127.0.0.1  auth-basic-server
+127.0.0.1  job-server
+```
