@@ -95,3 +95,33 @@
 127.0.0.1  auth-basic-server
 127.0.0.1  job-server
 ```
+
+2. 启动 Eureka Server集群
+```
+## 新建 Terminal 进入项目
+cd quick-ea/ea-basis-server-layer/eureka-basis-server
+## 启动 eureka1
+mvn spring-boot:run -Dspring-boot.run.profiles=eureka1
+
+## 新建 Terminal 进入项目
+cd quick-ea/ea-basis-server-layer/eureka-basis-server
+## 启动 eureka2
+mvn spring-boot:run -Dspring-boot.run.profiles=eureka2
+```
+3. 启动 API Gateway、Auth Server 和 Job Server
+```
+## 新建 Terminal 进入 API Gateway 项目
+cd quick-ea/ea-gateway-layer/zuul-api-gateway
+## 启动 API Gateway
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+
+## 新建 Terminal 进入 Auth Server 项目
+cd quick-ea/ea-basis-server-layer/auth-basic-server
+## 启动 Auth Server
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+
+## 新建 Terminal 进入 Job Server 项目
+cd quick-ea/ea-server-layer/job-server
+## 启动 Job Server
+mvn spring-boot:run -Dspring-boot.run.profiles=dev
+```

@@ -21,10 +21,10 @@ import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 @EnableEurekaClient
 @EnableZuulProxy
 @SpringBootApplication
-public class ApiGatewayServerApplication implements CommandLineRunner {
+public class ZuulApiGatewayApplication implements CommandLineRunner {
 
     public static void main(String[] args) {
-        SpringApplication.run(ApiGatewayServerApplication.class, args);
+        SpringApplication.run(ZuulApiGatewayApplication.class, args);
         //自定义过滤处理器
         FilterProcessor.setProcessor(new CustomFilterProcessor());
     }

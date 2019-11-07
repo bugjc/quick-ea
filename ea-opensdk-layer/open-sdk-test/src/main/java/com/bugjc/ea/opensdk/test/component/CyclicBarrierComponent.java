@@ -153,14 +153,30 @@ public class CyclicBarrierComponent {
             if (flag){
                 //到达第二个屏障执行
                 long totalTime = (System.currentTimeMillis() - startTime);
-                double averageResponseTime = NumberUtil.div(totalTime, numberOfRequests);
-                double noSecondsToProcessRequests = NumberUtil.div(1000, averageResponseTime);
+                int resultSuccessNum = cyclicBarrierComponent.getResultSuccessNum().get();
+                int resultErrorNum = cyclicBarrierComponent.getResultErrorNum().get();
+                double averageResponseTime = 0;
+                if (numberOfRequests != 0){
+                    averageResponseTime = NumberUtil.div(totalTime, numberOfRequests);
+                }
 
-                double averageSuccessResponseTime = NumberUtil.div(totalTime, cyclicBarrierComponent.getResultSuccessNum().get());
-                double successPerSecond = NumberUtil.div(1000, averageSuccessResponseTime);
+                double noSecondsToProcessRequests = 0;
+                if (averageResponseTime != 0){
+                    noSecondsToProcessRequests = NumberUtil.div(1000, averageResponseTime);
+                }
 
-                log.info("业务执行成功总数：{}", cyclicBarrierComponent.getResultSuccessNum().get());
-                log.info("业务执行失败总数：{}", cyclicBarrierComponent.getResultErrorNum().get());
+                double averageSuccessResponseTime = 0;
+                if (resultSuccessNum != 0){
+                    averageSuccessResponseTime = NumberUtil.div(totalTime, resultSuccessNum);
+                }
+
+                double successPerSecond = 0;
+                if (averageSuccessResponseTime != 0){
+                    successPerSecond = NumberUtil.div(1000, averageSuccessResponseTime);
+                }
+
+                log.info("业务执行成功总数：{}", resultSuccessNum);
+                log.info("业务执行失败总数：{}", resultErrorNum);
                 log.info("平均响应时间：{} 毫秒", averageResponseTime);
                 log.info("每秒处理请求：{} 条", NumberUtil.round(noSecondsToProcessRequests,0));
                 log.info("每秒业务执行成功的应答：{} 条", NumberUtil.round(successPerSecond,0));

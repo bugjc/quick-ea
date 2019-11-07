@@ -81,7 +81,7 @@ public class IoUtils {
     }
 
     public static String[] readLines(InputStream is) throws IOException {
-        List<String> lines = new ArrayList();
+        List<String> lines = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 
         String[] var4;
@@ -100,20 +100,13 @@ public class IoUtils {
     }
 
     public static void writeLines(OutputStream os, String[] lines) throws IOException {
-        PrintWriter writer = new PrintWriter(new OutputStreamWriter(os));
 
-        try {
-            String[] arr = lines;
-            int len = lines.length;
-
-            for(int i = 0; i < len; ++i) {
-                String line = arr[i];
+        try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(os))) {
+            for (String line : lines) {
                 writer.println(line);
             }
 
             writer.flush();
-        } finally {
-            writer.close();
         }
     }
 
