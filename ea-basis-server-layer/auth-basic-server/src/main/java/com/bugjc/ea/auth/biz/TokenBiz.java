@@ -48,7 +48,7 @@ public class TokenBiz {
             return ResultGenerator.genSuccessResult(responseBody);
         }
 
-        if (!app.getAppSecret().equals(requestBody.getAppSecret())){
+        if (app.getAppSecret() == null || !app.getAppSecret().equals(requestBody.getAppSecret())){
             //密钥不匹配
             responseBody.setFailCode(QueryTokenFailCode.KeyError.getCode());
             return ResultGenerator.genFailResult(QueryTokenFailCode.KeyError.getDesc());

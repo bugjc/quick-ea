@@ -36,7 +36,7 @@ public class AppSecurityConfigServiceImpl implements AppSecurityConfigService {
 
         final AntPathMatcher pathMatcher = new AntPathMatcher();
         for (AppSecurityConfig appSecurityConfig : list) {
-            if (pathMatcher.match(appSecurityConfig.getPath(),path) && !appSecurityConfig.isVerifySignature()){
+            if (pathMatcher.match(appSecurityConfig.getPath(), path) && !appSecurityConfig.isVerifySignature()){
                 log.info("接口路径{},无需验证签名",path);
                 return false;
             }

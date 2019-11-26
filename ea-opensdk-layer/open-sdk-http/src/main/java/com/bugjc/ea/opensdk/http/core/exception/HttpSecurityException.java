@@ -6,11 +6,14 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class HttpSecurityException extends RuntimeException {
-
-    private int code;  //异常状态码
-    private String message;  //异常信息
-    private String method;   //发生的方法，位置等
-    private String desc;   //描述
+    //异常状态码
+    private int code;
+    //异常信息
+    private String message;
+    //发生的方法，位置等
+    private String method;
+    //描述
+    private String desc;
 
     public HttpSecurityException(String message) {
         super(message);
@@ -35,5 +38,9 @@ public class HttpSecurityException extends RuntimeException {
         this.message = message;
         this.method = method;
         this.desc = desc;
+    }
+
+    public HttpSecurityException() {
+        super();
     }
 }

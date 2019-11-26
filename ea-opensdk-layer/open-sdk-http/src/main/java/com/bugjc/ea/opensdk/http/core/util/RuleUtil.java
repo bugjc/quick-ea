@@ -1,30 +1,24 @@
-package com.bugjc.ea.gateway.zuul.core.util;
+package com.bugjc.ea.opensdk.http.core.util;
 
-import cn.hutool.core.util.RandomUtil;
-import com.bugjc.ea.gateway.zuul.model.Server;
+import com.bugjc.ea.opensdk.http.core.component.eureka.model.Server;
 
-import java.net.MalformedURLException;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RuleUtil {
 
-    /**
-     * 加权随机
-     * @param list
-     * @return
-     * @throws MalformedURLException
-     */
-    private static Server random(List<Server> list) throws MalformedURLException {
-        return list.get(RandomUtil.randomInt(list.size()));
-    }
 
     /**
      * 加权轮询
      */
     private static final AtomicInteger POS = new AtomicInteger(0);
 
-    public static Server weightRobin(List<Server> list) throws MalformedURLException {
+    /**
+     * 加权轮询
+     * @param list
+     * @return
+     */
+    public static Server weightRobin(List<Server> list) {
         if (list == null || list.isEmpty()) {
             return null;
         }

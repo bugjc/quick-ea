@@ -1,16 +1,17 @@
-package com.bugjc.ea.opensdk.http.core.component.impl;
+package com.bugjc.ea.opensdk.http.core.component.token.impl;
 
 import cn.hutool.cache.CacheUtil;
 import cn.hutool.cache.impl.FIFOCache;
 import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.opensdk.http.api.AuthPathInfo;
-import com.bugjc.ea.opensdk.http.core.component.AccessTokenConstants;
-import com.bugjc.ea.opensdk.http.core.component.AuthConfig;
+import com.bugjc.ea.opensdk.http.core.component.token.AccessTokenConstants;
+import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.enums.TokenResultStatusEnum;
 import com.bugjc.ea.opensdk.http.model.auth.QueryTokenBody;
 import com.bugjc.ea.opensdk.http.service.HttpService;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.concurrent.locks.Lock;
@@ -21,6 +22,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author aoki
  * @date 2019/11/5
  * **/
+@Slf4j
 public class AuthDefaultConfigImpl implements AuthConfig {
 
     /**
@@ -116,8 +118,9 @@ public class AuthDefaultConfigImpl implements AuthConfig {
             Result result =  httpService.getAuthService().getToken(AuthPathInfo.QUERY_TOKEN_V1);
             while (result.getCode() == TokenResultStatusEnum.Retry.getStatus()){
                 retryCount--;
+                log.info(retryCount +"");
                 result = httpService.getAuthService().getToken(AuthPathInfo.QUERY_TOKEN_V1);
-                if (retryCount < 0){
+                if (retryCount <= 0){
                     break;
                 }
                 try {

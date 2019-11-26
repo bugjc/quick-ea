@@ -95,6 +95,9 @@
 127.0.0.1  auth-basic-server
 127.0.0.1  job-server
 ```
+通过 sdk 发起调用会自动识别内网网调用，如内网调用会切换到服务之间的调用方式，不需要经过 api网关.
+
+注意：内部应用调用需配置 redis 和 eureka.
 
 2. 启动 Eureka Server集群
 ```

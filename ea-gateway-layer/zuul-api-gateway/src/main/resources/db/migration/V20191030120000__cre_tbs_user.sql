@@ -53,7 +53,7 @@ CREATE TABLE `app_security_config` (
 DROP TABLE IF EXISTS `app_token`;
 
 CREATE TABLE `app_token` (
-                             `id` varchar(32) COLLATE utf8mb4_bin NOT NULL COMMENT '主键',
+                             `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
                              `app_id` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL COMMENT 'APP ID',
                              `access_token` varchar(100) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '接口调用凭证',
                              `token_available_time` int(8) DEFAULT NULL COMMENT '凭证有效期，单位秒',
@@ -62,7 +62,7 @@ CREATE TABLE `app_token` (
                              PRIMARY KEY (`id`),
                              KEY `app_id_index` (`app_id`),
                              KEY `access_token_index` (`access_token`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 /*Table structure for table `app_version_map` */
 

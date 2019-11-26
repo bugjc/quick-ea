@@ -33,12 +33,12 @@ public class HttpUtil {
     public static JobService getJobService(AppParam appParam) {
 
         //redis 配置
-        String host = "192.168.0.146";
+        String host = "192.168.35.17";
         int port = 6379;
-        int timeout = 6000;
+        int timeout = 2000;
         int maxIdle = 60;
         long maxWaitMillis = -1;
-        int database = 5;
+        int database = 10;
 
         JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
         jedisPoolConfig.setMaxIdle(maxIdle);

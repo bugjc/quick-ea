@@ -9,6 +9,7 @@ import com.bugjc.ea.opensdk.http.model.auth.QueryTokenBody;
 import com.bugjc.ea.opensdk.http.model.auth.VerifyTokenBody;
 import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ import java.io.IOException;
  * @author aoki
  * @date 2019/11/4
  * **/
+@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private HttpService httpService;

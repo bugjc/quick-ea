@@ -1,4 +1,4 @@
-package com.bugjc.ea.opensdk.http.core.component;
+package com.bugjc.ea.opensdk.http.core.component.token;
 
 /**
  * 授权认证 token 常量类

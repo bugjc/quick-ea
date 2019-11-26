@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.StringRedisTemplate;
 
 import javax.annotation.Resource;
 
@@ -21,12 +22,16 @@ public class CustomZuulConfig {
     ServerProperties server;
     @Resource
     ZuulRouteService zuulRouteService;
+    @Resource
+    StringRedisTemplate stringRedisTemplate;
 
     @Bean
     public CustomRouteLocator routeLocator() {
-        CustomRouteLocator routeLocator = new CustomRouteLocator(this.server.getServlet().getContextPath(), this.zuulProperties);
-        routeLocator.setZuulRouteService(zuulRouteService);
-        return routeLocator;
+        return new CustomRouteLocator(
+                this.server.getServlet().getContextPath(),
+                this.zuulProperties,
+                this.zuulRouteService,
+                this.stringRedisTemplate);
     }
 
 }

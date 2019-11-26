@@ -1,4 +1,4 @@
-package com.bugjc.ea.opensdk.http.core.component;
+package com.bugjc.ea.opensdk.http.core.component.token;
 
 import com.bugjc.ea.opensdk.http.service.HttpService;
 

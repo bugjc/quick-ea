@@ -35,6 +35,11 @@
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
             <version>${spring-cloud-starter-netflix-eureka-server.version}</version>
         </dependency>
+        <!--使用 ip 作为注册中心服务的名-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-commons</artifactId>
+        </dependency>
 
         <!--注解工具-->
         <dependency>
