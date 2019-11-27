@@ -174,12 +174,12 @@ public class CyclicBarrierComponent {
                 if (averageSuccessResponseTime != 0){
                     successPerSecond = NumberUtil.div(1000, averageSuccessResponseTime);
                 }
-
+                //TODO 计算百分比成功数，例如：90% 5ms，95% 7ms
                 log.info("业务执行成功总数：{}", resultSuccessNum);
                 log.info("业务执行失败总数：{}", resultErrorNum);
                 log.info("平均响应时间：{} 毫秒", averageResponseTime);
-                log.info("每秒处理请求：{} 条", NumberUtil.round(noSecondsToProcessRequests,0));
-                log.info("每秒业务执行成功的应答：{} 条", NumberUtil.round(successPerSecond,0));
+                log.info("平均每秒可处理请求数：{} 条", NumberUtil.round(noSecondsToProcessRequests,0));
+                log.info("平均每秒业务执行成功数：{} 条", NumberUtil.round(successPerSecond,0));
                 log.info("总耗时：{} 毫秒", totalTime);
             }else {
                 //到达第一个屏障执行

@@ -15,6 +15,11 @@ public interface EurekaConfig {
     void init();
 
     /**
+     * 销毁 eureka 实例
+     */
+    void shutdown();
+
+    /**
      * 设置 存储对象,默认读取 eureka 配置信息的 jedispool 连接池
      * @param storageObject
      */

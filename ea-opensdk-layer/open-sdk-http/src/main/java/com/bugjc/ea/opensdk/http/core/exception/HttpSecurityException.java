@@ -3,16 +3,32 @@ package com.bugjc.ea.opensdk.http.core.exception;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+/**
+ * http 调用异常
+ * @author aoki
+ * @date 2019/11/27
+ * **/
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class HttpSecurityException extends RuntimeException {
-    //异常状态码
+    /**
+     * 异常状态码
+     */
     private int code;
-    //异常信息
+
+    /**
+     * 异常信息
+     */
     private String message;
-    //发生的方法，位置等
+
+    /**
+     * 发生的方法，位置等
+     */
     private String method;
-    //描述
+
+    /**
+     * 描述
+     */
     private String desc;
 
     public HttpSecurityException(String message) {

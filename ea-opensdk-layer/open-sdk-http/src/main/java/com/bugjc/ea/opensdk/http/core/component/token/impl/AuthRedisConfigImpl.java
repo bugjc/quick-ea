@@ -1,22 +1,19 @@
 package com.bugjc.ea.opensdk.http.core.component.token.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.opensdk.http.api.AuthPathInfo;
 import com.bugjc.ea.opensdk.http.core.component.token.AccessTokenConstants;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.enums.TokenResultStatusEnum;
+import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
 import com.bugjc.ea.opensdk.http.model.auth.QueryTokenBody;
 import com.bugjc.ea.opensdk.http.service.HttpService;
 import com.github.jedis.lock.JedisLock;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-
-import java.io.IOException;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 平台认证服务 redis 实现
@@ -25,11 +22,6 @@ import java.util.concurrent.locks.ReentrantLock;
  * **/
 @Slf4j
 public class AuthRedisConfigImpl implements AuthConfig {
-
-    /**
-     * 远程 redis存储 token
-     */
-    private JedisPool redisStorage;
 
     /**
      *  平台接口授权服务 http客户端
@@ -47,28 +39,18 @@ public class AuthRedisConfigImpl implements AuthConfig {
      */
     enum SingletonEnum {
         //创建一个枚举对象，该对象天生为单例
-        INSTANCE,
-        //创建一个缓存实例对象
-        CACHE_INSTANCE,
-        //创建一个锁重入实例对象
-        LOCK_INSTANCE;
+        INSTANCE;
         private AuthConfig authConfig;
-        private Lock accessTokenLock;
 
         /**
          * 私有化枚举的构造函数
          */
         SingletonEnum(){
             authConfig = new AuthRedisConfigImpl();
-            accessTokenLock = new ReentrantLock();
         }
 
         public AuthConfig getInstance(){
             return authConfig;
-        }
-
-        public Lock getLockInstance(){
-            return accessTokenLock;
         }
     }
 
@@ -76,17 +58,10 @@ public class AuthRedisConfigImpl implements AuthConfig {
      * 暴露获取实例的静态方法
      * @return
      */
-    public static AuthConfig getInstance(HttpService httpService, JedisPool redisStorage){
+    public static AuthConfig getInstance(HttpService httpService){
         AuthConfig authConfig = AuthRedisConfigImpl.SingletonEnum.INSTANCE.getInstance();
         authConfig.setHttpService(httpService);
-        authConfig.setStorageObject(redisStorage);
         return authConfig;
-    }
-
-
-    @Override
-    public void setStorageObject(Object storageObject) {
-        this.redisStorage = (JedisPool) storageObject;
     }
 
     @Override
@@ -95,16 +70,16 @@ public class AuthRedisConfigImpl implements AuthConfig {
             return null;
         }
 
-        if (redisStorage == null){
+        if (httpService.getAppParam().getJedisPool() == null){
             return null;
         }
 
         String appId = httpService.getAppParam().getAppId();
 
-        try (Jedis jedis = redisStorage.getResource()) {
-            //从redis 中获取 token
-            String token = jedis.get(AccessTokenConstants.getKey(appId));
-            if (token != null){
+        try (Jedis jedis = httpService.getAppParam().getJedisPool().getResource()) {
+            //从 redis 中获取 token
+            String token = getAccessToken(jedis, appId);
+            if (StrUtil.isNotBlank(token)){
                 return token;
             }
 
@@ -114,8 +89,9 @@ public class AuthRedisConfigImpl implements AuthConfig {
             try {
                 //获取锁
                 lock.acquire();
-                token = jedis.get(AccessTokenConstants.getKey(appId));
-                if (token != null){
+                //再一次尝试获取token
+                token = getAccessToken(jedis, appId);;
+                if (StrUtil.isNotBlank(token)){
                     return token;
                 }
 
@@ -149,7 +125,7 @@ public class AuthRedisConfigImpl implements AuthConfig {
                 }
 
                 return token;
-            } catch (InterruptedException | IOException e) {
+            } catch (InterruptedException | HttpSecurityException e) {
                 e.printStackTrace();
             } finally {
                 //释放锁
@@ -157,5 +133,15 @@ public class AuthRedisConfigImpl implements AuthConfig {
             }
         }
         return null;
+    }
+
+    /**
+     * 从 redis 中获取token
+     * @param jedis
+     * @param appId
+     * @return
+     */
+    private String getAccessToken(Jedis jedis, String appId){
+        return jedis.get(AccessTokenConstants.getKey(appId));
     }
 }

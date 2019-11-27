@@ -3,7 +3,13 @@ package com.bugjc.ea.opensdk.http.core.component.eureka;
 /**
  * @author aoki
  */
-public interface RedisConstants {
+public interface EurekaConstants {
+
+    /**
+     * eureka 默认加载的配置文件
+     */
+    String EUREKA_DEFAULT_FILE_NAME = "config.properties";
+
     /**
      * zuul 路由配置信息
      */

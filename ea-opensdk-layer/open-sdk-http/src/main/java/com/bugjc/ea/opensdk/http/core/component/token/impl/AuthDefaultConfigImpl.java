@@ -8,12 +8,12 @@ import com.bugjc.ea.opensdk.http.core.component.token.AccessTokenConstants;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.enums.TokenResultStatusEnum;
+import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
 import com.bugjc.ea.opensdk.http.model.auth.QueryTokenBody;
 import com.bugjc.ea.opensdk.http.service.HttpService;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.IOException;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -85,12 +85,11 @@ public class AuthDefaultConfigImpl implements AuthConfig {
     public static AuthConfig getInstance(HttpService httpService){
         AuthConfig authConfig = SingletonEnum.INSTANCE.getInstance();
         authConfig.setHttpService(httpService);
-        authConfig.setStorageObject(SingletonEnum.CACHE_INSTANCE.getInstance());
         return authConfig;
     }
 
     @Override
-    public String getToken() throws IOException {
+    public String getToken() throws HttpSecurityException {
         if (httpService == null){
             return null;
         }

@@ -3,11 +3,9 @@ package com.bugjc.ea.opensdk.http.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.bugjc.ea.opensdk.http.core.component.eureka.impl.EurekaDefaultConfigImpl;
+import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.eureka.model.Server;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
-import com.bugjc.ea.opensdk.http.core.component.token.impl.AuthDefaultConfigImpl;
-import com.bugjc.ea.opensdk.http.core.component.token.impl.AuthRedisConfigImpl;
 import com.bugjc.ea.opensdk.http.core.constants.HttpHeaderKeyConstants;
 import com.bugjc.ea.opensdk.http.core.crypto.CryptoProcessor;
 import com.bugjc.ea.opensdk.http.core.crypto.input.AccessPartyDecryptParam;
@@ -16,7 +14,7 @@ import com.bugjc.ea.opensdk.http.core.crypto.output.AccessPartyDecryptObj;
 import com.bugjc.ea.opensdk.http.core.crypto.output.AccessPartyEncryptObj;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
-import com.bugjc.ea.opensdk.http.core.util.IpAddressUtil;
+import com.bugjc.ea.opensdk.http.model.AppInternalParam;
 import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
@@ -25,7 +23,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
-import redis.clients.jedis.JedisPool;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -41,28 +38,25 @@ public class HttpServiceImpl implements HttpService {
     private AppParam appParam;
     @Getter
     @Setter
+    private AppInternalParam appInternalParam;
+    @Getter
+    @Setter
     private OkHttpClient okHttpClient;
     @Getter
     @Setter
-    private JedisPool jedisPool;
+    private EurekaConfig eurekaConfig;
+    @Getter
+    @Setter
+    private AuthConfig authConfig;
     @Getter
     private AuthService authService = new AuthServiceImpl(this);
     @Getter
     private JobService jobService = new JobServiceImpl(this);
 
     @Override
-    public Result post(String path, String version, String body) throws IOException {
-        AuthConfig authConfig = null;
-        if (jedisPool == null) {
-            authConfig = AuthDefaultConfigImpl.getInstance(this);
-        } else {
-            authConfig = AuthRedisConfigImpl.getInstance(this, jedisPool);
-        }
-
+    public Result post(String path, String version, String body) throws HttpSecurityException {
         return post(path, version, authConfig.getToken(), body);
     }
-
-
 
     /**
      * http 接口调用方法
@@ -76,21 +70,14 @@ public class HttpServiceImpl implements HttpService {
      */
     @Override
     public Result post(String path, String version, String token, String body) throws HttpSecurityException {
-        if (this.appParam == null) {
-            throw new HttpSecurityException("参数不能为空");
-        }
 
         if (StrUtil.isBlank(path)) {
-            throw new HttpSecurityException("PATH 参数未设置");
+            throw new HttpSecurityException("接口路径 参数未设置");
         }
 
-        //参数判断
-        if (StrUtil.isBlank(body)) {
-            body = "{}";
-        }
+        body = convertHttpBody(body);
 
-        boolean flag = IpAddressUtil.internalIp(appParam.getBaseUrl());
-        if (flag){
+        if (appInternalParam != null && appInternalParam.isEnable()) {
             return execInternalHttpRequest(path, version, token, body);
         } else {
             return execHttpRequest(path, version, token, body);
@@ -105,16 +92,10 @@ public class HttpServiceImpl implements HttpService {
      * @param body
      * @return
      */
-    private Result execInternalHttpRequest(String path, String version, String token, String body){
+    private Result execInternalHttpRequest(String path, String version, String token, String body) throws HttpSecurityException{
 
-
-        //TODO 1.网关初始化时向 redis 服务插入映射关系，例如：/job --> job-server,然后在加上元数据，例如是否需要截断前缀
-        //2.sdk 初始化增加内部调用检测，检测到内部调用提示注入 eureka 和 redis(存有映射关系的redis)
-        //3.缓存内部调用路径
-        //4.内部调用增加断路器
-        //5.增加监控，使用适配器、桥接等方式
-        //todo 统一捕获异常
-        Server server = EurekaDefaultConfigImpl.getInstance(jedisPool).chooseServer(path);
+        //TODO 4.调用增加断路器 5.增加监控
+        Server server = eurekaConfig.chooseServer(path);
         if (server == null){
             log.warn("查找不到对应的内部服务，转外网调用方式。");
             return execHttpRequest(path, version, token, body);
@@ -159,7 +140,7 @@ public class HttpServiceImpl implements HttpService {
      * @param body
      * @return
      */
-    private Result execHttpRequest(String path, String version, String token, String body){
+    private Result execHttpRequest(String path, String version, String token, String body) throws HttpSecurityException{
         //接入方安全处理
         AccessPartyEncryptParam accessPartyEncryptParam = new AccessPartyEncryptParam();
         BeanUtil.copyProperties(appParam, accessPartyEncryptParam);
@@ -189,8 +170,6 @@ public class HttpServiceImpl implements HttpService {
                 .header(HttpHeaderKeyConstants.NONCE, accessPartyEncryptObj.getNonce())
                 .header(HttpHeaderKeyConstants.SIGNATURE, accessPartyEncryptObj.getSignature());
         if (StrUtil.isNotBlank(token)) {
-
-
             builder.header(HttpHeaderKeyConstants.AUTHORIZATION, token);
         }
 
@@ -221,10 +200,8 @@ public class HttpServiceImpl implements HttpService {
             accessPartyDecryptParam.setBody(resultJson);
             accessPartyDecryptParam.setSignature(httpResponse.header(HttpHeaderKeyConstants.SIGNATURE));
             AccessPartyDecryptObj accessPartyDecryptObj = cryptoProcessor.accessPartyDecrypt(accessPartyDecryptParam);
-            if (accessPartyDecryptObj.isSignSuccessful()) {
-                log.info("解密成功");
-            } else {
-                log.info("解密失败");
+            if (!accessPartyDecryptObj.isSignSuccessful()) {
+                throw new HttpSecurityException("接口调用解密应答消息错误!");
             }
 
             /**返回结果**/
@@ -253,4 +230,17 @@ public class HttpServiceImpl implements HttpService {
         return httpResponse;
     }
 
+    /**
+     * 转换 body
+     * @param body
+     * @return
+     */
+    private String convertHttpBody(String body){
+        //参数判断
+        if (StrUtil.isBlank(body)) {
+            //这里是为了网关签名统一处理
+            body = "{}";
+        }
+        return body;
+    }
 }

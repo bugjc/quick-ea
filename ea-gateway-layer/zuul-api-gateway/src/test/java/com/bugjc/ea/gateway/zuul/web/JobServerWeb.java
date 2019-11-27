@@ -12,6 +12,25 @@ import org.junit.Test;
 @Slf4j
 public class JobServerWeb {
 
+
+//    try {
+//
+//        File file = FileUtil.touch("config1.properties");
+//        FileWriter writer = new FileWriter(file);
+//        writer.append("eureka.serviceUrl.default=http://eureka:123456@127.0.0.1:8000/eureka/,http://eureka:123456@127.0.0.1:8001/eureka/");
+//        writer.close();
+//
+//        ClassPathResource resource = new ClassPathResource("config1.properties");
+//        System.out.println(resource.getPath());
+//        System.out.println(resource.getAbsolutePath());
+//        System.out.println(resource.getFile().getPath());
+//        System.out.println(resource.getName());
+//        System.out.println(resource.getFile().getParentFile().getPath());
+//        //FileUtil.appendLines(appList,);
+//    }catch (Exception ex){
+//        System.out.println(FileUtil.touch("config1.properties").getPath());
+//    }
+
     /**
      * 获取任务信息
      */
@@ -21,13 +40,14 @@ public class JobServerWeb {
         int total = 100;
         JobFindCyclicBarrierTask jobFindCyclicBarrierTask = new JobFindCyclicBarrierTask();
         //手动触发一次
-        //jobFindCyclicBarrierTask.execTask();
+        jobFindCyclicBarrierTask.execTask();
 
         CyclicBarrierComponent cyclicBarrierComponent = new TestBuilder()
                 .setTotal(total)
                 .setCyclicBarrierTask(jobFindCyclicBarrierTask)
                 .build();
         cyclicBarrierComponent.run();
+
 
     }
 

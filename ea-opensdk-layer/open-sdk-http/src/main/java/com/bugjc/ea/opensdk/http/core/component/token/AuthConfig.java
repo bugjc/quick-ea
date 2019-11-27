@@ -1,8 +1,7 @@
 package com.bugjc.ea.opensdk.http.core.component.token;
 
+import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
 import com.bugjc.ea.opensdk.http.service.HttpService;
-
-import java.io.IOException;
 
 /**
  * 平台认证服务配置
@@ -19,15 +18,10 @@ public interface AuthConfig {
     void setHttpService(HttpService httpService);
 
     /**
-     * 设置 存储对象,默认内存存储方式不使用
-     * @param storageObject
-     */
-    default void setStorageObject(Object storageObject){};
-    /**
      * 获取 token
      * @return
-     * @throws IOException
+     * @throws HttpSecurityException
      * @date 2019/11/5
      */
-    String getToken() throws IOException;
+    String getToken() throws HttpSecurityException;
 }

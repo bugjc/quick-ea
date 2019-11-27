@@ -5,13 +5,12 @@ import com.bugjc.ea.opensdk.http.api.AuthPathInfo;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
 import com.bugjc.ea.opensdk.http.core.enums.TokenResultStatusEnum;
+import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
 import com.bugjc.ea.opensdk.http.model.auth.QueryTokenBody;
 import com.bugjc.ea.opensdk.http.model.auth.VerifyTokenBody;
 import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
 import lombok.extern.slf4j.Slf4j;
-
-import java.io.IOException;
 
 /**
  * 平台授权认证服务
@@ -27,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result getToken(AuthPathInfo authPathInfo) throws IOException {
+    public Result getToken(AuthPathInfo authPathInfo) throws HttpSecurityException {
 
         if (httpService == null){
             throw new IllegalStateException("httpService object not set");
@@ -61,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public Result verifyToken(AuthPathInfo authPathInfo, VerifyTokenBody.RequestBody requestBody) throws IOException {
+    public Result verifyToken(AuthPathInfo authPathInfo, VerifyTokenBody.RequestBody requestBody) throws HttpSecurityException {
         return httpService.post(authPathInfo.getPath(), authPathInfo.getVersion(), requestBody.toString());
     }
 }
