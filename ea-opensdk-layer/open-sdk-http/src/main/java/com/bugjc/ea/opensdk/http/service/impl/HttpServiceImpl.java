@@ -1,5 +1,7 @@
 package com.bugjc.ea.opensdk.http.service.impl;
 
+import cn.hutool.aop.ProxyUtil;
+import cn.hutool.aop.aspects.TimeIntervalAspect;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
@@ -49,9 +51,9 @@ public class HttpServiceImpl implements HttpService {
     @Setter
     private AuthConfig authConfig;
     @Getter
-    private AuthService authService = new AuthServiceImpl(this);
+    private AuthService authService = ProxyUtil.proxy(new AuthServiceImpl(this), TimeIntervalAspect.class);
     @Getter
-    private JobService jobService = new JobServiceImpl(this);
+    private JobService jobService = ProxyUtil.proxy(new JobServiceImpl(this), TimeIntervalAspect.class);
 
     @Override
     public Result post(String path, String version, String body) throws HttpSecurityException {

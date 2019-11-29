@@ -1,5 +1,7 @@
 package com.bugjc.ea.opensdk.http;
 
+import cn.hutool.aop.ProxyUtil;
+import cn.hutool.aop.aspects.TimeIntervalAspect;
 import cn.hutool.core.util.StrUtil;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.eureka.impl.EurekaDefaultConfigImpl;
@@ -28,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 public class ApiBuilder {
     private AppParam appParam = null;
     private AppInternalParam appInternalParam = null;
-    private HttpService httpService = new HttpServiceImpl();
+    private HttpService httpService = ProxyUtil.proxy(new HttpServiceImpl(), TimeIntervalAspect.class);
     private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
     private OkHttpClient httpClient;
 
@@ -100,7 +102,7 @@ public class ApiBuilder {
                 appInternalParam.setEnable(true);
                 //设置eureka服务实例
                 EurekaConfig eurekaConfig = EurekaDefaultConfigImpl.getInstance(appInternalParam.getJedisPool());
-                this.httpService.setEurekaConfig(eurekaConfig);
+                this.httpService.setEurekaConfig(ProxyUtil.proxy(eurekaConfig, TimeIntervalAspect.class));
                 //初始化 eureka
                 eurekaConfig.init();
             }
@@ -110,7 +112,7 @@ public class ApiBuilder {
             if (httpService.getAppParam().getJedisPool() != null){
                 authConfig = AuthRedisConfigImpl.getInstance(this.httpService);
             }
-            this.httpService.setAuthConfig(authConfig);
+            this.httpService.setAuthConfig(ProxyUtil.proxy(authConfig, TimeIntervalAspect.class));
 
             //设置 http client 连接池
             if (this.httpClient == null) {

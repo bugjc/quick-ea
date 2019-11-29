@@ -23,7 +23,7 @@ public class AppInternalParam implements Serializable {
 
     /**
      * 启用内部调用方式（非必填），默认：false 外部调用, ture 内部调用；注：构建API调用对象时会自动检测并注入此参数
-     * TODO 备注：内部调用失败多次触发失败回退时需要及时清理 eureka 对象等信息
+     * TODO 备忘录：内部调用失败多次触发失败回退时需要及时清理 eureka 对象等信息
      */
     private boolean enable = false;
 
