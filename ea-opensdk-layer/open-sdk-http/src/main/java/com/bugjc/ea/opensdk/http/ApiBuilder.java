@@ -1,8 +1,6 @@
 package com.bugjc.ea.opensdk.http;
 
 import cn.hutool.core.util.StrUtil;
-import com.bugjc.ea.opensdk.http.core.aop.ProxyUtil;
-import com.bugjc.ea.opensdk.http.core.aop.aspect.TimeIntervalAspect;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.eureka.impl.EurekaDefaultConfigImpl;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
@@ -14,6 +12,7 @@ import com.bugjc.ea.opensdk.http.core.util.SSLUtil;
 import com.bugjc.ea.opensdk.http.model.AppInternalParam;
 import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.service.HttpService;
+import com.bugjc.ea.opensdk.http.service.HttpServiceFactory;
 import com.bugjc.ea.opensdk.http.service.impl.HttpServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
@@ -29,11 +28,12 @@ import java.util.concurrent.TimeUnit;
 public class ApiBuilder {
     private AppParam appParam = null;
     private AppInternalParam appInternalParam = null;
-    private HttpService httpService = (HttpService) ProxyUtil.createProxy(new HttpServiceImpl(), new TimeIntervalAspect());
+    private HttpService httpService;
     private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
     private OkHttpClient httpClient;
 
     public ApiBuilder(){
+        this.httpService = HttpServiceFactory.createProxy(new HttpServiceImpl());
         this.httpClientBuilder.connectTimeout(5L, TimeUnit.SECONDS).readTimeout(20L, TimeUnit.SECONDS);
     }
 
@@ -115,7 +115,7 @@ public class ApiBuilder {
 
             //设置 http client 连接池
             if (this.httpClient == null) {
-                this.httpClientBuilder.connectionPool(new ConnectionPool(2, 5L, TimeUnit.MINUTES));
+                this.httpClientBuilder.connectionPool(new ConnectionPool(4, 5L, TimeUnit.MINUTES));
 
                 try {
                     this.httpClientBuilder.sslSocketFactory(SSLUtil.getAllTrustContext().getSocketFactory(), SSLUtil.getAllTrustManager());

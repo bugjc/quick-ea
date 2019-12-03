@@ -1,11 +1,8 @@
 package com.bugjc.ea.opensdk.http.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
-import com.bugjc.ea.opensdk.http.core.aop.ProxyUtil;
-import com.bugjc.ea.opensdk.http.core.aop.aspect.TimeIntervalAspect;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.eureka.model.Server;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
@@ -21,6 +18,7 @@ import com.bugjc.ea.opensdk.http.model.AppInternalParam;
 import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
+import com.bugjc.ea.opensdk.http.service.HttpServiceFactory;
 import com.bugjc.ea.opensdk.http.service.JobService;
 import lombok.Getter;
 import lombok.Setter;
@@ -60,9 +58,8 @@ public class HttpServiceImpl implements HttpService {
 
     public HttpServiceImpl(){
         /*创建HttpService切面代理对象并将引用传递到服务接口*/
-        TimeIntervalAspect timeIntervalAspect = Singleton.get(TimeIntervalAspect.class);
-        authService = new AuthServiceImpl((HttpService) ProxyUtil.createProxy(this, timeIntervalAspect));
-        jobService = new JobServiceImpl((HttpService) ProxyUtil.createProxy(this, timeIntervalAspect));
+        authService = new AuthServiceImpl(HttpServiceFactory.createProxy(this));
+        jobService = new JobServiceImpl(HttpServiceFactory.createProxy(this));
     }
 
 

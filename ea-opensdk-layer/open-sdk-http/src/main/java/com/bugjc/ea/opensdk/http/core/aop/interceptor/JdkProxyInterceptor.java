@@ -1,6 +1,7 @@
 package com.bugjc.ea.opensdk.http.core.aop.interceptor;
 
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.DefaultAspect;
 import lombok.extern.slf4j.Slf4j;
@@ -36,12 +37,9 @@ public class JdkProxyInterceptor implements InvocationHandler {
     /**
      * 将目标对象传入进行代理
      */
-    public Object newProxy(Object target, Aspect aspect) {
+    public Object newProxy(Object target, Class<? extends Aspect> aspectClass) {
         this.target = target;
-        if (aspect == null){
-            return newProxy(target);
-        }
-        this.aspect = aspect;
+        this.aspect = ReflectUtil.newInstance(aspectClass);
         //返回代理对象
         return Proxy.newProxyInstance(target.getClass().getClassLoader(),
                 target.getClass().getInterfaces(), this);
