@@ -17,6 +17,15 @@ public class JobFindCyclicBarrierTask implements CyclicBarrierTask {
             FindBody.RequestBody requestBody = new FindBody.RequestBody();
             requestBody.setJobId(RandomUtil.randomNumbers(20));
             Result result = HttpUtil.getHttpService(EnvUtil.getDevServer()).getJobService().findJob(JobPathInfo.JOB_FIND_PATH_V1, requestBody);
+
+//            FindBody.RequestBody requestBody = new FindBody.RequestBody();
+//            requestBody.setJobId("#########################################");
+//
+//            String path = JobPathInfo.JOB_FIND_PATH_V1.getPath();
+//            String version = JobPathInfo.JOB_FIND_PATH_V1.getVersion();
+//            String body = JSON.toJSONString(requestBody);
+//            Result result = HttpUtil.getHttpService(EnvUtil.getDevServer()).post(path, version, body);
+
             return result.getCode();
         }catch (Exception ex){
             return ResultCode.INTERNAL_SERVER_ERROR.getCode();

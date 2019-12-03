@@ -1,8 +1,8 @@
 package com.bugjc.ea.opensdk.http;
 
-import cn.hutool.aop.ProxyUtil;
-import cn.hutool.aop.aspects.TimeIntervalAspect;
 import cn.hutool.core.util.StrUtil;
+import com.bugjc.ea.opensdk.http.core.aop.ProxyUtil;
+import com.bugjc.ea.opensdk.http.core.aop.aspect.TimeIntervalAspect;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.eureka.impl.EurekaDefaultConfigImpl;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
@@ -22,7 +22,6 @@ import okhttp3.OkHttpClient;
 import java.util.concurrent.TimeUnit;
 
 /**
- * PerformanceTesting
  * 构建API
  * @author aoki
  */
@@ -30,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class ApiBuilder {
     private AppParam appParam = null;
     private AppInternalParam appInternalParam = null;
-    private HttpService httpService = ProxyUtil.proxy(new HttpServiceImpl(), TimeIntervalAspect.class);
+    private HttpService httpService = (HttpService) ProxyUtil.createProxy(new HttpServiceImpl(), new TimeIntervalAspect());
     private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
     private OkHttpClient httpClient;
 
@@ -102,7 +101,7 @@ public class ApiBuilder {
                 appInternalParam.setEnable(true);
                 //设置eureka服务实例
                 EurekaConfig eurekaConfig = EurekaDefaultConfigImpl.getInstance(appInternalParam.getJedisPool());
-                this.httpService.setEurekaConfig(ProxyUtil.proxy(eurekaConfig, TimeIntervalAspect.class));
+                this.httpService.setEurekaConfig(eurekaConfig);
                 //初始化 eureka
                 eurekaConfig.init();
             }
@@ -112,7 +111,7 @@ public class ApiBuilder {
             if (httpService.getAppParam().getJedisPool() != null){
                 authConfig = AuthRedisConfigImpl.getInstance(this.httpService);
             }
-            this.httpService.setAuthConfig(ProxyUtil.proxy(authConfig, TimeIntervalAspect.class));
+            this.httpService.setAuthConfig(authConfig);
 
             //设置 http client 连接池
             if (this.httpClient == null) {

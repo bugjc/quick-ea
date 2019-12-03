@@ -22,10 +22,21 @@
         <eureka-client.version>1.9.13</eureka-client.version>
         <!--rxjava-->
         <rxjava.version>1.1.1</rxjava.version>
+        <!--cglib-->
+        <cglib.version>3.3.0</cglib.version>
     </properties>
 
 
     <dependencies>
+
+        <!-- cglib 动态代理库-->
+        <dependency>
+            <groupId>cglib</groupId>
+            <artifactId>cglib</artifactId>
+            <version>${cglib.version}</version>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
 
         <!--http client-->
         <dependency>

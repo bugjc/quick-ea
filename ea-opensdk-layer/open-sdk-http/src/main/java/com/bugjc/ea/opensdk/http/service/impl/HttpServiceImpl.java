@@ -1,10 +1,11 @@
 package com.bugjc.ea.opensdk.http.service.impl;
 
-import cn.hutool.aop.ProxyUtil;
-import cn.hutool.aop.aspects.TimeIntervalAspect;
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.Singleton;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
+import com.bugjc.ea.opensdk.http.core.aop.ProxyUtil;
+import com.bugjc.ea.opensdk.http.core.aop.aspect.TimeIntervalAspect;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.eureka.model.Server;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
@@ -50,10 +51,20 @@ public class HttpServiceImpl implements HttpService {
     @Getter
     @Setter
     private AuthConfig authConfig;
+
     @Getter
-    private AuthService authService = ProxyUtil.proxy(new AuthServiceImpl(this), TimeIntervalAspect.class);
+    private AuthService authService;
     @Getter
-    private JobService jobService = ProxyUtil.proxy(new JobServiceImpl(this), TimeIntervalAspect.class);
+    private JobService jobService;
+
+
+    public HttpServiceImpl(){
+        /*创建HttpService切面代理对象并将引用传递到服务接口*/
+        TimeIntervalAspect timeIntervalAspect = Singleton.get(TimeIntervalAspect.class);
+        authService = new AuthServiceImpl((HttpService) ProxyUtil.createProxy(this, timeIntervalAspect));
+        jobService = new JobServiceImpl((HttpService) ProxyUtil.createProxy(this, timeIntervalAspect));
+    }
+
 
     @Override
     public Result post(String path, String version, String body) throws HttpSecurityException {
