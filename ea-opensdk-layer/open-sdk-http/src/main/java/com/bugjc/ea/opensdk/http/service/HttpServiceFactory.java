@@ -3,6 +3,11 @@ package com.bugjc.ea.opensdk.http.service;
 import com.bugjc.ea.opensdk.http.core.aop.ProxyUtil;
 import com.bugjc.ea.opensdk.http.core.component.monitor.HttpCallAspect;
 
+/**
+ * http service 工厂类
+ * @author aoki
+ * @date 2019/12/4
+ * **/
 public class HttpServiceFactory {
 
     /**

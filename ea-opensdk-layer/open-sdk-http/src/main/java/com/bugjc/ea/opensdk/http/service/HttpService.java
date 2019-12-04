@@ -1,5 +1,6 @@
 package com.bugjc.ea.opensdk.http.service;
 
+import com.bugjc.ea.opensdk.http.core.aop.AspectInterceptor;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
@@ -84,6 +85,7 @@ public interface HttpService {
      * @return
      * @throws HttpSecurityException
      */
+    @AspectInterceptor
     Result post(String path, String version, String body) throws HttpSecurityException;
 
     /**
@@ -95,6 +97,7 @@ public interface HttpService {
      * @return
      * @throws HttpSecurityException
      */
+    @AspectInterceptor
     Result post(String path, String version, String token, String body) throws HttpSecurityException;
 
     /********************************************* 实际发起接口调用的方法 end ****************************************************************/

@@ -26,10 +26,14 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 public class ApiBuilder {
+    /** 应用接入方参数 */
     private AppParam appParam = null;
+    /** 内部应用接入方参数 */
     private AppInternalParam appInternalParam = null;
+    /** 调用http接口服务*/
     private HttpService httpService;
     private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+    /** http 客户端*/
     private OkHttpClient httpClient;
 
     public ApiBuilder(){

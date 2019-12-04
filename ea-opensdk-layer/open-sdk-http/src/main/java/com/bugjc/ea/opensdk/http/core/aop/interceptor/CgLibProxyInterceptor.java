@@ -2,6 +2,7 @@ package com.bugjc.ea.opensdk.http.core.aop.interceptor;
 
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
+import com.bugjc.ea.opensdk.http.core.aop.AspectInterceptorUtil;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.DefaultAspect;
 import net.sf.cglib.proxy.Enhancer;
@@ -49,11 +50,15 @@ public class CgLibProxyInterceptor implements MethodInterceptor {
     }
 
 
-
     @Override
     public Object intercept(Object proxy, Method method, Object[] args,
                             MethodProxy methodProxy) throws Throwable {
         try {
+            //获取并检查方法是否已开启切面拦截
+            if (!AspectInterceptorUtil.check(method)){
+                return method.invoke(target, args);
+            }
+
             if (aspect.before(target, method, args)){
                 Object returnVal = method.invoke(ClassUtil.isStatic(method) ? null : target, args);
                 aspect.afterReturning(target, method, args, returnVal);

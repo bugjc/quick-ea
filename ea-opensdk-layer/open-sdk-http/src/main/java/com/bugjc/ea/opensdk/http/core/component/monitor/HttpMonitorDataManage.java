@@ -11,7 +11,7 @@ public class HttpMonitorDataManage {
     /**
      * 队列
      */
-    private BoundedPriorityQueue<HttpMetadata> dataQueue = new BoundedPriorityQueue<HttpMetadata>(5000, (o1, o2) -> o1 == o2 ? 0 : -1);
+    private final BoundedPriorityQueue<HttpMetadata> dataQueue = new BoundedPriorityQueue<HttpMetadata>(5000, (o1, o2) -> o1 == o2 ? 0 : -1);
 
     /**
      * 私有化构造函数
@@ -53,7 +53,7 @@ public class HttpMonitorDataManage {
      * @param metadata
      * @return
      */
-    boolean add(HttpMetadata metadata){
+    boolean push(HttpMetadata metadata){
         return dataQueue.offer(metadata);
     }
 
@@ -61,7 +61,7 @@ public class HttpMonitorDataManage {
      * 读取监控数据
      * @return
      */
-    HttpMetadata poll(){
+    HttpMetadata pull(){
         return dataQueue.poll();
     }
 }
