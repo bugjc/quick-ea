@@ -1,7 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor;
 
 import cn.hutool.core.date.TimeInterval;
-import cn.hutool.core.lang.Singleton;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.component.monitor.entity.CountInfoTable;
 import com.bugjc.ea.opensdk.http.core.component.monitor.entity.HttpMetadata;
@@ -56,7 +55,7 @@ public class HttpCallAspect implements Aspect, Serializable {
 
     @Override
     public void after() {
-        ThreadPoolExecutorUtil.execute(Singleton.get(HttpMetadataHandle.class));
-        log.info("调用统计：{}",CountInfoTable.getInstance().getCountInfo());
+        ThreadPoolExecutorUtil.execute(HttpMetadataHandle.getInstance());
+        log.info("调用统计结果：{}",CountInfoTable.getInstance().getCountInfo());
     }
 }

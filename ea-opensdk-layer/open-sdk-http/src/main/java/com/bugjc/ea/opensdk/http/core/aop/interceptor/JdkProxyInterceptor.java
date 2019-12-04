@@ -25,6 +25,9 @@ public class JdkProxyInterceptor implements InvocationHandler {
 
     /**
      * 将目标对象传入进行代理
+     * @param target            --目标对象
+     * @param aspectClass       --切面对象
+     * @return  代理对象
      */
     public Object newProxy(Object target, Class<? extends Aspect> aspectClass) {
         this.target = target;
@@ -35,13 +38,21 @@ public class JdkProxyInterceptor implements InvocationHandler {
     }
 
     /**
-     * invoke方法
+     * 调用目标方法
+     * @param proxy             --代理对象
+     * @param method            --目标待执行方法
+     * @param args              --目标参数
+     * @return  目标方法执行结果
+     * @throws Throwable        --目标方法抛出的异常
      */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        //获取并检查方法是否已开启切面拦截
+        boolean flag = AspectInterceptorUtil.check(method);
         try {
             //获取并检查方法是否已开启切面拦截
-            if (!AspectInterceptorUtil.check(method)){
+            if (!flag){
+                log.debug("JDK动态代理方法 {} 无需拦截！", method.getName());
                 return method.invoke(target, args);
             }
 
@@ -52,10 +63,14 @@ public class JdkProxyInterceptor implements InvocationHandler {
             }
             return null;
         } catch (Exception ex){
-            aspect.afterThrowing(target, method, args, ex.getCause());
+            if (flag){
+                aspect.afterThrowing(target, method, args, ex.getCause());
+            }
             throw ex.getCause();
         } finally {
-            aspect.after();
+            if (flag){
+                aspect.after();
+            }
         }
     }
 

@@ -12,12 +12,11 @@ public class AspectInterceptorUtil {
     /**
      * 检查方法是否已开启切面拦截
      * @param method
-     * @return
+     * @return true:开启切面拦截，false:未开启切面拦截
      */
     public static boolean check(Method method){
         //获取并检查方法是否已开启切面拦截
-        AspectInterceptor aspectInterceptor = method.getAnnotation(AspectInterceptor.class);
-        return aspectInterceptor != null;
+        return method.getAnnotation(AspectInterceptor.class) != null;
     }
 
 }

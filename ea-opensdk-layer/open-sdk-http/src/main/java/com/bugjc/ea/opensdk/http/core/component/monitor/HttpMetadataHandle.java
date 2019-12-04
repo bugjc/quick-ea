@@ -11,12 +11,31 @@ import lombok.extern.slf4j.Slf4j;
  * **/
 @Slf4j
 public class HttpMetadataHandle implements Runnable {
+
+    private HttpMetadataHandle(){}
+
+    private enum SingletonEnum{
+        INSTANCE;
+        private HttpMetadataHandle httpMetadataHandle;
+        SingletonEnum(){
+            httpMetadataHandle = new HttpMetadataHandle();
+        }
+        public HttpMetadataHandle getHttpMetadataHandle(){
+            return this.httpMetadataHandle;
+        }
+    }
+
+    public static HttpMetadataHandle getInstance(){
+        return SingletonEnum.INSTANCE.getHttpMetadataHandle();
+    }
+
     @Override
     public void run() {
         int numberOfProcessedData = 0;
         while (true){
             //从队列拉取数据
             HttpMetadata httpMetadata = HttpMonitorDataManage.getInstance().pull();
+            log.info("HttpMetadata：{}", httpMetadata);
             if (httpMetadata == null){
                 //没有数据退出
                 break;

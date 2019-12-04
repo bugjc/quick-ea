@@ -21,13 +21,15 @@ public class JobServerWeb {
         int total = 100;
         JobFindCyclicBarrierTask jobFindCyclicBarrierTask = new JobFindCyclicBarrierTask();
         //手动触发一次
-        jobFindCyclicBarrierTask.execTask();
+        //jobFindCyclicBarrierTask.execTask();
 
         CyclicBarrierComponent cyclicBarrierComponent = new TestBuilder()
                 .setTotal(total)
                 .setCyclicBarrierTask(jobFindCyclicBarrierTask)
                 .build();
         cyclicBarrierComponent.run();
+
+        Thread.sleep(10000);
     }
 
 }
