@@ -1,6 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.event;
 
-import javafx.event.EventHandler;
+import com.lmax.disruptor.EventHandler;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -10,8 +10,9 @@ import lombok.extern.slf4j.Slf4j;
  * **/
 @Slf4j
 public class HttpCallEventHandler implements EventHandler<HttpCallEvent> {
+
     @Override
-    public void handle(HttpCallEvent event) {
+    public void onEvent(HttpCallEvent event, long l, boolean b) throws Exception {
         log.info("消费消息：{}", event.getPath());
     }
 }

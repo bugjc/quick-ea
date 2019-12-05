@@ -1,5 +1,7 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.event;
 
+import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSON;
 import com.lmax.disruptor.EventTranslatorOneArg;
 import com.lmax.disruptor.RingBuffer;
 
@@ -20,7 +22,11 @@ public class HttpCallEventProducer {
     }
 
     private static final EventTranslatorOneArg<HttpCallEvent, ByteBuffer> TRANSLATOR = (event, sequence, bb) -> {
-        event.setId(bb.toString());
+        HttpCallEvent httpCallEvent = JSON.parseObject(bb.array(),HttpCallEvent.class);
+        if (httpCallEvent == null){
+            return;
+        }
+        BeanUtil.copyProperties(httpCallEvent, event);
     };
 
     public void onData(ByteBuffer bb) {

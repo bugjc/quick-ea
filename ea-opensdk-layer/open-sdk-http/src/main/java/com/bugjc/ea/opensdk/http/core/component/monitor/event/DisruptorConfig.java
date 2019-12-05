@@ -1,21 +1,25 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.event;
 
-import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import com.lmax.disruptor.util.DaemonThreadFactory;
+import lombok.extern.slf4j.Slf4j;
+
+import java.nio.ByteBuffer;
 
 /**
- * 高性能队列初始化
+ * 高性能队列配置
  * @author aoki
  * @date 2019/12/5
  * **/
+@Slf4j
 public class DisruptorConfig {
 
     /** 指定环形缓冲区的大小，必须为2的幂。 */
     private final static int BUFFER_SIZE = 1024;
-    private static Disruptor<HttpCallEvent> httpCallEventDisruptor= null;
+    private Disruptor<HttpCallEvent> httpCallEventDisruptor= null;
+    private HttpCallEventProducer httpCallEventProducer = null;
 
     private DisruptorConfig(){};
 
@@ -49,6 +53,7 @@ public class DisruptorConfig {
             synchronized (DisruptorConfig.class){
                 if (httpCallEventDisruptor == null){
                     httpCallEventDisruptor = new Disruptor<HttpCallEvent>(new HttpCallEventFactory(), BUFFER_SIZE, DaemonThreadFactory.INSTANCE, ProducerType.SINGLE, new YieldingWaitStrategy());;
+                    httpCallEventDisruptor.handleEventsWith(new HttpCallEventHandler());
                     httpCallEventDisruptor.start();
                 }
             }
@@ -66,9 +71,23 @@ public class DisruptorConfig {
      * 获取一个生产者对象实例
      * @return
      */
-    public HttpCallEventProducer newProducer(){
-        // 创建RingBuffer容器
-        RingBuffer<HttpCallEvent> ringBuffer = httpCallEventDisruptor.getRingBuffer();
-        return new HttpCallEventProducer(ringBuffer);
+    private HttpCallEventProducer getProducer(){
+        if (httpCallEventProducer == null){
+            synchronized (DisruptorConfig.class){
+                if (httpCallEventProducer == null){
+                    httpCallEventProducer = new HttpCallEventProducer(httpCallEventDisruptor.getRingBuffer());
+                }
+            }
+        }
+        return httpCallEventProducer;
+    }
+
+    /**
+     * 推送数据到队列
+     * @param httpCallEvent
+     */
+    public void push(HttpCallEvent httpCallEvent){
+        log.info("生产消息：{}", httpCallEvent.toString());
+        getProducer().onData(ByteBuffer.wrap(httpCallEvent.toString().getBytes()));
     }
 }

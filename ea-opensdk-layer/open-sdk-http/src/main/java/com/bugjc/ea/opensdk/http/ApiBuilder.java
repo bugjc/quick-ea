@@ -23,21 +23,30 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 构建API
+ *
  * @author aoki
  */
 @Slf4j
 public class ApiBuilder {
-    /** 应用接入方参数 */
+    /**
+     * 应用接入方参数
+     */
     private AppParam appParam = null;
-    /** 内部应用接入方参数 */
+    /**
+     * 内部应用接入方参数
+     */
     private AppInternalParam appInternalParam = null;
-    /** 调用http接口服务*/
+    /**
+     * 调用http接口服务
+     */
     private HttpService httpService;
     private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
-    /** http 客户端*/
+    /**
+     * http 客户端
+     */
     private OkHttpClient httpClient;
 
-    public ApiBuilder(){
+    public ApiBuilder() {
         this.httpService = HttpServiceFactory.createProxy(new HttpServiceImpl());
         this.httpClientBuilder.connectTimeout(5L, TimeUnit.SECONDS).readTimeout(20L, TimeUnit.SECONDS);
         //启动 Disruptor
@@ -46,6 +55,7 @@ public class ApiBuilder {
 
     /**
      * 设置超时时间
+     *
      * @param timeout
      * @return
      */
@@ -60,6 +70,7 @@ public class ApiBuilder {
 
     /**
      * 设置服务方接口基地址(必设)
+     *
      * @param appParam
      * @return
      */
@@ -71,6 +82,7 @@ public class ApiBuilder {
 
     /**
      * 设置服务方接口基地址(非必设)
+     *
      * @param appInternalParam
      * @return
      */
@@ -82,10 +94,11 @@ public class ApiBuilder {
 
     /**
      * 构建http调用对象
+     *
      * @return
      */
-    public HttpService build(){
-        if (this.appParam == null){
+    public HttpService build() {
+        if (this.appParam == null) {
             throw new ElementNotFoundException("app param object not set");
         } else if (StrUtil.isBlank(this.appParam.getBaseUrl())) {
             throw new ElementNotFoundException("base url  not set");
@@ -95,12 +108,12 @@ public class ApiBuilder {
             throw new ElementNotFoundException("service party rsa public key not set");
         } else if (StrUtil.isBlank(this.appParam.getAppId())) {
             throw new ElementNotFoundException("app id not set");
-        } else if (StrUtil.isBlank(this.appParam.getAppSecret())){
+        } else if (StrUtil.isBlank(this.appParam.getAppSecret())) {
             throw new ElementNotFoundException("app secret not set");
         } else {
             //接入方设置了应用内部调用且接口基地址用的是内网地址
-            if (appInternalParam != null && IpAddressUtil.internalIp(appParam.getBaseUrl())){
-                if (appInternalParam.getJedisPool() == null){
+            if (appInternalParam != null && IpAddressUtil.internalIp(appParam.getBaseUrl())) {
+                if (appInternalParam.getJedisPool() == null) {
                     throw new ElementNotFoundException("in app call does not set jedis");
                 }
 
@@ -115,7 +128,7 @@ public class ApiBuilder {
 
             //设置授权服务实现
             AuthConfig authConfig = AuthDefaultConfigImpl.getInstance(this.httpService);
-            if (httpService.getAppParam().getJedisPool() != null){
+            if (httpService.getAppParam().getJedisPool() != null) {
                 authConfig = AuthRedisConfigImpl.getInstance(this.httpService);
             }
             this.httpService.setAuthConfig(authConfig);

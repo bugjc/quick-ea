@@ -1,8 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.event;
 
 import com.alibaba.fastjson.JSON;
-import javafx.event.Event;
-import javafx.event.EventType;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -13,7 +11,7 @@ import java.io.Serializable;
  * @date 2019/12/5
  * **/
 @Data
-public class HttpCallEvent extends Event implements Serializable {
+public class HttpCallEvent implements Serializable {
     /**
      * 标识ID
      */
@@ -33,10 +31,6 @@ public class HttpCallEvent extends Event implements Serializable {
      * 指标类型
      */
     private TypeEnum type;
-
-    public HttpCallEvent(EventType<? extends Event> eventType) {
-        super(eventType);
-    }
 
     /**
      * 元数据状态
