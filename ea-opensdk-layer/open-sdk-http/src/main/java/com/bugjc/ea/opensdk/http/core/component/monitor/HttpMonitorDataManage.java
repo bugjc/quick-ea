@@ -1,7 +1,7 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor;
 
 import cn.hutool.core.collection.BoundedPriorityQueue;
-import com.bugjc.ea.opensdk.http.core.component.monitor.entity.HttpMetadata;
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 
 /**
  * @author aoki
@@ -11,7 +11,7 @@ public class HttpMonitorDataManage {
     /**
      * 队列
      */
-    private final BoundedPriorityQueue<HttpMetadata> dataQueue = new BoundedPriorityQueue<HttpMetadata>(5000, (o1, o2) -> o1 == o2 ? 0 : -1);
+    private final BoundedPriorityQueue<HttpCallEvent> dataQueue = new BoundedPriorityQueue<HttpCallEvent>(5000, (o1, o2) -> o1 == o2 ? 0 : -1);
 
     /**
      * 私有化构造函数
@@ -53,7 +53,7 @@ public class HttpMonitorDataManage {
      * @param metadata
      * @return
      */
-    boolean push(HttpMetadata metadata){
+    boolean push(HttpCallEvent metadata){
         return dataQueue.offer(metadata);
     }
 
@@ -61,7 +61,7 @@ public class HttpMonitorDataManage {
      * 读取监控数据
      * @return
      */
-    HttpMetadata pull(){
+    HttpCallEvent pull(){
         return dataQueue.poll();
     }
 }

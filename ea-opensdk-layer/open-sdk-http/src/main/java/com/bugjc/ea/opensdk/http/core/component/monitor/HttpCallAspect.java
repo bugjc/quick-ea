@@ -3,7 +3,7 @@ package com.bugjc.ea.opensdk.http.core.component.monitor;
 import cn.hutool.core.date.TimeInterval;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.component.monitor.entity.CountInfoTable;
-import com.bugjc.ea.opensdk.http.core.component.monitor.entity.HttpMetadata;
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -29,11 +29,11 @@ public class HttpCallAspect implements Aspect, Serializable {
     @Override
     public void afterReturning(Object target, Method method, Object[] args, Object returnVal) {
         //设置元数据
-        HttpMetadata metadata = new HttpMetadata();
+        HttpCallEvent metadata = new HttpCallEvent();
         metadata.setId(String.valueOf(Arrays.hashCode(args)));
         metadata.setPath(String.valueOf(args[0]));
-        metadata.setType(HttpMetadata.TypeEnum.TotalRequests);
-        metadata.setStatus(HttpMetadata.StatusEnum.CallSuccess);
+        metadata.setType(HttpCallEvent.TypeEnum.TotalRequests);
+        metadata.setStatus(HttpCallEvent.StatusEnum.CallSuccess);
         if (HttpMonitorDataManage.getInstance().push(metadata)){
             log.info("收集监控数据成功！{}", method.getName());
         }
@@ -43,11 +43,11 @@ public class HttpCallAspect implements Aspect, Serializable {
     public void afterThrowing(Object target, Method method, Object[] args, Throwable e) {
 
         //设置元数据
-        HttpMetadata metadata = new HttpMetadata();
+        HttpCallEvent metadata = new HttpCallEvent();
         metadata.setId(String.valueOf(Arrays.hashCode(args)));
         metadata.setPath(String.valueOf(args[0]));
-        metadata.setType(HttpMetadata.TypeEnum.TotalRequests);
-        metadata.setStatus(HttpMetadata.StatusEnum.CallFailed);
+        metadata.setType(HttpCallEvent.TypeEnum.TotalRequests);
+        metadata.setStatus(HttpCallEvent.StatusEnum.CallFailed);
         if (HttpMonitorDataManage.getInstance().push(metadata)){
             log.info("收集监控数据成功！{}" ,method.getName());
         }

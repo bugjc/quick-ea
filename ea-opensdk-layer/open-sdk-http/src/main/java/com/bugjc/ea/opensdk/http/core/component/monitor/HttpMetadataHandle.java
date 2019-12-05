@@ -1,7 +1,7 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor;
 
 import com.bugjc.ea.opensdk.http.core.component.monitor.entity.CountInfoTable;
-import com.bugjc.ea.opensdk.http.core.component.monitor.entity.HttpMetadata;
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,7 +34,7 @@ public class HttpMetadataHandle implements Runnable {
         int numberOfProcessedData = 0;
         while (true){
             //从队列拉取数据
-            HttpMetadata httpMetadata = HttpMonitorDataManage.getInstance().pull();
+            HttpCallEvent httpMetadata = HttpMonitorDataManage.getInstance().pull();
             log.info("HttpMetadata：{}", httpMetadata);
             if (httpMetadata == null){
                 //没有数据退出

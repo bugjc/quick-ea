@@ -14,16 +14,10 @@
     <properties>
         <!--redis-->
         <jedis.version>3.1.0</jedis.version>
-        <!--ribbon-->
-        <netflix.ribbon.version>2.7.17</netflix.ribbon.version>
-        <!--feign-->
-        <netflix.feign.version>10.2.3</netflix.feign.version>
-        <!--eureka-->
         <eureka-client.version>1.9.13</eureka-client.version>
-        <!--rxjava-->
         <rxjava.version>1.1.1</rxjava.version>
-        <!--cglib-->
         <cglib.version>3.3.0</cglib.version>
+        <disruptor.version>3.4.1</disruptor.version>
     </properties>
 
 
@@ -36,6 +30,13 @@
             <version>${cglib.version}</version>
             <scope>compile</scope>
             <optional>true</optional>
+        </dependency>
+
+        <!-- 高性能队列 -->
+        <dependency>
+            <groupId>com.lmax</groupId>
+            <artifactId>disruptor</artifactId>
+            <version>${disruptor.version}</version>
         </dependency>
 
         <!--http client-->

@@ -1,5 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.entity;
 
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -68,15 +69,15 @@ public class CountInfoTable implements Serializable {
     /**
      * 统计调用成功数量
      */
-    public void increment(HttpMetadata httpMetadata){
-        if (httpMetadata.getType() != HttpMetadata.TypeEnum.TotalRequests){
+    public void increment(HttpCallEvent httpMetadata){
+        if (httpMetadata.getType() != HttpCallEvent.TypeEnum.TotalRequests){
             return;
         }
 
         //只处理 TotalRequests 主题类型的数据
-        if (httpMetadata.getStatus() == HttpMetadata.StatusEnum.CallSuccess){
+        if (httpMetadata.getStatus() == HttpCallEvent.StatusEnum.CallSuccess){
             SUCCESS_NUM_COUNT.increment();
-        } else if (httpMetadata.getStatus() == HttpMetadata.StatusEnum.CallFailed){
+        } else if (httpMetadata.getStatus() == HttpCallEvent.StatusEnum.CallFailed){
             FAIL_NUM_COUNT.increment();
         }
 

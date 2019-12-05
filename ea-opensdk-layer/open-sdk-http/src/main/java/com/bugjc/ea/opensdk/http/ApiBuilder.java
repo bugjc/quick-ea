@@ -3,6 +3,7 @@ package com.bugjc.ea.opensdk.http;
 import cn.hutool.core.util.StrUtil;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.eureka.impl.EurekaDefaultConfigImpl;
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.DisruptorConfig;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
 import com.bugjc.ea.opensdk.http.core.component.token.impl.AuthDefaultConfigImpl;
 import com.bugjc.ea.opensdk.http.core.component.token.impl.AuthRedisConfigImpl;
@@ -39,6 +40,8 @@ public class ApiBuilder {
     public ApiBuilder(){
         this.httpService = HttpServiceFactory.createProxy(new HttpServiceImpl());
         this.httpClientBuilder.connectTimeout(5L, TimeUnit.SECONDS).readTimeout(20L, TimeUnit.SECONDS);
+        //启动 Disruptor
+        DisruptorConfig.getInstance().start();
     }
 
     /**
