@@ -18,7 +18,7 @@ public class CountInfoTable implements Serializable {
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CountInfo implements Serializable{
+    private static class CountInfo implements Serializable{
         /**
          * 调用成功数量
          */
@@ -30,8 +30,8 @@ public class CountInfoTable implements Serializable {
         private long failNum;
     }
 
-    private final LongAdder SUCCESS_NUM_COUNT = new LongAdder();
-    private final LongAdder FAIL_NUM_COUNT = new LongAdder();
+    private final static LongAdder SUCCESS_NUM_COUNT = new LongAdder();
+    private final static LongAdder FAIL_NUM_COUNT = new LongAdder();
 
     /**
      * 私有化构造函数

@@ -1,7 +1,8 @@
-package com.bugjc.ea.opensdk.http.core.component.monitor.event;
+package com.bugjc.ea.opensdk.http.core.component.monitor.producer;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSON;
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.lmax.disruptor.EventTranslatorOneArg;
 import com.lmax.disruptor.RingBuffer;
 

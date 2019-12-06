@@ -27,13 +27,7 @@
         <netty-common.version>4.1.28.Final</netty-common.version>
 
         <aspectjweaver.version>1.9.4</aspectjweaver.version>
-        <fastjson.version>1.2.47</fastjson.version>
-        <lombok.version>1.18.2</lombok.version>
-        <slf4j-api.version>1.7.25</slf4j-api.version>
-        <log4j-over-slf4j.version>1.7.25</log4j-over-slf4j.version>
-        <jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
-        <mysql-connector-java.version>8.0.11</mysql-connector-java.version>
-        <flyway.version>5.2.0</flyway.version>
+
     </properties>
 
     <dependencies>

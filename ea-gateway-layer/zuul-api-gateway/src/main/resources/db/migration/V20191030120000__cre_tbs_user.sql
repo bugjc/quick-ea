@@ -62,7 +62,7 @@ CREATE TABLE `app_token` (
                              PRIMARY KEY (`id`),
                              KEY `app_id_index` (`app_id`),
                              KEY `access_token_index` (`access_token`)
-) ENGINE=InnoDB AUTO_INCREMENT=68 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
+) ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin;
 
 /*Table structure for table `app_version_map` */
 
@@ -80,8 +80,6 @@ CREATE TABLE `app_version_map` (
                                    UNIQUE KEY `INDEX_KEY1` (`app_id`,`version_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='应用版本映射表';
 
-/*Table structure for table `route` */
-
 DROP TABLE IF EXISTS `route`;
 
 CREATE TABLE `route` (
@@ -96,3 +94,4 @@ CREATE TABLE `route` (
                          `description` varchar(255) DEFAULT NULL COMMENT '描述',
                          PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='zuul网关路由表';
+

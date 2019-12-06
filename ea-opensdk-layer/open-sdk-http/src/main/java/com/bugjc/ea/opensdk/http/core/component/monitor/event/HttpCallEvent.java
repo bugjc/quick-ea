@@ -28,6 +28,11 @@ public class HttpCallEvent implements Serializable {
     private StatusEnum status;
 
     /**
+     * 调用耗时
+     */
+    private long intervalMs;
+
+    /**
      * 指标类型
      */
     private TypeEnum type;

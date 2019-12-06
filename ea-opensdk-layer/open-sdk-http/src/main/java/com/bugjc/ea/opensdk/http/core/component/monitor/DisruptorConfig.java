@@ -1,5 +1,9 @@
-package com.bugjc.ea.opensdk.http.core.component.monitor.event;
+package com.bugjc.ea.opensdk.http.core.component.monitor;
 
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEventFactory;
+import com.bugjc.ea.opensdk.http.core.component.monitor.consumer.HttpCallEventHandler;
+import com.bugjc.ea.opensdk.http.core.component.monitor.producer.HttpCallEventProducer;
 import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
@@ -68,7 +72,7 @@ public class DisruptorConfig {
     }
 
     /**
-     * 获取一个生产者对象实例
+     * 获取生产者对象实例（单例）
      * @return
      */
     private HttpCallEventProducer getProducer(){
