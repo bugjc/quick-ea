@@ -1,5 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.entity;
 
+import cn.hutool.core.util.NumberUtil;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,19 +20,50 @@ public class CountInfoTable implements Serializable {
     @NoArgsConstructor
     @AllArgsConstructor
     private static class CountInfo implements Serializable{
+
+        /**
+         * 调用总次数
+         */
+        private long total;
+
         /**
          * 调用成功数量
          */
-        private long successNum;
+        private long numberOfSuccesses;
 
         /**
          * 调用失败数量
          */
-        private long failNum;
+        private long numberOfFailures;
+
+        /**
+         * 成功率
+         */
+        private double successRate;
+
+        /**
+         * 失败率
+         */
+        private double failureRate;
+
+        CountInfo(long numberOfSuccesses, long numberOfFailures){
+            this.numberOfSuccesses = numberOfSuccesses;
+            this.numberOfFailures = numberOfFailures;
+            this.total = numberOfSuccesses + numberOfFailures;
+            this.successRate = NumberUtil.div(this.numberOfSuccesses, this.total, 2);
+            this.failureRate = NumberUtil.div(this.numberOfFailures, this.total,2);
+        }
     }
 
-    private final static LongAdder SUCCESS_NUM_COUNT = new LongAdder();
-    private final static LongAdder FAIL_NUM_COUNT = new LongAdder();
+    /**
+     * 统计成功的调用次数
+     */
+    private final static LongAdder COUNT_NUMBER_OF_SUCCESSES = new LongAdder();
+
+    /**
+     * 统计失败的调用次数
+     */
+    private final static LongAdder COUNT_NUMBER_OF_FAILURES = new LongAdder();
 
     /**
      * 私有化构造函数
@@ -76,19 +108,19 @@ public class CountInfoTable implements Serializable {
 
         //只处理 TotalRequests 主题类型的数据
         if (httpMetadata.getStatus() == HttpCallEvent.StatusEnum.CallSuccess){
-            SUCCESS_NUM_COUNT.increment();
+            COUNT_NUMBER_OF_SUCCESSES.increment();
         } else if (httpMetadata.getStatus() == HttpCallEvent.StatusEnum.CallFailed){
-            FAIL_NUM_COUNT.increment();
+            COUNT_NUMBER_OF_FAILURES.increment();
         }
 
     }
 
     private long getSuccessNum(){
-        return SUCCESS_NUM_COUNT.longValue();
+        return COUNT_NUMBER_OF_SUCCESSES.longValue();
     }
 
     private long getFailNum(){
-        return FAIL_NUM_COUNT.longValue();
+        return COUNT_NUMBER_OF_FAILURES.longValue();
     }
 
     /**

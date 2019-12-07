@@ -19,7 +19,7 @@ public class JobServerWeb {
     @Test
     public void testJob() throws Exception {
         //同时发起 500 个创建任务请求
-        int total = 1;
+        int total = 1000;
         JobFindCyclicBarrierTask jobFindCyclicBarrierTask = new JobFindCyclicBarrierTask();
         //手动触发一次
         jobFindCyclicBarrierTask.execTask();

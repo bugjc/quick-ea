@@ -49,13 +49,11 @@ public class JdkProxyInterceptor implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         //获取并检查方法是否已开启切面拦截
         boolean flag = AspectInterceptorUtil.check(method);
+        if (!flag){
+            log.debug("JDK动态代理方法 {} 无需拦截！", method.getName());
+            return method.invoke(target, args);
+        }
         try {
-            //获取并检查方法是否已开启切面拦截
-            if (!flag){
-                log.debug("JDK动态代理方法 {} 无需拦截！", method.getName());
-                return method.invoke(target, args);
-            }
-
             if (aspect.before(target, method, args)){
                 Object returnVal = method.invoke(ClassUtil.isStatic(method) ? null : target, args);
                 aspect.afterReturning(target, method, args, returnVal);
@@ -63,14 +61,10 @@ public class JdkProxyInterceptor implements InvocationHandler {
             }
             return null;
         } catch (Exception ex){
-            if (flag){
-                aspect.afterThrowing(target, method, args, ex.getCause());
-            }
+            aspect.afterThrowing(target, method, args, ex.getCause());
             throw ex.getCause();
         } finally {
-            if (flag){
-                aspect.after();
-            }
+            aspect.after();
         }
     }
 

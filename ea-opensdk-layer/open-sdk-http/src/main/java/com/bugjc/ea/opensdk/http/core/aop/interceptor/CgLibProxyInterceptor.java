@@ -53,27 +53,23 @@ public class CgLibProxyInterceptor implements MethodInterceptor {
                             MethodProxy methodProxy) throws Throwable {
         //获取并检查方法是否已开启切面拦截
         boolean flag = AspectInterceptorUtil.check(method);
-        try {
-            //获取并检查方法是否已开启切面拦截
-            if (!flag){
-                log.debug("CGLib 动态代理方法 {} 无需拦截！", method.getName());
-                return method.invoke(target, args);
-            }
+        //获取并检查方法是否已开启切面拦截
+        if (!flag){
+            log.debug("CGLib 动态代理方法 {} 无需拦截！", method.getName());
+            return method.invoke(target, args);
+        }
 
+        try {
             if (aspect.before(target, method, args)){
                 Object returnVal = method.invoke(ClassUtil.isStatic(method) ? null : target, args);
                 aspect.afterReturning(target, method, args, returnVal);
                 return returnVal;
             }
         } catch (Exception ex){
-            if (flag){
-                aspect.afterThrowing(target, method, args, ex.getCause());
-            }
+            aspect.afterThrowing(target, method, args, ex.getCause());
             throw ex.getCause();
         } finally {
-            if (flag){
-                aspect.after();
-            }
+            aspect.after();
         }
         return null;
     }

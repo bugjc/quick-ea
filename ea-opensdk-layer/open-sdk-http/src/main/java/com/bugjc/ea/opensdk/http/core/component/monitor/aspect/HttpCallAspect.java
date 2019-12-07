@@ -18,8 +18,10 @@ import java.util.Arrays;
 @Slf4j
 public class HttpCallAspect implements Aspect, Serializable {
     private static final long serialVersionUID = 1L;
+    private DisruptorConfig disruptorConfig = DisruptorConfig.getInstance();
     private TimeInterval interval = new TimeInterval();
     private HttpCallEvent metadata = null;
+
 
     @Override
     public boolean before(Object target, Method method, Object[] args) {
@@ -36,7 +38,7 @@ public class HttpCallAspect implements Aspect, Serializable {
         metadata.setType(HttpCallEvent.TypeEnum.TotalRequests);
         metadata.setStatus(HttpCallEvent.StatusEnum.CallSuccess);
         metadata.setIntervalMs(interval.intervalMs());
-        DisruptorConfig.getInstance().push(metadata);
+        disruptorConfig.push(metadata);
     }
 
     @Override
@@ -48,13 +50,9 @@ public class HttpCallAspect implements Aspect, Serializable {
         metadata.setType(HttpCallEvent.TypeEnum.TotalRequests);
         metadata.setStatus(HttpCallEvent.StatusEnum.CallFailed);
         metadata.setIntervalMs(interval.intervalMs());
-        DisruptorConfig.getInstance().push(metadata);
+        disruptorConfig.push(metadata);
     }
 
     @Override
-    public void after() {
-        //及时清理对象
-        interval = null;
-        metadata = null;
-    }
+    public void after() {}
 }

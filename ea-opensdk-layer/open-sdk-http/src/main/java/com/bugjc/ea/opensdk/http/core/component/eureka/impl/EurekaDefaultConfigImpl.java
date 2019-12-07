@@ -166,6 +166,9 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
             //TODO 这里统计获取内部服务地址失败的次数，当超过失败次数设定的阈值或时间比例则主动将内部调用切换成外部调用方式。
             log.warn("尝试获取内部服务地址出错了！错误信息：{}",e.getMsg());
             return null;
+        } catch (NullPointerException ex){
+            log.warn("111尝试获取内部服务地址出错了！错误信息：{}",ex.getMessage());
+            return null;
         }
 
     }

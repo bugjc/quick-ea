@@ -28,7 +28,7 @@ public class AuthDefaultConfigImpl implements AuthConfig {
     /**
      * 缓存容量
      */
-    private static final int CACHE_CAPACITY = 100;
+    private static final int CACHE_CAPACITY = 10;
 
     /**
      *  平台接口授权服务 http客户端

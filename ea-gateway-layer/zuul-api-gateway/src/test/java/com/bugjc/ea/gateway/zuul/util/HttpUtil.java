@@ -22,10 +22,10 @@ public class HttpUtil {
             synchronized (HttpUtil.class){
                 if (jedisPool == null){
                     //redis 配置
-                    String host = "192.168.35.17";
+                    String host = "127.0.0.1";
                     int port = 6379;
                     int timeout = 2000;
-                    int maxIdle = 60;
+                    int maxIdle = 10;
                     //获取连接时的最大等待毫秒数，默认：-1 长时间等待
                     long maxWaitMillis = 2000;
                     int database = 10;

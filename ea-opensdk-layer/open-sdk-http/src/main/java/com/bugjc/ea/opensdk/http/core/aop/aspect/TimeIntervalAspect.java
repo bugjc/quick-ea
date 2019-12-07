@@ -1,7 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.aop.aspect;
 
 import cn.hutool.core.date.TimeInterval;
-import cn.hutool.core.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -25,9 +24,6 @@ public class TimeIntervalAspect implements Aspect, Serializable {
 
     @Override
     public void afterReturning(Object target, Method method, Object[] args, Object returnVal) {
-
-        returnVal = RandomUtil.randomNumber();
-
         log.info("Method [{}.{}] execute spend [{}]ms return value [{}]",
                 target.getClass().getName(),
                 method.getName(),

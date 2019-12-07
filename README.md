@@ -74,6 +74,7 @@
 - jwt认证
 - 自动化部署
 - 主动告警
+- 内部调用链路优化
 
 ## 统一API网关
 - 负载均衡
@@ -113,6 +114,11 @@ cd quick-ea/ea-basis-server-layer/eureka-basis-server
 mvn spring-boot:run -Dspring-boot.run.profiles=eureka2
 ```
 3. 启动 API Gateway、Auth Server 和 Job Server
+
+3.1 初始化数据库
+- 启动 API Gateway 前先初始化数据库 ea-parent/ea-gateway-layer/zuul-api-gateway/src/main/resources/db/init/init.sql .
+- 启动 Job Server 前先初始化数据库 ea-parent/ea-server-layer/job-server/src/main/resources/db/init/init.sql .
+
 ```
 ## 新建 Terminal 进入 API Gateway 项目
 cd quick-ea/ea-gateway-layer/zuul-api-gateway
