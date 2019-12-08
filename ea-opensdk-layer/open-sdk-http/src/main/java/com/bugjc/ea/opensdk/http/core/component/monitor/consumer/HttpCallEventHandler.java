@@ -1,6 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.consumer;
 
-import com.bugjc.ea.opensdk.http.core.component.monitor.entity.CountInfoTable;
+import com.bugjc.ea.opensdk.http.core.component.monitor.data.CountInfoTable;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.lmax.disruptor.EventHandler;
 import lombok.extern.slf4j.Slf4j;

@@ -1,7 +1,7 @@
 package com.bugjc.ea.opensdk.http.model;
 
 import cn.hutool.core.io.FileUtil;
-import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConstants;
+import com.bugjc.ea.opensdk.http.core.component.eureka.constants.EurekaConstants;
 import com.bugjc.ea.opensdk.http.core.exception.ElementNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Data;

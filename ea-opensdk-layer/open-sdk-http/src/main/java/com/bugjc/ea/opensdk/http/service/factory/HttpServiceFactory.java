@@ -1,7 +1,8 @@
-package com.bugjc.ea.opensdk.http.service;
+package com.bugjc.ea.opensdk.http.service.factory;
 
 import com.bugjc.ea.opensdk.http.core.aop.ProxyUtil;
 import com.bugjc.ea.opensdk.http.core.component.monitor.aspect.HttpCallAspect;
+import com.bugjc.ea.opensdk.http.service.HttpService;
 
 /**
  * http service 工厂类

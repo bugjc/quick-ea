@@ -1,4 +1,4 @@
-package com.bugjc.ea.opensdk.http.core.component.eureka.model;
+package com.bugjc.ea.opensdk.http.core.component.eureka.entity;
 
 import lombok.Data;
 

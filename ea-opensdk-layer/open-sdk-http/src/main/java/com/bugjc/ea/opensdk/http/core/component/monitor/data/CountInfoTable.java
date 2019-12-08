@@ -1,7 +1,9 @@
-package com.bugjc.ea.opensdk.http.core.component.monitor.entity;
+package com.bugjc.ea.opensdk.http.core.component.monitor.data;
 
 import cn.hutool.core.util.NumberUtil;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
+import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
+import com.bugjc.ea.opensdk.http.core.component.monitor.enums.TypeEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +22,8 @@ public class CountInfoTable implements Serializable {
     @NoArgsConstructor
     @AllArgsConstructor
     private static class CountInfo implements Serializable{
+
+        private String path;
 
         /**
          * 调用总次数
@@ -50,8 +54,10 @@ public class CountInfoTable implements Serializable {
             this.numberOfSuccesses = numberOfSuccesses;
             this.numberOfFailures = numberOfFailures;
             this.total = numberOfSuccesses + numberOfFailures;
-            this.successRate = NumberUtil.div(this.numberOfSuccesses, this.total, 2);
-            this.failureRate = NumberUtil.div(this.numberOfFailures, this.total,2);
+            if (this.total != 0){
+                this.successRate = NumberUtil.div(this.numberOfSuccesses, this.total, 2);
+                this.failureRate = NumberUtil.div(this.numberOfFailures, this.total,2);
+            }
         }
     }
 
@@ -98,29 +104,29 @@ public class CountInfoTable implements Serializable {
         return SingletonEnum.INSTANCE.getInstance();
     }
 
-    /**
-     * 统计调用成功数量
-     */
-    public void increment(HttpCallEvent httpMetadata){
-        if (httpMetadata.getType() != HttpCallEvent.TypeEnum.TotalRequests){
-            return;
-        }
-
-        //只处理 TotalRequests 主题类型的数据
-        if (httpMetadata.getStatus() == HttpCallEvent.StatusEnum.CallSuccess){
-            COUNT_NUMBER_OF_SUCCESSES.increment();
-        } else if (httpMetadata.getStatus() == HttpCallEvent.StatusEnum.CallFailed){
-            COUNT_NUMBER_OF_FAILURES.increment();
-        }
-
-    }
-
     private long getSuccessNum(){
         return COUNT_NUMBER_OF_SUCCESSES.longValue();
     }
 
     private long getFailNum(){
         return COUNT_NUMBER_OF_FAILURES.longValue();
+    }
+
+    /**
+     * 统计调用成功数量
+     */
+    public void increment(HttpCallEvent httpCallEvent){
+        if (httpCallEvent.getMetadata().getType() != TypeEnum.TotalRequests){
+            return;
+        }
+
+        //只处理 TotalRequests 主题类型的数据
+        if (httpCallEvent.getMetadata().getStatus() == StatusEnum.CallSuccess){
+            COUNT_NUMBER_OF_SUCCESSES.increment();
+        } else if (httpCallEvent.getMetadata().getStatus() == StatusEnum.CallFailed){
+            COUNT_NUMBER_OF_FAILURES.increment();
+        }
+
     }
 
     /**

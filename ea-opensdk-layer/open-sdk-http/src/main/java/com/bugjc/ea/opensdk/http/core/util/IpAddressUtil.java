@@ -14,7 +14,7 @@ public class IpAddressUtil {
 
         String temp = "https://10.0.0.0:8080/123123/123123?32323=12312&123123=123123".replace("http://", "").replace("https://", "").replaceAll("[:,/].*", "");
         System.out.println(temp);
-        System.out.println(internalIp("10.0.0.0"));
+        System.out.println(internalIp("12121212"));
         System.out.println(internalIp("172.16.0.0"));
         System.out.println(internalIp("192.168.0.0"));
         System.out.println(internalIp("127.0.0.1"));

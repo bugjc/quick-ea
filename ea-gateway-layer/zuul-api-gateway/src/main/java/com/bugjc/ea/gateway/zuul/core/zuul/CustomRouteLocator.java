@@ -3,7 +3,7 @@ package com.bugjc.ea.gateway.zuul.core.zuul;
 
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.gateway.zuul.service.ZuulRouteService;
-import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConstants;
+import com.bugjc.ea.opensdk.http.core.component.eureka.constants.EurekaConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.RefreshableRouteLocator;
 import org.springframework.cloud.netflix.zuul.filters.SimpleRouteLocator;

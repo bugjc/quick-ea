@@ -13,7 +13,7 @@ import com.bugjc.ea.opensdk.http.core.util.SSLUtil;
 import com.bugjc.ea.opensdk.http.model.AppInternalParam;
 import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.service.HttpService;
-import com.bugjc.ea.opensdk.http.service.HttpServiceFactory;
+import com.bugjc.ea.opensdk.http.service.factory.HttpServiceFactory;
 import com.bugjc.ea.opensdk.http.service.impl.HttpServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;

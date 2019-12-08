@@ -1,4 +1,4 @@
-package com.bugjc.ea.opensdk.http.core.component.eureka;
+package com.bugjc.ea.opensdk.http.core.component.eureka.constants;
 
 /**
  * @author aoki

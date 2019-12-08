@@ -1,6 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.util;
 
-import com.bugjc.ea.opensdk.http.core.component.eureka.model.Server;
+import com.bugjc.ea.opensdk.http.core.component.eureka.entity.Server;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;

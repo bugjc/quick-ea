@@ -3,7 +3,7 @@ package com.bugjc.ea.opensdk.http.core.component.monitor.aspect;
 import cn.hutool.core.date.TimeInterval;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.component.monitor.DisruptorConfig;
-import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEventFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -20,7 +20,6 @@ public class HttpCallAspect implements Aspect, Serializable {
     private static final long serialVersionUID = 1L;
     private DisruptorConfig disruptorConfig = DisruptorConfig.getInstance();
     private TimeInterval interval = new TimeInterval();
-    private HttpCallEvent metadata = null;
 
 
     @Override
@@ -32,25 +31,17 @@ public class HttpCallAspect implements Aspect, Serializable {
     @Override
     public void afterReturning(Object target, Method method, Object[] args, Object returnVal) {
         //设置元数据
-        metadata = new HttpCallEvent();
-        metadata.setId(String.valueOf(Arrays.hashCode(args)));
-        metadata.setPath(String.valueOf(args[0]));
-        metadata.setType(HttpCallEvent.TypeEnum.TotalRequests);
-        metadata.setStatus(HttpCallEvent.StatusEnum.CallSuccess);
-        metadata.setIntervalMs(interval.intervalMs());
-        disruptorConfig.push(metadata);
+        String id = String.valueOf(Arrays.hashCode(args));
+        String path = String.valueOf(args[0]);
+        disruptorConfig.push(new HttpCallEventFactory().newInstance().setCallSuccess(id, path, interval.intervalMs()));
     }
 
     @Override
     public void afterThrowing(Object target, Method method, Object[] args, Throwable e) {
         //设置元数据
-        metadata = new HttpCallEvent();
-        metadata.setId(String.valueOf(Arrays.hashCode(args)));
-        metadata.setPath(String.valueOf(args[0]));
-        metadata.setType(HttpCallEvent.TypeEnum.TotalRequests);
-        metadata.setStatus(HttpCallEvent.StatusEnum.CallFailed);
-        metadata.setIntervalMs(interval.intervalMs());
-        disruptorConfig.push(metadata);
+        String id = String.valueOf(Arrays.hashCode(args));
+        String path = String.valueOf(args[0]);
+        disruptorConfig.push(new HttpCallEventFactory().newInstance().setCallFailed(id, path, interval.intervalMs()));
     }
 
     @Override

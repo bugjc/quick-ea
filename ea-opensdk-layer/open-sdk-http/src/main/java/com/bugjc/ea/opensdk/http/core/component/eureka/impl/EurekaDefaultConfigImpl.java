@@ -7,12 +7,13 @@ import cn.hutool.cache.impl.LRUCache;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
-import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConstants;
+import com.bugjc.ea.opensdk.http.core.component.eureka.constants.EurekaConstants;
 import com.bugjc.ea.opensdk.http.core.component.eureka.config.MyInstanceConfig;
-import com.bugjc.ea.opensdk.http.core.component.eureka.model.Server;
-import com.bugjc.ea.opensdk.http.core.component.eureka.model.ZuulRoute;
+import com.bugjc.ea.opensdk.http.core.component.eureka.entity.Server;
+import com.bugjc.ea.opensdk.http.core.component.eureka.entity.ZuulRoute;
 import com.bugjc.ea.opensdk.http.core.exception.ElementNotFoundException;
 import com.bugjc.ea.opensdk.http.core.util.AntPathMatcher;
+import com.bugjc.ea.opensdk.http.core.util.IpAddressUtil;
 import com.bugjc.ea.opensdk.http.core.util.RuleUtil;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.DefaultEurekaClientConfig;
@@ -38,22 +39,27 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     /**
      * 缓存容量（key1 - key2）
      */
-    private static final int CACHE_KEY_CAPACITY = 1000;
+    private final static int CACHE_KEY_CAPACITY = 200;
 
     /**
      * 过期时间：60 秒
      */
-    public final static int KEY_EXPIRE_DATE = 60;
+    private final static int KEY_EXPIRE_DATE = 60;
 
     /**
      * 缓存容量（key2 - Value）
      */
-    private static final int CACHE_VALUE_CAPACITY = 100;
+    private final static int CACHE_VALUE_CAPACITY = 5;
 
     /**
      * 过期时间：1800 秒
      */
-    public final static int VALUE_EXPIRE_DATE = 1800;
+    private final static int VALUE_EXPIRE_DATE = 1800;
+
+    /**
+     * http 协议url前缀
+     */
+    private final static String HTTP_PREFIX = "http://";
 
     /**
      * 远程 redis存储 token
@@ -63,12 +69,12 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     /**
      * 获取 path --> serviceId 的缓存对象
      */
-    private static FIFOCache<String, ZuulRoute> cacheKey = SingletonEnum.CACHE_INSTANCE.getCacheKeyInstance();
+    private final static FIFOCache<String, ZuulRoute> CACHE_KEY = SingletonEnum.CACHE_INSTANCE.getCacheKeyInstance();
 
     /**
      * 获取 serviceId --> list server 的缓存对象
      */
-    private static LRUCache<String, List<Server>> cacheValue = SingletonEnum.CACHE_SERVER_INSTANCE.getCacheValueInstance();
+    private final static LRUCache<String, List<Server>> CACHE_VALUE = SingletonEnum.CACHE_SERVER_INSTANCE.getCacheValueInstance();
 
     /**
      * 私有化构造函数
@@ -166,9 +172,6 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
             //TODO 这里统计获取内部服务地址失败的次数，当超过失败次数设定的阈值或时间比例则主动将内部调用切换成外部调用方式。
             log.warn("尝试获取内部服务地址出错了！错误信息：{}",e.getMsg());
             return null;
-        } catch (NullPointerException ex){
-            log.warn("111尝试获取内部服务地址出错了！错误信息：{}",ex.getMessage());
-            return null;
         }
 
     }
@@ -183,7 +186,7 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     private List<Server> getServers(String path, ZuulRoute currentZuulRoute) {
 
         // 尝试从缓存中获取服务列表数据
-        List<Server> servers = cacheValue.get(currentZuulRoute.getServiceId());
+        List<Server> servers = CACHE_VALUE.get(currentZuulRoute.getServiceId());
         if (servers != null && !servers.isEmpty()) {
             return servers;
         }
@@ -197,15 +200,20 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
         List<Server> allList = new ArrayList<>();
         List<InstanceInfo> instanceInfos = application.getInstances();
         for (InstanceInfo instanceInfo : instanceInfos) {
+            String url = instanceInfo.getHomePageUrl();
+            if (IpAddressUtil.internalIp(instanceInfo.getInstanceId())){
+                //eureka ip 是内网的则组装内网调用地址。
+                url = HTTP_PREFIX + instanceInfo.getIPAddr() +":"+ instanceInfo.getPort();
+            }
             if (currentZuulRoute.isStripPrefix()) {
-                allList.add(new Server(dePrefix(instanceInfo.getHomePageUrl(), path, currentZuulRoute.getPath())));
+                allList.add(new Server(dePrefix(url, path, currentZuulRoute.getPath())));
             } else {
-                allList.add(new Server(dePrefix(instanceInfo.getHomePageUrl()).concat(path)));
+                allList.add(new Server(dePrefix(url).concat(path)));
             }
         }
 
         //添加 serviceId --> list server 的缓存
-        cacheValue.put(currentZuulRoute.getServiceId(), allList, VALUE_EXPIRE_DATE);
+        CACHE_VALUE.put(currentZuulRoute.getServiceId(), allList, VALUE_EXPIRE_DATE);
 
         //清空数据
         instanceInfos.clear();
@@ -221,7 +229,7 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     private ZuulRoute getCurrentZuulRoute(String path) {
 
         // 尝试从缓存中获取当前路由信息数据
-        ZuulRoute currentZuulRoute = cacheKey.get(path);
+        ZuulRoute currentZuulRoute = CACHE_KEY.get(path);
         if (currentZuulRoute != null) {
             return currentZuulRoute;
         }
@@ -257,7 +265,7 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
             }
 
             //添加 path --> serviceId的缓存
-            cacheKey.put(path, currentZuulRoute, KEY_EXPIRE_DATE);
+            CACHE_KEY.put(path, currentZuulRoute, KEY_EXPIRE_DATE);
             return currentZuulRoute;
         }
     }
@@ -279,17 +287,17 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     /**
      * 去除路径前缀
      *
-     * @param homePageUrl
+     * @param url
      * @param pattern
      * @return url
      */
-    private String dePrefix(String homePageUrl, String path, String pattern) {
+    private String dePrefix(String url, String path, String pattern) {
 
         //提取出路径前缀
         String prefix = pattern.substring(pattern.indexOf("/"), pattern.lastIndexOf("/"));
         try {
             //首先通过统一定位资源包装，其次在对当前完整路径统一斜杠，最后在替换第一个出现的前缀为空字符串。
-            return dePrefix(homePageUrl) + new URI(path).getPath().replaceAll("//", "/").replaceFirst(prefix, "");
+            return dePrefix(url) + new URI(path).getPath().replaceAll("//", "/").replaceFirst(prefix, "");
         } catch (URISyntaxException e) {
             throw new ElementNotFoundException("error removing path prefix");
         }

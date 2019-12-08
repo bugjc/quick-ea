@@ -1,6 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.eureka;
 
-import com.bugjc.ea.opensdk.http.core.component.eureka.model.Server;
+import com.bugjc.ea.opensdk.http.core.component.eureka.entity.Server;
 
 /**
  * eureka 配置
