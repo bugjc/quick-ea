@@ -12,6 +12,8 @@ import com.bugjc.ea.opensdk.http.model.auth.VerifyTokenBody;
  * **/
 public interface AuthService {
 
+    HttpService getHttpService();
+
     /**
      * 获取 token
      * @param authPathInfo

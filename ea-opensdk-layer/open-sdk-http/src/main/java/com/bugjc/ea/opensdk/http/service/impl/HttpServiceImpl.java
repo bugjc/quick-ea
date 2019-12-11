@@ -16,10 +16,7 @@ import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
 import com.bugjc.ea.opensdk.http.model.AppInternalParam;
 import com.bugjc.ea.opensdk.http.model.AppParam;
-import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
-import com.bugjc.ea.opensdk.http.service.factory.HttpServiceFactory;
-import com.bugjc.ea.opensdk.http.service.JobService;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -50,16 +47,11 @@ public class HttpServiceImpl implements HttpService {
     @Setter
     private AuthConfig authConfig;
 
-    @Getter
-    private AuthService authService;
-    @Getter
-    private JobService jobService;
-
 
     public HttpServiceImpl(){
         /*创建HttpService切面代理对象并将引用传递到服务接口*/
-        authService = new AuthServiceImpl(HttpServiceFactory.createProxy(this));
-        jobService = new JobServiceImpl(HttpServiceFactory.createProxy(this));
+//        authService = new AuthServiceImpl(HttpServiceFactory.createProxy(this));
+//        jobService = new JobServiceImpl(HttpServiceFactory.createProxy(this));
     }
 
 

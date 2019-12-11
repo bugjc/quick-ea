@@ -22,7 +22,7 @@ public class JobServiceImpl implements JobService {
     public JobServiceImpl(HttpService httpService){
         this.httpService = httpService;
     }
-    
+
     @Override
     public Result createJob(JobPathInfo jobPathInfo, CreateBody.RequestBody requestBody) throws IOException {
         return httpService.post(jobPathInfo.getPath(), jobPathInfo.getVersion(), requestBody.toString());

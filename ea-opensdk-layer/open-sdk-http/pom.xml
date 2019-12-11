@@ -18,10 +18,25 @@
         <rxjava.version>1.1.1</rxjava.version>
         <cglib.version>3.3.0</cglib.version>
         <disruptor.version>3.4.1</disruptor.version>
+        <guice.version>4.2.2</guice.version>
     </properties>
 
 
     <dependencies>
+
+        <!-- guice 依赖注入库 -->
+        <dependency>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <!-- guice 动态注入扩展库 -->
+        <dependency>
+            <groupId>com.google.inject.extensions</groupId>
+            <artifactId>guice-multibindings</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+
 
         <!-- cglib 动态代理库-->
         <dependency>
