@@ -70,11 +70,6 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     private final static String HTTP_PREFIX = "http://";
 
     /**
-     * 远程 redis存储 token
-     */
-    private JedisPool redisStorage;
-
-    /**
      * 获取 path --> serviceId 的缓存对象
      */
     private final static FIFOCache<String, ZuulRoute> CACHE_KEY = SingletonEnum.CACHE_INSTANCE.getCacheKeyInstance();
@@ -234,7 +229,10 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
         if (currentZuulRoute != null) {
             return currentZuulRoute;
         }
-        redisStorage = httpService.getAppInternalParam().getJedisPool();
+        /**
+         * 远程 redis存储 token
+         */
+        JedisPool redisStorage = httpService.getAppInternalParam().getJedisPool();
         if (redisStorage == null) {
             throw new ElementNotFoundException("jedis not set");
         }

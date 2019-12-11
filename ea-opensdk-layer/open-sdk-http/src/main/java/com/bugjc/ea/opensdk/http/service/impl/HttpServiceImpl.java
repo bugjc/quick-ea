@@ -48,13 +48,6 @@ public class HttpServiceImpl implements HttpService {
     private AuthConfig authConfig;
 
 
-    public HttpServiceImpl(){
-        /*创建HttpService切面代理对象并将引用传递到服务接口*/
-//        authService = new AuthServiceImpl(HttpServiceFactory.createProxy(this));
-//        jobService = new JobServiceImpl(HttpServiceFactory.createProxy(this));
-    }
-
-
     @Override
     public Result post(String path, String version, String body) throws HttpSecurityException {
         return post(path, version, authConfig.getToken(), body);

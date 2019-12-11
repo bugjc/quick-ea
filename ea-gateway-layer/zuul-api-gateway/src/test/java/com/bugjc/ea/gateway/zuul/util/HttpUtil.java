@@ -5,6 +5,7 @@ import com.bugjc.ea.opensdk.http.core.util.HttpClient;
 import com.bugjc.ea.opensdk.http.model.AppInternalParam;
 import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.service.HttpService;
+import com.bugjc.ea.opensdk.http.service.JobService;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -60,6 +61,24 @@ public class HttpUtil {
         appInternalParam.setEurekaEntities(eurekaEntities);
         appInternalParam.setJedisPool(jedisPool);
 
-        return HttpClient.getHttpService(appParam, appInternalParam);
+        return HttpClient.getInstance().getHttpService(appParam, appInternalParam);
+    }
+
+    /**
+     * 获取 http 任务调度服务对象
+     * @param appParam          --接入应用调用接口协议所需参数
+     * @return
+     */
+    public static JobService getJobService(AppParam appParam) {
+
+        JedisPool jedisPool = Singleton.get(HttpUtil.class).getJedisPool();
+
+        AppInternalParam appInternalParam = new AppInternalParam();
+        List<AppInternalParam.EurekaEntity> eurekaEntities = new ArrayList<>();
+        eurekaEntities.add(new AppInternalParam.EurekaEntity("eureka.serviceUrl.default=http://eureka:123456@127.0.0.1:8000/eureka/,http://eureka:123456@127.0.0.1:8001/eureka/"));
+        appInternalParam.setEurekaEntities(eurekaEntities);
+        appInternalParam.setJedisPool(jedisPool);
+
+        return HttpClient.getInstance().getJobService(appParam, appInternalParam);
     }
 }

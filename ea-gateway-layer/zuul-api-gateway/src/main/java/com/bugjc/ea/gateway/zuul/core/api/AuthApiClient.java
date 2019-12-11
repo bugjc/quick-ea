@@ -9,7 +9,6 @@ import com.bugjc.ea.opensdk.http.core.util.HttpClient;
 import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.model.auth.VerifyTokenBody;
 import com.bugjc.ea.opensdk.http.service.AuthService;
-import com.bugjc.ea.opensdk.http.service.impl.AuthServiceImpl;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,7 +60,7 @@ public class AuthApiClient {
             appParam.setRsaPublicKey(app.getRsaPublicKey());
             appParam.setAppSecret(app.getAppSecret());
             appParam.setAppId(app.getId());
-            AuthService authService = new AuthServiceImpl(HttpClient.getHttpService(appParam));
+            AuthService authService = HttpClient.getInstance().getAuthService(appParam);
             //调用接口
             VerifyTokenBody.RequestBody requestBody = new VerifyTokenBody.RequestBody();
             requestBody.setAccessToken(token);

@@ -9,8 +9,8 @@ import com.bugjc.ea.opensdk.http.core.component.token.impl.AuthRedisConfigImpl;
 import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
 import com.bugjc.ea.opensdk.http.service.JobService;
-import com.bugjc.ea.opensdk.http.service.factory.AuthServiceFactory;
-import com.bugjc.ea.opensdk.http.service.factory.JobServiceFactory;
+import com.bugjc.ea.opensdk.http.service.impl.AuthServiceImpl;
+import com.bugjc.ea.opensdk.http.service.impl.JobServiceImpl;
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 import lombok.extern.slf4j.Slf4j;
@@ -32,9 +32,9 @@ public class ApiModule extends AbstractModule {
     @Override
     protected void configure() {
         // 表明：当需要 HttpService 这个变量时，通过 HttpServiceFactory 创建单例的 HttpServiceImpl 实例作为依赖。
-        this.bind(HttpService.class).toInstance(httpService);
-        this.bind(AuthService.class).toProvider(AuthServiceFactory.class);
-        this.bind(JobService.class).toProvider(JobServiceFactory.class);
+        this.bind(HttpService.class).toInstance(this.httpService);
+        this.bind(AuthService.class).toInstance(new AuthServiceImpl(this.httpService));
+        this.bind(JobService.class).toInstance(new JobServiceImpl(this.httpService));
         //绑定内部注册中心调用实例依赖
         this.bind(EurekaConfig.class).toInstance(EurekaDefaultConfigImpl.getInstance());
         //动态参数 AuthConfig  多实例绑定

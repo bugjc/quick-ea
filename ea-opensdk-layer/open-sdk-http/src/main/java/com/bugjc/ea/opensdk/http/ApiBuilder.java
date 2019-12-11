@@ -11,7 +11,9 @@ import com.bugjc.ea.opensdk.http.core.util.IpAddressUtil;
 import com.bugjc.ea.opensdk.http.core.util.SSLUtil;
 import com.bugjc.ea.opensdk.http.model.AppInternalParam;
 import com.bugjc.ea.opensdk.http.model.AppParam;
+import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
+import com.bugjc.ea.opensdk.http.service.JobService;
 import com.bugjc.ea.opensdk.http.service.factory.HttpServiceFactory;
 import com.bugjc.ea.opensdk.http.service.impl.HttpServiceImpl;
 import com.google.inject.Guice;
@@ -126,6 +128,9 @@ public class ApiBuilder {
                 this.appInternalParam.setEnable(true);
                 //设置eureka服务实例
                 EurekaConfig eurekaConfig = injector.getInstance(EurekaConfig.class);
+                if (eurekaConfig == null){
+                    throw new ElementNotFoundException("cannot get EurekaConfig.class instance");
+                }
                 this.httpService.setEurekaConfig(eurekaConfig);
                 //初始化 eureka
                 eurekaConfig.init();
@@ -155,5 +160,23 @@ public class ApiBuilder {
             this.httpService.setOkHttpClient(this.httpClient);
             return this.httpService;
         }
+    }
+
+    /**
+     * 构建授权服务
+     * @return
+     */
+    public AuthService buildAuthService(){
+        this.build();
+        return this.injector.getInstance(AuthService.class);
+    }
+
+    /**
+     * 构建任务调度服务
+     * @return
+     */
+    public JobService buildJobService(){
+        this.build();
+        return this.injector.getInstance(JobService.class);
     }
 }
