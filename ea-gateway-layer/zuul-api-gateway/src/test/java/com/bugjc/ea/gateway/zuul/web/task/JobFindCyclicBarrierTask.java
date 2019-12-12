@@ -18,7 +18,7 @@ public class JobFindCyclicBarrierTask implements CyclicBarrierTask {
             //创建请求参数对象
             FindBody.RequestBody requestBody = new FindBody.RequestBody();
             requestBody.setJobId(RandomUtil.randomNumbers(20));
-            Result result = HttpUtil.getHttpService(EnvUtil.getDevServer()).getJobService().findJob(JobPathInfo.JOB_FIND_PATH_V1, requestBody);
+            Result result = HttpUtil.getJobService(EnvUtil.getDevServer()).findJob(JobPathInfo.JOB_FIND_PATH_V1, requestBody);
 
 //            FindBody.RequestBody requestBody = new FindBody.RequestBody();
 //            requestBody.setJobId("#########################################");

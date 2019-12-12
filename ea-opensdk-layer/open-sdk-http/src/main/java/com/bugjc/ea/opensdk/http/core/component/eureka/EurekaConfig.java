@@ -20,12 +20,6 @@ public interface EurekaConfig {
     void shutdown();
 
     /**
-     * 设置 存储对象,默认读取 eureka 配置信息的 jedispool 连接池
-     * @param storageObject
-     */
-    void setStorageObject(Object storageObject);
-
-    /**
      * 根据接口路径获取一个服务，例如：path = /job/create
      * @param path
      * @return

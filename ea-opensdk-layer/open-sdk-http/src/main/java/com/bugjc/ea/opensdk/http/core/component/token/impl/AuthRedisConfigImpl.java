@@ -3,15 +3,15 @@ package com.bugjc.ea.opensdk.http.core.component.token.impl;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.opensdk.http.api.AuthPathInfo;
-import com.bugjc.ea.opensdk.http.core.component.token.AccessTokenConstants;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
+import com.bugjc.ea.opensdk.http.core.component.token.constants.AccessTokenConstants;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.bugjc.ea.opensdk.http.core.enums.TokenResultStatusEnum;
 import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
 import com.bugjc.ea.opensdk.http.model.auth.QueryTokenBody;
-import com.bugjc.ea.opensdk.http.service.HttpService;
+import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.github.jedis.lock.JedisLock;
-import lombok.Setter;
+import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import redis.clients.jedis.Jedis;
 
@@ -26,8 +26,8 @@ public class AuthRedisConfigImpl implements AuthConfig {
     /**
      *  平台接口授权服务 http客户端
      */
-    @Setter
-    private HttpService httpService;
+    @Inject
+    private AuthService authService;
 
     /**
      * 私有化构造函数
@@ -58,25 +58,23 @@ public class AuthRedisConfigImpl implements AuthConfig {
      * 暴露获取实例的静态方法
      * @return
      */
-    public static AuthConfig getInstance(HttpService httpService){
-        AuthConfig authConfig = AuthRedisConfigImpl.SingletonEnum.INSTANCE.getInstance();
-        authConfig.setHttpService(httpService);
-        return authConfig;
+    public static AuthConfig getInstance(){
+        return SingletonEnum.INSTANCE.getInstance();
     }
 
     @Override
     public String getToken() {
-        if (httpService == null){
+        if (authService == null){
             return null;
         }
 
-        if (httpService.getAppParam().getJedisPool() == null){
+        if (authService.getHttpService().getAppParam().getJedisPool() == null){
             return null;
         }
 
-        String appId = httpService.getAppParam().getAppId();
+        String appId = authService.getHttpService().getAppParam().getAppId();
 
-        try (Jedis jedis = httpService.getAppParam().getJedisPool().getResource()) {
+        try (Jedis jedis = authService.getHttpService().getAppParam().getJedisPool().getResource()) {
             //从 redis 中获取 token
             String token = getAccessToken(jedis, appId);
             if (StrUtil.isNotBlank(token)){
@@ -97,11 +95,11 @@ public class AuthRedisConfigImpl implements AuthConfig {
 
                 //获取 token 重试次数
                 int retryCount = 3;
-                Result result =  httpService.getAuthService().getToken(AuthPathInfo.QUERY_TOKEN_V1);
+                Result result =  authService.getToken(AuthPathInfo.QUERY_TOKEN_V1);
                 while (result.getCode() == TokenResultStatusEnum.Retry.getStatus()){
                     retryCount--;
                     log.info(retryCount +"");
-                    result = httpService.getAuthService().getToken(AuthPathInfo.QUERY_TOKEN_V1);
+                    result = authService.getToken(AuthPathInfo.QUERY_TOKEN_V1);
                     if (retryCount <= 0){
                         break;
                     }

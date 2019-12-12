@@ -7,14 +7,16 @@ import cn.hutool.cache.impl.LRUCache;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
-import com.bugjc.ea.opensdk.http.core.component.eureka.constants.EurekaConstants;
 import com.bugjc.ea.opensdk.http.core.component.eureka.config.MyInstanceConfig;
+import com.bugjc.ea.opensdk.http.core.component.eureka.constants.EurekaConstants;
 import com.bugjc.ea.opensdk.http.core.component.eureka.entity.Server;
 import com.bugjc.ea.opensdk.http.core.component.eureka.entity.ZuulRoute;
 import com.bugjc.ea.opensdk.http.core.exception.ElementNotFoundException;
 import com.bugjc.ea.opensdk.http.core.util.AntPathMatcher;
 import com.bugjc.ea.opensdk.http.core.util.IpAddressUtil;
 import com.bugjc.ea.opensdk.http.core.util.RuleUtil;
+import com.bugjc.ea.opensdk.http.service.HttpService;
+import com.google.inject.Inject;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.DefaultEurekaClientConfig;
 import com.netflix.discovery.DiscoveryManager;
@@ -35,6 +37,12 @@ import java.util.List;
  */
 @Slf4j
 public class EurekaDefaultConfigImpl implements EurekaConfig {
+
+    /**
+     *  平台接口授权服务 http客户端
+     */
+    @Inject
+    private HttpService httpService;
 
     /**
      * 缓存容量（key1 - key2）
@@ -60,11 +68,6 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
      * http 协议url前缀
      */
     private final static String HTTP_PREFIX = "http://";
-
-    /**
-     * 远程 redis存储 token
-     */
-    private JedisPool redisStorage;
 
     /**
      * 获取 path --> serviceId 的缓存对象
@@ -123,9 +126,7 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
      *
      * @return
      */
-    public static EurekaDefaultConfigImpl getInstance(JedisPool redisStorage) {
-        EurekaConfig eurekaConfig = SingletonEnum.INSTANCE.getInstance();
-        eurekaConfig.setStorageObject(redisStorage);
+    public static EurekaDefaultConfigImpl getInstance() {
         return SingletonEnum.INSTANCE.getInstance();
     }
 
@@ -144,11 +145,6 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     @Override
     public void shutdown() {
         DiscoveryManager.getInstance().shutdownComponent();
-    }
-
-    @Override
-    public void setStorageObject(Object storageObject) {
-        this.redisStorage = (JedisPool) storageObject;
     }
 
     /**
@@ -233,7 +229,10 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
         if (currentZuulRoute != null) {
             return currentZuulRoute;
         }
-
+        /**
+         * 远程 redis存储 token
+         */
+        JedisPool redisStorage = httpService.getAppInternalParam().getJedisPool();
         if (redisStorage == null) {
             throw new ElementNotFoundException("jedis not set");
         }
