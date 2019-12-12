@@ -1,12 +1,14 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.data;
 
 import cn.hutool.core.util.NumberUtil;
-import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.TypeEnum;
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 
 import java.io.Serializable;
 import java.util.concurrent.atomic.LongAdder;
@@ -18,48 +20,7 @@ import java.util.concurrent.atomic.LongAdder;
  * **/
 public class CountInfoTable implements Serializable {
 
-    @Data
-    @NoArgsConstructor
-    @AllArgsConstructor
-    private static class CountInfo implements Serializable{
-
-        private String path;
-
-        /**
-         * 调用总次数
-         */
-        private long total;
-
-        /**
-         * 调用成功数量
-         */
-        private long numberOfSuccesses;
-
-        /**
-         * 调用失败数量
-         */
-        private long numberOfFailures;
-
-        /**
-         * 成功率
-         */
-        private double successRate;
-
-        /**
-         * 失败率
-         */
-        private double failureRate;
-
-        CountInfo(long numberOfSuccesses, long numberOfFailures){
-            this.numberOfSuccesses = numberOfSuccesses;
-            this.numberOfFailures = numberOfFailures;
-            this.total = numberOfSuccesses + numberOfFailures;
-            if (this.total != 0){
-                this.successRate = NumberUtil.div(this.numberOfSuccesses, this.total, 2);
-                this.failureRate = NumberUtil.div(this.numberOfFailures, this.total,2);
-            }
-        }
-    }
+    private DB db = DBMaker.memoryDB().make();
 
     /**
      * 统计成功的调用次数
@@ -104,16 +65,18 @@ public class CountInfoTable implements Serializable {
         return SingletonEnum.INSTANCE.getInstance();
     }
 
+
     private long getSuccessNum(){
         return COUNT_NUMBER_OF_SUCCESSES.longValue();
     }
+
 
     private long getFailNum(){
         return COUNT_NUMBER_OF_FAILURES.longValue();
     }
 
     /**
-     * 统计调用成功数量
+     * 统计数量
      */
     public void increment(HttpCallEvent httpCallEvent){
         if (httpCallEvent.getMetadata().getType() != TypeEnum.TotalRequests){
@@ -127,6 +90,8 @@ public class CountInfoTable implements Serializable {
             COUNT_NUMBER_OF_FAILURES.increment();
         }
 
+        //TODO 记录监控数据到数据库
+
     }
 
     /**
@@ -137,4 +102,56 @@ public class CountInfoTable implements Serializable {
         return new CountInfo(getSuccessNum(), getFailNum());
     }
 
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    private static class CountInfo implements Serializable{
+
+        /**
+         * 接口路径
+         */
+        private String path;
+
+        /**
+         * 调用总次数
+         */
+        private long total;
+
+        /**
+         * 调用成功数量
+         */
+        private long numberOfSuccesses;
+
+        /**
+         * 调用失败数量
+         */
+        private long numberOfFailures;
+
+        /**
+         * 成功率
+         */
+        private double successRate;
+
+        /**
+         * 失败率
+         */
+        private double failureRate;
+
+        /**
+         * 调用信息
+         * @param numberOfSuccesses
+         * @param numberOfFailures
+         */
+        CountInfo(long numberOfSuccesses, long numberOfFailures){
+            this.path = "/";
+            this.numberOfSuccesses = numberOfSuccesses;
+            this.numberOfFailures = numberOfFailures;
+            this.total = numberOfSuccesses + numberOfFailures;
+            if (this.total != 0){
+                this.successRate = NumberUtil.div(this.numberOfSuccesses, this.total, 2);
+                this.failureRate = NumberUtil.div(this.numberOfFailures, this.total,2);
+            }
+        }
+    }
 }

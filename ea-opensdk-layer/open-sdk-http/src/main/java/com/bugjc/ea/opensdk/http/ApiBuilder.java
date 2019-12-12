@@ -5,7 +5,7 @@ import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.monitor.DisruptorConfig;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
 import com.bugjc.ea.opensdk.http.core.di.ApiModule;
-import com.bugjc.ea.opensdk.http.core.di.AuthFactory;
+import com.bugjc.ea.opensdk.http.core.component.token.AuthFactory;
 import com.bugjc.ea.opensdk.http.core.exception.ElementNotFoundException;
 import com.bugjc.ea.opensdk.http.core.util.IpAddressUtil;
 import com.bugjc.ea.opensdk.http.core.util.SSLUtil;

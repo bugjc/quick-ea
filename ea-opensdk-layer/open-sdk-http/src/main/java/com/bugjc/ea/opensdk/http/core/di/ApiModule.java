@@ -31,10 +31,11 @@ public class ApiModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        // 表明：当需要 HttpService 这个变量时，通过 HttpServiceFactory 创建单例的 HttpServiceImpl 实例作为依赖。
+        //绑定服务实例依赖。
         this.bind(HttpService.class).toInstance(this.httpService);
         this.bind(AuthService.class).toInstance(new AuthServiceImpl(this.httpService));
         this.bind(JobService.class).toInstance(new JobServiceImpl(this.httpService));
+
         //绑定内部注册中心调用实例依赖
         this.bind(EurekaConfig.class).toInstance(EurekaDefaultConfigImpl.getInstance());
         //动态参数 AuthConfig  多实例绑定

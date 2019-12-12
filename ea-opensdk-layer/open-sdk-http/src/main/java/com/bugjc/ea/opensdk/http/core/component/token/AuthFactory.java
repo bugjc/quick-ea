@@ -1,4 +1,4 @@
-package com.bugjc.ea.opensdk.http.core.di;
+package com.bugjc.ea.opensdk.http.core.component.token;
 
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
 import com.google.inject.Inject;
