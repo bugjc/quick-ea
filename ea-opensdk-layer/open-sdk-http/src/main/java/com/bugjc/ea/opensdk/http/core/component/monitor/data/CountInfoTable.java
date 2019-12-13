@@ -1,16 +1,23 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.data;
 
 import cn.hutool.core.util.NumberUtil;
+import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.TypeEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.mapdb.DB;
-import org.mapdb.DBMaker;
+import lombok.extern.slf4j.Slf4j;
+import org.rocksdb.Options;
+import org.rocksdb.RocksDB;
+import org.rocksdb.RocksDBException;
+import org.rocksdb.RocksIterator;
 
+import java.io.IOException;
 import java.io.Serializable;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
@@ -18,9 +25,32 @@ import java.util.concurrent.atomic.LongAdder;
  * @author aoki
  * @date 2019/12/4
  * **/
+@Slf4j
 public class CountInfoTable implements Serializable {
 
-    private DB db = DBMaker.memoryDB().make();
+    private static final String DB_PATH = "D://data/";
+    private static RocksDB rocksdb;
+    static {
+        RocksDB.loadLibrary();
+
+        Options options = new Options();
+        options.setCreateIfMissing(true);
+
+        // 文件不存在，则先创建文件
+        if (!Files.isSymbolicLink(Paths.get(DB_PATH))) {
+            try {
+                Files.createDirectories(Paths.get(DB_PATH));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            rocksdb = RocksDB.open(options, DB_PATH);
+        } catch (RocksDBException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     /**
      * 统计成功的调用次数
@@ -90,8 +120,13 @@ public class CountInfoTable implements Serializable {
             COUNT_NUMBER_OF_FAILURES.increment();
         }
 
-        //TODO 记录监控数据到数据库
-
+        //存储监控数据
+        try {
+            log.info("收集监控数据");
+            rocksdb.put(httpCallEvent.getMetadata().getId().getBytes(), httpCallEvent.getMetadata().toString().getBytes());
+        } catch (RocksDBException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -102,6 +137,18 @@ public class CountInfoTable implements Serializable {
         return new CountInfo(getSuccessNum(), getFailNum());
     }
 
+    /**
+     * 获取监控数据
+     * @return
+     */
+    public long getValues(){
+        try (final RocksIterator iterator = rocksdb.newIterator()) {
+            for (iterator.seekToLast(); iterator.isValid(); iterator.prev()) {
+                System.out.println(new String(iterator.value()));
+            }
+        }
+        return rocksdb.getLatestSequenceNumber();
+    }
 
     @Data
     @NoArgsConstructor
@@ -152,6 +199,11 @@ public class CountInfoTable implements Serializable {
                 this.successRate = NumberUtil.div(this.numberOfSuccesses, this.total, 2);
                 this.failureRate = NumberUtil.div(this.numberOfFailures, this.total,2);
             }
+        }
+
+        @Override
+        public String toString(){
+            return JSON.toJSONString(this);
         }
     }
 }

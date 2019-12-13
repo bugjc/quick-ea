@@ -19,17 +19,17 @@
         <cglib.version>3.3.0</cglib.version>
         <disruptor.version>3.4.1</disruptor.version>
         <guice.version>4.2.2</guice.version>
-        <mapdb.version>3.0.7</mapdb.version>
+        <rocksdbjni.version>6.4.6</rocksdbjni.version>
     </properties>
 
 
     <dependencies>
 
-        <!-- 内存数据库 -->
+        <!-- key-value 存储引擎 -->
         <dependency>
-            <groupId>org.mapdb</groupId>
-            <artifactId>mapdb</artifactId>
-            <version>${mapdb.version}</version>
+            <groupId>org.rocksdb</groupId>
+            <artifactId>rocksdbjni</artifactId>
+            <version>${rocksdbjni.version}</version>
         </dependency>
 
         <!-- guice 依赖注入库 -->
