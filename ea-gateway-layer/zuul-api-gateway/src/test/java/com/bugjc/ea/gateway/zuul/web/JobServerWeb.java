@@ -30,12 +30,6 @@ public class JobServerWeb {
                 .build();
         cyclicBarrierComponent.run();
 
-        cyclicBarrierComponent = new TestBuilder()
-                .setTotal(total)
-                .setCyclicBarrierTask(jobFindCyclicBarrierTask)
-                .build();
-        cyclicBarrierComponent.run();
-
         log.info("实时统计信息：{}", CountInfoTable.getInstance().getCountInfo());
         log.info("存储的数据：{}", CountInfoTable.getInstance().getValues());
     }

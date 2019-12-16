@@ -15,9 +15,7 @@ public class HttpCallEventHandler implements EventHandler<HttpCallEvent> {
 
     @Override
     public void onEvent(HttpCallEvent event, long l, boolean b)  {
-        log.info("消费消息：{}", event.toString());
         CountInfoTable countInfoTable = CountInfoTable.getInstance();
         countInfoTable.increment(event);
-        //producer_consumer
     }
 }

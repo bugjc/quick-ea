@@ -20,6 +20,7 @@
         <disruptor.version>3.4.1</disruptor.version>
         <guice.version>4.2.2</guice.version>
         <rocksdbjni.version>6.4.6</rocksdbjni.version>
+        <assertj-core.version>3.14.0</assertj-core.version>
     </properties>
 
 
@@ -131,6 +132,21 @@
             <version>1</version>
             <optional>true</optional>
         </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${assertj-core.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+
 
     </dependencies>
 

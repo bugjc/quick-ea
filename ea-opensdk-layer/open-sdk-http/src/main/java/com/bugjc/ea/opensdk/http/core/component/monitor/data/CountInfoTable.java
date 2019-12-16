@@ -5,19 +5,16 @@ import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.TypeEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
+import com.bugjc.ea.opensdk.http.core.component.monitor.rocksdb.Cache;
+import com.bugjc.ea.opensdk.http.core.component.monitor.rocksdb.RocksTTLDBCache;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.rocksdb.Options;
-import org.rocksdb.RocksDB;
-import org.rocksdb.RocksDBException;
-import org.rocksdb.RocksIterator;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
@@ -28,28 +25,21 @@ import java.util.concurrent.atomic.LongAdder;
 @Slf4j
 public class CountInfoTable implements Serializable {
 
-    private static final String DB_PATH = "D://data/";
-    private static RocksDB rocksdb;
+    private static final String DB_PATH = "D://data//count_info//";
+    private static Cache cache;
     static {
-        RocksDB.loadLibrary();
+        Map<Object, Object> conf = new HashMap<>();
+        conf.put("rocksdb.root.dir", DB_PATH);
+        Map<String,Integer> map = new HashMap<>();
+        map.put("total", 10);
+        conf.put("cfNames", map);
 
-        Options options = new Options();
-        options.setCreateIfMissing(true);
-
-        // 文件不存在，则先创建文件
-        if (!Files.isSymbolicLink(Paths.get(DB_PATH))) {
-            try {
-                Files.createDirectories(Paths.get(DB_PATH));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        cache = new RocksTTLDBCache();
         try {
-            rocksdb = RocksDB.open(options, DB_PATH);
-        } catch (RocksDBException e) {
+            cache.init(conf);
+        } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     /**
@@ -121,12 +111,7 @@ public class CountInfoTable implements Serializable {
         }
 
         //存储监控数据
-        try {
-            log.info("收集监控数据");
-            rocksdb.put(httpCallEvent.getMetadata().getId().getBytes(), httpCallEvent.getMetadata().toString().getBytes());
-        } catch (RocksDBException e) {
-            e.printStackTrace();
-        }
+        cache.put(httpCallEvent.getMetadata().getId(), httpCallEvent.getMetadata());
     }
 
     /**
@@ -142,12 +127,8 @@ public class CountInfoTable implements Serializable {
      * @return
      */
     public long getValues(){
-        try (final RocksIterator iterator = rocksdb.newIterator()) {
-            for (iterator.seekToLast(); iterator.isValid(); iterator.prev()) {
-                System.out.println(new String(iterator.value()));
-            }
-        }
-        return rocksdb.getLatestSequenceNumber();
+        cache.get("1");
+        return cache.size();
     }
 
     @Data
