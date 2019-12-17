@@ -17,7 +17,7 @@ public interface Cache {
 
     void remove(String key);
 
-    void put(String key, Object value, int timeoutSecond);
+    void put(String key, Object value, byte[] timeoutSecond);
 
     void put(String key, Object value);
 

@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.rocksdb.*;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,8 +38,17 @@ class RocksTTLDBCacheTest {
     @Test
     public void ttlDbOpenWithColumnFamilies() throws RocksDBException,
             InterruptedException {
+
+
+        Map<Object, Object> conf = new HashMap<>();
+        conf.put("root.dir", "D:\\data\\test\\");
+        Map<String,Integer> map = new HashMap<>();
+        map.put("total", 2);
+        conf.put("cfNames", map);
+
+
         final List<ColumnFamilyDescriptor> cfNames = Arrays.asList(new ColumnFamilyDescriptor(RocksDB.DEFAULT_COLUMN_FAMILY), new ColumnFamilyDescriptor("new_cf".getBytes()));
-        final List<Integer> ttlValues = Arrays.asList(0, 1);
+        final List<Integer> ttlValues = Arrays.asList(0, 2);
 
         final List<ColumnFamilyHandle> columnFamilyHandleList = new ArrayList<>();
         try (final DBOptions dbOptions = new DBOptions().setCreateMissingColumnFamilies(true).setCreateIfMissing(true);
@@ -49,14 +56,15 @@ class RocksTTLDBCacheTest {
 
             try {
                 //ttlDB.put("key".getBytes(), "value".getBytes());
+
                 //assertThat(ttlDB.get("key".getBytes())).isEqualTo("value".getBytes());
                 ttlDB.put(columnFamilyHandleList.get(1), "key".getBytes(), "value".getBytes());
                 assertThat(ttlDB.get(columnFamilyHandleList.get(1), "key".getBytes())).isEqualTo("value".getBytes());
-                TimeUnit.SECONDS.sleep(2);
+                TimeUnit.SECONDS.sleep(3);
 
                 ttlDB.compactRange();
                 ttlDB.compactRange(columnFamilyHandleList.get(1));
-
+                assertThat(ttlDB.getLatestSequenceNumber()).isEqualTo(0);
                 //assertThat(ttlDB.get("key".getBytes())).isNotNull();
                 assertThat(ttlDB.get(columnFamilyHandleList.get(1), "key".getBytes())).isNull();
             } finally {

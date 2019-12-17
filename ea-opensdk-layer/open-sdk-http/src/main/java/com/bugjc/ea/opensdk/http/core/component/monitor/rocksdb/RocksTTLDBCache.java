@@ -1,12 +1,12 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.rocksdb;
 
-import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.rocksdb.*;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.*;
 
 @Slf4j
@@ -16,13 +16,18 @@ public class RocksTTLDBCache implements Cache{
         RocksDB.loadLibrary();
     }
 
-    public static final String ROCKSDB_ROOT_DIR = "rocksdb.root.dir";
-    protected TtlDB ttlDB;
-    protected String rootDir;
-    protected TreeMap<Integer, ColumnFamilyHandle> windowHandlers = new TreeMap<>();
+    private static final String ROOT_DIR = "root.dir";
+    private TtlDB ttlDB;
+    private String rootDir;
+    private TreeMap<byte[], ColumnFamilyHandle> windowHandlers = new TreeMap<byte[], ColumnFamilyHandle>(new Comparator<byte[]>() {
+        @Override
+        public int compare(byte[] o1, byte[] o2) {
+            return 1;
+        }
+    });
 
     public void initDir(Map<Object, Object> conf) {
-        String confDir = (String) conf.get(ROCKSDB_ROOT_DIR);
+        String confDir = (String) conf.get(ROOT_DIR);
         if (StrUtil.isBlank(confDir)) {
             throw new RuntimeException("rootDir of rocksDB is not specified!");
         }
@@ -54,8 +59,8 @@ public class RocksTTLDBCache implements Cache{
         final List<ColumnFamilyHandle> columnFamilyHandleList = new ArrayList<>();
         final DBOptions dbOptions = new DBOptions().setCreateMissingColumnFamilies(true).setCreateIfMissing(true);
         this.ttlDB = TtlDB.open(dbOptions, rootDir, cfNames, columnFamilyHandleList, ttlValues, false);
-        for (int i = 0; i < ttlValues.size(); i++) {
-            windowHandlers.put(ttlValues.get(i), columnFamilyHandleList.get(i));
+        for (ColumnFamilyHandle columnFamilyHandle : columnFamilyHandleList) {
+            windowHandlers.put(columnFamilyHandle.getName(), columnFamilyHandle);
         }
         log.info("Successfully init rocksDB of {}", rootDir);
     }
@@ -99,74 +104,46 @@ public class RocksTTLDBCache implements Cache{
 
     @Override
     public Object get(String key) {
-        //TODO 直接列族名稱獲取ColumnFamilyHandle
-        for (Map.Entry<Integer, ColumnFamilyHandle> entry : windowHandlers.entrySet()) {
-            try {
-                byte[] data = ttlDB.get(entry.getValue(), key.getBytes());
-                if (data != null) {
-                    try {
-                        System.out.println(JSON.parse(data));
-                        //return JSON.parse(data);
-                    } catch (Exception e) {
-                        log.error("Failed to deserialize obj of " + key);
-                        ttlDB.delete(entry.getValue(), key.getBytes());
-                        return null;
-                    }
+        try {
+            byte[] keyBytes = key.getBytes();
+            ColumnFamilyHandle columnFamilyHandle = windowHandlers.get(keyBytes);
+            byte[] data = ttlDB.get(columnFamilyHandle, keyBytes);
+            if (data != null) {
+                try {
+                    return JSON.parse(data);
+                } catch (Exception e) {
+                    log.error("Failed to deserialize obj of " + key);
+                    ttlDB.delete(columnFamilyHandle, key.getBytes());
+                    return null;
                 }
-            } catch (Exception ignored) {
             }
-        }
-
+        } catch (Exception ignored) {}
         return null;
     }
 
 
     @Override
     public void remove(String key) {
-        for (Map.Entry<Integer, ColumnFamilyHandle> entry : windowHandlers.entrySet()) {
-            try {
-                ttlDB.delete(entry.getValue(), key.getBytes());
-
-            } catch (Exception e) {
-                log.error("Failed to remove " + key);
-            }
+        try {
+            byte[] keyBytes = key.getBytes();
+            ttlDB.delete(windowHandlers.get(keyBytes), key.getBytes());
+        } catch (Exception e) {
+            log.error("Failed to remove " + key);
         }
     }
 
 
-    protected void put(String key, Object value, Map.Entry<Integer, ColumnFamilyHandle> entry) {
+    protected void put(String key, Object value, Map.Entry<byte[], ColumnFamilyHandle> entry) {
         byte[] data = JSON.toJSONBytes(value);
         try {
             ttlDB.put(entry.getValue(), key.getBytes(), data);
         } catch (Exception e) {
             log.error("Failed to put key into cache, " + key, e);
-            return;
-        }
-
-//        try {
-//            ttlDB.compactRange();
-//            ttlDB.compactRange(entry.getValue());
-//        } catch (RocksDBException e) {
-//            e.printStackTrace();
-//        }
-
-
-        for (Map.Entry<Integer, ColumnFamilyHandle> removeEntry : windowHandlers.entrySet()) {
-            if (removeEntry.getKey().equals(entry.getKey())) {
-                continue;
-            }
-
-            try {
-                ttlDB.delete(removeEntry.getValue(), key.getBytes());
-                System.out.println(Arrays.toString(ttlDB.get(removeEntry.getValue(), key.getBytes())));
-            } catch (Exception e) {
-                log.warn("Failed to remove other " + key);
-            }
         }
     }
 
-    protected Map.Entry<Integer, ColumnFamilyHandle> getHandler(int timeoutSecond) {
-        Map.Entry<Integer, ColumnFamilyHandle> ceilingEntry = windowHandlers.ceilingEntry(timeoutSecond);
+    private Map.Entry<byte[], ColumnFamilyHandle> getHandler(byte[] timeoutSecond) {
+        Map.Entry<byte[], ColumnFamilyHandle> ceilingEntry = windowHandlers.ceilingEntry(timeoutSecond);
         if (ceilingEntry != null) {
             return ceilingEntry;
         } else {
@@ -175,7 +152,7 @@ public class RocksTTLDBCache implements Cache{
     }
 
     @Override
-    public void put(String key, Object value, int timeoutSecond) {
+    public void put(String key, Object value, byte[] timeoutSecond) {
         put(key, value, getHandler(timeoutSecond));
     }
 
@@ -192,7 +169,7 @@ public class RocksTTLDBCache implements Cache{
     private static Cache cache;
     static {
         Map<Object, Object> conf = new HashMap<>();
-        conf.put("rocksdb.root.dir", "D:\\data\\test\\");
+        conf.put("root.dir", "D:\\data\\test\\");
         Map<String,Integer> map = new HashMap<>();
         map.put("total", 2);
         conf.put("cfNames", map);
@@ -206,10 +183,7 @@ public class RocksTTLDBCache implements Cache{
     public static void main(String[] args) {
         System.out.println(cache.size());
         cache.put("total", "123456");
-        System.out.println(cache.size());
-        ThreadUtil.sleep(3000);
-        System.out.println(cache.size());
-        cache.put("20", "555555");
+        //ThreadUtil.sleep(3000);
         System.out.println(cache.get("total"));
     }
 }
