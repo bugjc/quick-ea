@@ -23,6 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ApiModule extends AbstractModule {
 
+    /**
+     * HTTP 客户端
+     */
     private HttpService httpService;
 
     public ApiModule(HttpService httpService) {
@@ -37,7 +40,7 @@ public class ApiModule extends AbstractModule {
         this.bind(JobService.class).toInstance(new JobServiceImpl(this.httpService));
 
         //绑定内部注册中心调用实例依赖
-        this.bind(EurekaConfig.class).toInstance(EurekaDefaultConfigImpl.getInstance());
+        this.bind(EurekaConfig.class).toInstance(new EurekaDefaultConfigImpl(this.httpService));
         //动态参数 AuthConfig  多实例绑定
         MapBinder<Integer, AuthConfig> authBinder = MapBinder.newMapBinder(binder(), Integer.class, AuthConfig.class);
         authBinder.addBinding(AuthTypeEnum.Memory.getType()).toInstance(AuthDefaultConfigImpl.getInstance());

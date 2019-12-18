@@ -18,17 +18,17 @@ public class ProxyUtil {
     /**
      * 创建切面代理对象
      * @param target        --目标对象
-     * @param aspectClass   --切面类
+     * @param aspect        --切面对象
      * @return
      */
-    public static Object createProxy(Object target, Class<? extends Aspect> aspectClass){
+    public static Object createProxy(Object target, Aspect aspect){
         try {
-            return new CgLibProxyInterceptor().newProxy(target, aspectClass);
+            return new CgLibProxyInterceptor().newProxy(target, aspect);
         } catch (NoClassDefFoundError e) {
             // ignore
         }
         log.info("使用JDK动态代理模式");
-        return new JdkProxyInterceptor().newProxy(target, aspectClass);
+        return new JdkProxyInterceptor().newProxy(target, aspect);
     }
 
 

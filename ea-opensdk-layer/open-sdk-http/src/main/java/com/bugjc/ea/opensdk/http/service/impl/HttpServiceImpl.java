@@ -113,7 +113,7 @@ public class HttpServiceImpl implements HttpService {
 
             Response response = optionalOf(httpResponse);
             String resultJson = Objects.requireNonNull(response.body()).string();
-            log.info("ResponseBody:{}", resultJson);
+            log.debug("ResponseBody:{}", resultJson);
             if (StrUtil.isNotBlank(httpResponse.header(HttpHeaderKeyConstants.GATEWAY_ERROR_FLAG))) {
                 //直接返回
                 return JSON.parseObject(resultJson, Result.class);

@@ -5,16 +5,12 @@ import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.TypeEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
-import com.bugjc.ea.opensdk.http.core.component.monitor.rocksdb.Cache;
-import com.bugjc.ea.opensdk.http.core.component.monitor.rocksdb.RocksTTLDBCache;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.atomic.LongAdder;
 
 /**
@@ -24,23 +20,6 @@ import java.util.concurrent.atomic.LongAdder;
  * **/
 @Slf4j
 public class CountInfoTable implements Serializable {
-
-    private static final String DB_PATH = "D://data//count_info//";
-    private static Cache cache;
-    static {
-        Map<Object, Object> conf = new HashMap<>();
-        conf.put("rocksdb.root.dir", DB_PATH);
-        Map<String,Integer> map = new HashMap<>();
-        map.put("total", 10);
-        conf.put("cfNames", map);
-
-        cache = new RocksTTLDBCache();
-        try {
-            cache.init(conf);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 统计成功的调用次数
@@ -111,7 +90,7 @@ public class CountInfoTable implements Serializable {
         }
 
         //存储监控数据
-        cache.put(httpCallEvent.getMetadata().getId(), httpCallEvent.getMetadata());
+        //cache.put(httpCallEvent.getMetadata().getId(), httpCallEvent.getMetadata());
     }
 
     /**
@@ -120,15 +99,6 @@ public class CountInfoTable implements Serializable {
      */
     public CountInfo getCountInfo(){
         return new CountInfo(getSuccessNum(), getFailNum());
-    }
-
-    /**
-     * 获取监控数据
-     * @return
-     */
-    public long getValues(){
-        cache.get("1");
-        return cache.size();
     }
 
     @Data

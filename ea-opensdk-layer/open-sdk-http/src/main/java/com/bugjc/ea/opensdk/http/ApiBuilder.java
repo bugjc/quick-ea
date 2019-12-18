@@ -1,11 +1,13 @@
 package com.bugjc.ea.opensdk.http;
 
 import cn.hutool.core.util.StrUtil;
+import com.bugjc.ea.opensdk.http.core.aop.ProxyUtil;
+import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
-import com.bugjc.ea.opensdk.http.core.component.monitor.DisruptorConfig;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
-import com.bugjc.ea.opensdk.http.core.di.ApiModule;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthFactory;
+import com.bugjc.ea.opensdk.http.core.di.ApiModule;
+import com.bugjc.ea.opensdk.http.core.di.BasicModule;
 import com.bugjc.ea.opensdk.http.core.exception.ElementNotFoundException;
 import com.bugjc.ea.opensdk.http.core.util.IpAddressUtil;
 import com.bugjc.ea.opensdk.http.core.util.SSLUtil;
@@ -14,10 +16,10 @@ import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.service.AuthService;
 import com.bugjc.ea.opensdk.http.service.HttpService;
 import com.bugjc.ea.opensdk.http.service.JobService;
-import com.bugjc.ea.opensdk.http.service.factory.HttpServiceFactory;
 import com.bugjc.ea.opensdk.http.service.impl.HttpServiceImpl;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Stage;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionPool;
 import okhttp3.OkHttpClient;
@@ -43,21 +45,23 @@ public class ApiBuilder {
      * 调用http接口服务
      */
     private HttpService httpService;
-    private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
     private Injector injector;
     /**
      * http 客户端
      */
     private OkHttpClient httpClient;
+    private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
 
     public ApiBuilder() {
-        //先初始化客户端调用实例对象，在将对象交由 Guice 管理。
-        this.httpService = HttpServiceFactory.createProxy(new HttpServiceImpl());
-        injector = Guice.createInjector(new ApiModule(httpService));
-
         this.httpClientBuilder.connectTimeout(5L, TimeUnit.SECONDS).readTimeout(20L, TimeUnit.SECONDS);
+
+        //初始化依赖注入
+        this.injector = Guice.createInjector(Stage.PRODUCTION, new BasicModule());
+        Aspect aspect = this.injector.getInstance(Aspect.class);
+        this.httpService = (HttpService) ProxyUtil.createProxy(new HttpServiceImpl(), aspect);
+        this.injector = this.injector.createChildInjector(new ApiModule(this.httpService));
         //启动 Disruptor
-        DisruptorConfig.getInstance().start();
+        //this.injector.getInstance(DisruptorConfig.class).start();
     }
 
     /**
@@ -127,7 +131,7 @@ public class ApiBuilder {
                 //设置内部调用开关
                 this.appInternalParam.setEnable(true);
                 //设置eureka服务实例
-                EurekaConfig eurekaConfig = injector.getInstance(EurekaConfig.class);
+                EurekaConfig eurekaConfig = this.injector.getInstance(EurekaConfig.class);
                 if (eurekaConfig == null){
                     throw new ElementNotFoundException("cannot get EurekaConfig.class instance");
                 }

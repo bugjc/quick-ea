@@ -1,11 +1,10 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.producer;
 
-import com.alibaba.fastjson.JSON;
+import com.bugjc.ea.opensdk.http.core.component.monitor.Disruptor;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
+import com.google.inject.Inject;
 import com.lmax.disruptor.EventTranslatorOneArg;
-import com.lmax.disruptor.RingBuffer;
-
-import java.nio.ByteBuffer;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * 调用 http 消息生产者
@@ -13,24 +12,25 @@ import java.nio.ByteBuffer;
  * @author aoki
  * @date 2019/12/5
  **/
-public class HttpCallEventProducer {
+@Slf4j
+public class HttpCallEventProducer implements EventProducer<HttpCallEvent> {
 
-    private final RingBuffer<HttpCallEvent> ringBuffer;
+    @Inject
+    private Disruptor<HttpCallEvent> disruptor;
 
-    public HttpCallEventProducer(RingBuffer<HttpCallEvent> ringBuffer) {
-        this.ringBuffer = ringBuffer;
-    }
-
-    private static final EventTranslatorOneArg<HttpCallEvent, ByteBuffer> TRANSLATOR = (event, sequence, bb) -> {
-        HttpCallEvent httpCallEvent = JSON.parseObject(bb.array(), HttpCallEvent.class);
-        if (httpCallEvent == null){
-            return;
-        }
-        event.setMetadata(httpCallEvent.getMetadata());
+    private static final EventTranslatorOneArg<HttpCallEvent, HttpCallEvent> TRANSLATOR = (event, sequence, bb) -> {
+        //无需填充;
+        event.setMetadata(bb.getMetadata());
     };
 
-    public void onData(ByteBuffer bb) {
-        ringBuffer.publishEvent(TRANSLATOR, bb);
+    /**
+     * 发送消息
+     *
+     * @param event --事件
+     */
+    @Override
+    public void onData(HttpCallEvent event) {
+        log.info("生产消息：{}", disruptor);
+        disruptor.getProducer().publishEvent(TRANSLATOR, event);
     }
-
 }

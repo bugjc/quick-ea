@@ -18,6 +18,9 @@ public class JobServerWeb {
      */
     @Test
     public void testJob() throws Exception {
+        //1s 打印一次
+        //MetricUtil.consolePrint(1, TimeUnit.SECONDS);
+
         //同时发起 500 个创建任务请求
         int total = 1000;
         JobFindCyclicBarrierTask jobFindCyclicBarrierTask = new JobFindCyclicBarrierTask();
@@ -31,7 +34,7 @@ public class JobServerWeb {
         cyclicBarrierComponent.run();
 
         log.info("实时统计信息：{}", CountInfoTable.getInstance().getCountInfo());
-        log.info("存储的数据：{}", CountInfoTable.getInstance().getValues());
+        Thread.sleep(5000);
     }
 
 }

@@ -19,18 +19,18 @@
         <cglib.version>3.3.0</cglib.version>
         <disruptor.version>3.4.1</disruptor.version>
         <guice.version>4.2.2</guice.version>
-        <rocksdbjni.version>6.4.6</rocksdbjni.version>
         <assertj-core.version>3.14.0</assertj-core.version>
+        <metrics-core.version>4.1.2</metrics-core.version>
     </properties>
 
 
     <dependencies>
 
-        <!-- key-value 存储引擎 -->
+        <!-- 监控指标的度量类库 -->
         <dependency>
-            <groupId>org.rocksdb</groupId>
-            <artifactId>rocksdbjni</artifactId>
-            <version>${rocksdbjni.version}</version>
+            <groupId>io.dropwizard.metrics</groupId>
+            <artifactId>metrics-core</artifactId>
+            <version>${metrics-core.version}</version>
         </dependency>
 
         <!-- guice 依赖注入库 -->
@@ -103,21 +103,21 @@
         </dependency>
 
         <!--日志包-->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j-api.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>log4j-over-slf4j</artifactId>
-            <version>${log4j-over-slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <version>${jcl-over-slf4j.version}</version>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.slf4j</groupId>-->
+<!--            <artifactId>slf4j-api</artifactId>-->
+<!--            <version>${slf4j-api.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.slf4j</groupId>-->
+<!--            <artifactId>log4j-over-slf4j</artifactId>-->
+<!--            <version>${log4j-over-slf4j.version}</version>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.slf4j</groupId>-->
+<!--            <artifactId>jcl-over-slf4j</artifactId>-->
+<!--            <version>${jcl-over-slf4j.version}</version>-->
+<!--        </dependency>-->
 
         <!-- eureka 服务发现 -->
         <dependency>

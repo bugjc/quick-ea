@@ -16,7 +16,6 @@ import com.bugjc.ea.opensdk.http.core.util.AntPathMatcher;
 import com.bugjc.ea.opensdk.http.core.util.IpAddressUtil;
 import com.bugjc.ea.opensdk.http.core.util.RuleUtil;
 import com.bugjc.ea.opensdk.http.service.HttpService;
-import com.google.inject.Inject;
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.DefaultEurekaClientConfig;
 import com.netflix.discovery.DiscoveryManager;
@@ -41,8 +40,10 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     /**
      *  平台接口授权服务 http客户端
      */
-    @Inject
     private HttpService httpService;
+    public EurekaDefaultConfigImpl(HttpService httpService){
+        this.httpService = httpService;
+    }
 
     /**
      * 缓存容量（key1 - key2）
@@ -72,63 +73,12 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     /**
      * 获取 path --> serviceId 的缓存对象
      */
-    private final static FIFOCache<String, ZuulRoute> CACHE_KEY = SingletonEnum.CACHE_INSTANCE.getCacheKeyInstance();
+    private final static FIFOCache<String, ZuulRoute> CACHE_KEY = CacheUtil.newFIFOCache(CACHE_KEY_CAPACITY);
 
     /**
      * 获取 serviceId --> list server 的缓存对象
      */
-    private final static LRUCache<String, List<Server>> CACHE_VALUE = SingletonEnum.CACHE_SERVER_INSTANCE.getCacheValueInstance();
-
-    /**
-     * 私有化构造函数
-     */
-    private EurekaDefaultConfigImpl() {
-    }
-
-    /**
-     * 定义一个静态枚举类
-     */
-    enum SingletonEnum {
-        //创建一个枚举对象，该对象天生为单例
-        INSTANCE,
-        //创建一个缓存实例对象，用于 path --> serviceId 的缓存
-        CACHE_INSTANCE,
-        //创建一个缓存实例对象, 用于 serviceId --> list server 的缓存
-        CACHE_SERVER_INSTANCE;
-        private EurekaDefaultConfigImpl ribbonComponent;
-        private FIFOCache<String, ZuulRoute> cacheKey;
-        private LRUCache<String, List<Server>> cacheValue;
-
-        /**
-         * 私有化枚举的构造函数
-         */
-        SingletonEnum() {
-            ribbonComponent = new EurekaDefaultConfigImpl();
-            cacheKey = CacheUtil.newFIFOCache(CACHE_KEY_CAPACITY);
-            cacheValue = CacheUtil.newLRUCache(CACHE_VALUE_CAPACITY);
-        }
-
-        public EurekaDefaultConfigImpl getInstance() {
-            return ribbonComponent;
-        }
-
-        public FIFOCache<String, ZuulRoute> getCacheKeyInstance() {
-            return cacheKey;
-        }
-
-        public LRUCache<String, List<Server>> getCacheValueInstance() {
-            return cacheValue;
-        }
-    }
-
-    /**
-     * 暴露获取实例的静态方法
-     *
-     * @return
-     */
-    public static EurekaDefaultConfigImpl getInstance() {
-        return SingletonEnum.INSTANCE.getInstance();
-    }
+    private final static LRUCache<String, List<Server>> CACHE_VALUE = CacheUtil.newLRUCache(CACHE_VALUE_CAPACITY);
 
     @Override
     public void init() {

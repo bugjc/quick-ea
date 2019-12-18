@@ -1,7 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.aop.interceptor;
 
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
 import com.bugjc.ea.opensdk.http.core.aop.AspectInterceptorUtil;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
 import lombok.extern.slf4j.Slf4j;
@@ -26,12 +25,12 @@ public class CgLibProxyInterceptor implements MethodInterceptor {
     /**
      * 将目标对象传入进行代理
      * @param target            --目标对象
-     * @param aspectClass       --切面对象
+     * @param aspect            --切面对象
      * @return  代理对象
      */
-    public Object newProxy(Object target, Class<? extends Aspect> aspectClass) {
+    public Object newProxy(Object target, Aspect aspect) {
         this.target = target;
-        this.aspect = ReflectUtil.newInstance(aspectClass);;
+        this.aspect = aspect;
 
         Enhancer enhancer = new Enhancer();
         enhancer.setInterfaces(target.getClass().getInterfaces());
