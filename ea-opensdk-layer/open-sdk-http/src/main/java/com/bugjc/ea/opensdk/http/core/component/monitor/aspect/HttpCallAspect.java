@@ -3,9 +3,9 @@ package com.bugjc.ea.opensdk.http.core.component.monitor.aspect;
 import cn.hutool.core.date.TimeInterval;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
-import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEventFactory;
 import com.bugjc.ea.opensdk.http.core.component.monitor.producer.EventProducer;
 import com.google.inject.Inject;
+import com.lmax.disruptor.EventFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -23,6 +23,8 @@ public class HttpCallAspect implements Aspect, Serializable {
 
     @Inject
     private EventProducer<HttpCallEvent> producer;
+    @Inject
+    private EventFactory<HttpCallEvent> httpCallEvent;
 
     private TimeInterval interval = new TimeInterval();
 
@@ -38,8 +40,7 @@ public class HttpCallAspect implements Aspect, Serializable {
         //设置元数据
         String id = String.valueOf(Arrays.hashCode(args));
         String path = String.valueOf(args[0]);
-        log.info("生产者发送消息:"+producer);
-        producer.onData(new HttpCallEventFactory().newInstance().setCallSuccess(id, path, interval.intervalMs()));
+        producer.onData(httpCallEvent.newInstance().setCallSuccess(id, path, interval.intervalMs()));
     }
 
     @Override
@@ -47,7 +48,7 @@ public class HttpCallAspect implements Aspect, Serializable {
         //设置元数据
         String id = String.valueOf(Arrays.hashCode(args));
         String path = String.valueOf(args[0]);
-        producer.onData(new HttpCallEventFactory().newInstance().setCallFailed(id, path, interval.intervalMs()));
+        producer.onData(httpCallEvent.newInstance().setCallFailed(id, path, interval.intervalMs()));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.producer;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.bugjc.ea.opensdk.http.core.component.monitor.Disruptor;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.google.inject.Inject;
@@ -19,8 +20,7 @@ public class HttpCallEventProducer implements EventProducer<HttpCallEvent> {
     private Disruptor<HttpCallEvent> disruptor;
 
     private static final EventTranslatorOneArg<HttpCallEvent, HttpCallEvent> TRANSLATOR = (event, sequence, bb) -> {
-        //无需填充;
-        event.setMetadata(bb.getMetadata());
+        BeanUtil.copyProperties(bb, event);
     };
 
     /**
@@ -30,7 +30,7 @@ public class HttpCallEventProducer implements EventProducer<HttpCallEvent> {
      */
     @Override
     public void onData(HttpCallEvent event) {
-        log.info("生产消息：{}", disruptor);
+        log.info("生产消息：{}", event.toString());
         disruptor.getProducer().publishEvent(TRANSLATOR, event);
     }
 }

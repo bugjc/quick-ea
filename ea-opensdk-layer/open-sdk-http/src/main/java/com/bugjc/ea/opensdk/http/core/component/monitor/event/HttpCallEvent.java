@@ -2,8 +2,8 @@ package com.bugjc.ea.opensdk.http.core.component.monitor.event;
 
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.component.monitor.entity.Metadata;
+import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.TypeEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,12 +32,12 @@ public class HttpCallEvent implements Serializable {
      * @return
      */
     public HttpCallEvent setCallSuccess(String id, String path, long intervalMs){
-        this.metadata = new HttpCallMetadataBuilder()
+        this.metadata = new HttpCallEventMetadataBuilder()
                 .setId(id)
                 .setPath(path)
                 .setIntervalMs(intervalMs)
                 .setStatus(StatusEnum.CallSuccess)
-                .setType(TypeEnum.TotalRequests)
+                .setType(MetricCounterEnum.TotalRequests)
                 .setCreateTime(new Date())
                 .build();
         return this;
@@ -51,12 +51,12 @@ public class HttpCallEvent implements Serializable {
      * @return
      */
     public HttpCallEvent setCallFailed(String id, String path, long intervalMs){
-        metadata = new HttpCallMetadataBuilder()
+        metadata = new HttpCallEventMetadataBuilder()
                 .setId(id)
                 .setPath(path)
                 .setIntervalMs(intervalMs)
                 .setStatus(StatusEnum.CallFailed)
-                .setType(TypeEnum.TotalRequests)
+                .setType(MetricCounterEnum.TotalRequests)
                 .setCreateTime(new Date())
                 .build();
         return this;

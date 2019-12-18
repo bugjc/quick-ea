@@ -1,6 +1,7 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.consumer;
 
-import com.bugjc.ea.opensdk.http.core.component.monitor.Metric;
+import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.Metric;
 import com.bugjc.ea.opensdk.http.core.component.monitor.data.CountInfoTable;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.codahale.metrics.Counter;
@@ -32,8 +33,7 @@ public class HttpCallEventHandler implements EventHandler<HttpCallEvent> {
         countInfoTable.increment(event);
 
         //指标计数
-        metric.get().inc();
+        metric.get(MetricCounterEnum.TotalRequests.name()).inc();
         //metric.print(2, TimeUnit.SECONDS);
-        //counter.inc();
     }
 }

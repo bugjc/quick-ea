@@ -1,8 +1,8 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.entity;
 
-import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallMetadataBuilder;
+import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
+import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEventMetadataBuilder;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.TypeEnum;
 
 import java.util.Date;
 
@@ -15,17 +15,17 @@ public abstract class MetadataBuilder {
 
     protected Metadata metadata = new Metadata();
 
-    public abstract HttpCallMetadataBuilder setId(String id);
+    public abstract HttpCallEventMetadataBuilder setId(String id);
 
-    public abstract HttpCallMetadataBuilder setPath(String path);
+    public abstract HttpCallEventMetadataBuilder setPath(String path);
 
-    public abstract HttpCallMetadataBuilder setStatus(StatusEnum status);
+    public abstract HttpCallEventMetadataBuilder setStatus(StatusEnum status);
 
-    public abstract HttpCallMetadataBuilder setIntervalMs(long intervalMs);
+    public abstract HttpCallEventMetadataBuilder setIntervalMs(long intervalMs);
 
-    public abstract HttpCallMetadataBuilder setType(TypeEnum type);
+    public abstract HttpCallEventMetadataBuilder setType(MetricCounterEnum type);
 
-    public abstract HttpCallMetadataBuilder setCreateTime(Date createTime);
+    public abstract HttpCallEventMetadataBuilder setCreateTime(Date createTime);
 
     public Metadata build(){
         return metadata;

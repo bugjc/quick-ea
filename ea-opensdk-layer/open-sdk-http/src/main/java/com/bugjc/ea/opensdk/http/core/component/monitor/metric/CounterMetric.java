@@ -1,6 +1,6 @@
-package com.bugjc.ea.opensdk.http.core.component.monitor;
+package com.bugjc.ea.opensdk.http.core.component.monitor.metric;
 
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.TypeEnum;
+import com.bugjc.ea.opensdk.http.core.component.monitor.util.StrUtil;
 import com.codahale.metrics.ConsoleReporter;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.MetricRegistry;
@@ -15,11 +15,9 @@ import java.util.concurrent.TimeUnit;
  * @author aoki
  * @date 2019/12/18
  * **/
-public class CounterMetric implements Metric<Counter>{
+public class CounterMetric implements Metric<Counter> {
 
     private MetricRegistry registry;
-    private TypeEnum typeEnum;
-    private Counter counter;
     private ConsoleReporter consoleReporter;
     /**
      * 初始化 hashtable 用于存储 counter 实例
@@ -27,14 +25,15 @@ public class CounterMetric implements Metric<Counter>{
     private static final Hashtable<String, Counter> COUNTER_HASHTABLE = new Hashtable<>();
 
     @Inject
-    public CounterMetric(@Named("TotalRequests") TypeEnum typeEnum, MetricRegistry registry){
+    public CounterMetric(@Named("MetricCounterEnum") String metricCounterStr, MetricRegistry registry){
         this.registry = registry;
-        this.typeEnum = typeEnum;
         this.consoleReporter = ConsoleReporter.forRegistry(registry).convertRatesTo(TimeUnit.SECONDS).convertDurationsTo(TimeUnit.SECONDS).build();
 
         //预加载度量计数器实例
-        this.counter = COUNTER_HASHTABLE.get(typeEnum.name());
-        this.get();
+        for (String metricCounterName : StrUtil.arrStrToList(metricCounterStr)) {
+            this.get(metricCounterName);
+        }
+
     }
 
     /**
@@ -42,12 +41,13 @@ public class CounterMetric implements Metric<Counter>{
      * @return Counter
      */
     @Override
-    public Counter get() {
+    public Counter get(String name) {
+        Counter counter = COUNTER_HASHTABLE.get(name);
         if (counter == null){
             synchronized (this){
                 if (counter == null){
-                    counter = registry.counter(typeEnum.name());
-                    COUNTER_HASHTABLE.put(typeEnum.name(), counter);
+                    counter = registry.counter(name);
+                    COUNTER_HASHTABLE.put(name, counter);
                 }
             }
         }

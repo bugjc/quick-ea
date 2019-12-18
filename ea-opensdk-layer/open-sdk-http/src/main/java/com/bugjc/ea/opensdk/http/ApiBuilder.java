@@ -36,15 +36,19 @@ public class ApiBuilder {
     /**
      * 应用接入方参数
      */
-    private AppParam appParam = null;
+    private AppParam appParam;
     /**
      * 内部应用接入方参数
      */
-    private AppInternalParam appInternalParam = null;
+    private AppInternalParam appInternalParam;
     /**
      * 调用http接口服务
      */
     private HttpService httpService;
+
+    /**
+     * 注入器
+     */
     private Injector injector;
     /**
      * http 客户端
@@ -60,8 +64,6 @@ public class ApiBuilder {
         Aspect aspect = this.injector.getInstance(Aspect.class);
         this.httpService = (HttpService) ProxyUtil.createProxy(new HttpServiceImpl(), aspect);
         this.injector = this.injector.createChildInjector(new ApiModule(this.httpService));
-        //启动 Disruptor
-        //this.injector.getInstance(DisruptorConfig.class).start();
     }
 
     /**

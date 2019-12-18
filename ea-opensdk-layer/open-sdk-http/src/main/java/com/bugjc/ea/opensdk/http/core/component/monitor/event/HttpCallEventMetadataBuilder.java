@@ -1,8 +1,8 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.event;
 
 import com.bugjc.ea.opensdk.http.core.component.monitor.entity.MetadataBuilder;
+import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.TypeEnum;
 
 import java.util.Date;
 
@@ -11,39 +11,39 @@ import java.util.Date;
  * @author aoki
  * @date 2019/12/8
  * **/
-public class HttpCallMetadataBuilder extends MetadataBuilder {
+public class HttpCallEventMetadataBuilder extends MetadataBuilder {
     @Override
-    public HttpCallMetadataBuilder setId(String id) {
+    public HttpCallEventMetadataBuilder setId(String id) {
         metadata.setId(id);
         return this;
     }
 
     @Override
-    public HttpCallMetadataBuilder setPath(String path) {
+    public HttpCallEventMetadataBuilder setPath(String path) {
         metadata.setPath(path);
         return this;
     }
 
     @Override
-    public HttpCallMetadataBuilder setStatus(StatusEnum status) {
+    public HttpCallEventMetadataBuilder setStatus(StatusEnum status) {
         metadata.setStatus(status);
         return this;
     }
 
     @Override
-    public HttpCallMetadataBuilder setIntervalMs(long intervalMs) {
+    public HttpCallEventMetadataBuilder setIntervalMs(long intervalMs) {
         metadata.setIntervalMs(intervalMs);
         return this;
     }
 
     @Override
-    public HttpCallMetadataBuilder setType(TypeEnum type) {
+    public HttpCallEventMetadataBuilder setType(MetricCounterEnum type) {
         metadata.setType(type);
         return this;
     }
 
     @Override
-    public HttpCallMetadataBuilder setCreateTime(Date createTime) {
+    public HttpCallEventMetadataBuilder setCreateTime(Date createTime) {
         metadata.setCreateTime(createTime);
         return this;
     }

@@ -1,4 +1,4 @@
-package com.bugjc.ea.opensdk.http.core.component.monitor;
+package com.bugjc.ea.opensdk.http.core.component.monitor.metric;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,14 +10,15 @@ import java.util.concurrent.TimeUnit;
 public interface Metric<T> {
     /**
      * 获取度量实例
-     * @return
+     * @param name      --指标名
+     * @return  T
      */
-    T get();
+    T get(String name);
 
     /**
      * 打印结果
-     * @param period
-     * @param unit
+     * @param period        --间隔时间
+     * @param unit          --时间单位
      */
     void print(long period, TimeUnit unit);
 }
