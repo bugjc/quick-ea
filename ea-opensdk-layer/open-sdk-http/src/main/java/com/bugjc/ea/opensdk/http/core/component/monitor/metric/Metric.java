@@ -1,24 +1,22 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.metric;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * 度量接口
  * @author aoki
  * @date 2019/12/18
  * **/
-public interface Metric<T> {
-    /**
-     * 获取度量实例
-     * @param name      --指标名
-     * @return  T
-     */
-    T get(String name);
+public interface Metric<T, E> {
 
     /**
-     * 打印结果
-     * @param period        --间隔时间
-     * @param unit          --时间单位
+     * 初始化指标
+     * @param enumName    --定义指标的枚举类
      */
-    void print(long period, TimeUnit unit);
+    void init(E enumName);
+
+    /**
+     * 获取度量实例
+     * @param enumName      --指标定义的枚举类
+     * @return  T
+     */
+    T get(E enumName);
 }

@@ -1,7 +1,7 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.producer;
 
 /**
- * 生产者事件
+ * 事件生产者
  * @author aoki
  * @date 2019/12/18
  * **/

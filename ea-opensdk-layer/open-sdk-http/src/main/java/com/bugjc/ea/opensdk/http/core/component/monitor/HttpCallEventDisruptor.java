@@ -1,9 +1,9 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor;
 
+import com.bugjc.ea.opensdk.http.core.component.monitor.consumer.EventConsumer;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.google.inject.Inject;
 import com.lmax.disruptor.EventFactory;
-import com.lmax.disruptor.EventHandler;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.dsl.ProducerType;
@@ -29,16 +29,16 @@ public class HttpCallEventDisruptor implements Disruptor<HttpCallEvent> {
     private com.lmax.disruptor.dsl.Disruptor<HttpCallEvent> disruptor;
 
     @Inject
-    public HttpCallEventDisruptor(EventHandler<HttpCallEvent> eventHandler,
+    public HttpCallEventDisruptor(EventConsumer<HttpCallEvent> eventConsumer,
                                   EventFactory<HttpCallEvent> eventFactory,
                                   ThreadFactory threadFactory,
                                   WaitStrategy waitStrategy){
        this.disruptor = new com.lmax.disruptor.dsl.Disruptor<>(eventFactory, BUFFER_SIZE, threadFactory, PRODUCER_TYPE, waitStrategy);
 
-       //注入事件消费者
-       this.disruptor.handleEventsWith(eventHandler);
+       //注入事件消费者并启动
+       this.disruptor.handleEventsWith(eventConsumer);
        this.disruptor.start();
-       log.info("注入事件消费者:{} 到队列：{}", eventHandler, disruptor);
+       log.info("注入事件消费者:{} 到队列：{}", eventConsumer, disruptor);
     }
 
     @Override
