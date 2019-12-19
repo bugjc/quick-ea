@@ -11,7 +11,7 @@ import com.google.inject.Inject;
  * @author aoki
  * @date 2019/12/19
  * **/
-public class RequestSuccessRatioGauge extends RatioGauge {
+public class RequestSuccessRatioGauge extends RatioGauge{
 
     @Inject
     private Metric<Counter, MetricCounterEnum> counterMetric;

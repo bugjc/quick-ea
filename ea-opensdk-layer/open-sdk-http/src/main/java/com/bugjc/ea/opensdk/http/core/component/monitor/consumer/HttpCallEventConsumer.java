@@ -6,7 +6,9 @@ import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricHistogramEnu
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.Metric;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.index.MetricGaugeIndex;
 import com.codahale.metrics.Counter;
+import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Histogram;
 import com.google.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,8 @@ public class HttpCallEventConsumer implements EventConsumer<HttpCallEvent> {
     private Metric<Counter, MetricCounterEnum> counterMetric;
     @Inject
     private Metric<Histogram, MetricHistogramEnum> histogramMetric;
+    @Inject
+    private Metric<Gauge, MetricGaugeIndex.MetricGauge> gaugeIndexMetric;
 
     /**
      * 接收消息
@@ -45,5 +49,8 @@ public class HttpCallEventConsumer implements EventConsumer<HttpCallEvent> {
 
         //时耗分布区间计算
         histogramMetric.get(MetricHistogramEnum.Interval).update(event.getMetadata().getIntervalMs());
+
+        //统计请求成功率
+        gaugeIndexMetric.get(MetricGaugeIndex.getInstance().get(MetricGaugeIndex.MetricGaugeEnum.RequestSuccessRatio));
     }
 }

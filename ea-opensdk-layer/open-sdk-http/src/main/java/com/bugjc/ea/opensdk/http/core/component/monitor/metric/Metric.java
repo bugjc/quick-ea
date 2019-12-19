@@ -1,11 +1,13 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.metric;
 
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.index.Named;
+
 /**
  * 度量接口
  * @author aoki
  * @date 2019/12/18
  * **/
-public interface Metric<T, E> {
+public interface Metric<T, E extends Named> {
 
     /**
      * 初始化指标

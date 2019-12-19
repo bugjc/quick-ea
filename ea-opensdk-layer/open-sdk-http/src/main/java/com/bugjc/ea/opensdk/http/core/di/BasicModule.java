@@ -8,13 +8,14 @@ import com.bugjc.ea.opensdk.http.core.component.monitor.aspect.HttpCallAspect;
 import com.bugjc.ea.opensdk.http.core.component.monitor.consumer.EventConsumer;
 import com.bugjc.ea.opensdk.http.core.component.monitor.consumer.HttpCallEventConsumer;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricGaugeEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricHistogramEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEventFactory;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.CounterMetric;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.GaugeMetric;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.HistogramMetric;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.Metric;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.index.MetricGaugeIndex;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.index.RequestSuccessRatioGauge;
 import com.bugjc.ea.opensdk.http.core.component.monitor.producer.EventProducer;
 import com.bugjc.ea.opensdk.http.core.component.monitor.producer.HttpCallEventProducer;
@@ -49,9 +50,10 @@ public class BasicModule extends AbstractModule {
         this.bind(MetricRegistry.class).toInstance(MetricRegistryFactory.getInstance().getRegistry());
 
         //MetricGaugeIndex类指标多实例绑定
-        MapBinder<MetricGaugeEnum, Gauge> metricGaugeBinder = MapBinder.newMapBinder(binder(), MetricGaugeEnum.class, Gauge.class);
-        metricGaugeBinder.addBinding(MetricGaugeEnum.RequestSuccessRatio).to(RequestSuccessRatioGauge.class);
-        //this.bind(MetricGaugeIndex.class).in(Scopes.SINGLETON);
+        MapBinder<MetricGaugeIndex.MetricGaugeEnum, Gauge> metricGaugeBinder = MapBinder.newMapBinder(binder(), MetricGaugeIndex.MetricGaugeEnum.class, Gauge.class);
+        metricGaugeBinder.addBinding(MetricGaugeIndex.MetricGaugeEnum.RequestSuccessRatio).to(RequestSuccessRatioGauge.class);
+        this.bind(MetricGaugeIndex.class).in(Scopes.SINGLETON);
+        this.bind(new TypeLiteral<Metric<Gauge, MetricGaugeIndex.MetricGauge>>(){}).to(GaugeMetric.class);
 
         this.bind(new TypeLiteral<MetricCounterEnum[]>(){}).annotatedWith(Names.named("MetricCounterEnum")).toInstance(MetricCounterEnum.values());
         this.bind(new TypeLiteral<MetricHistogramEnum[]>(){}).annotatedWith(Names.named("MetricHistogramEnum")).toInstance(MetricHistogramEnum.values());
