@@ -1,7 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.entity;
 
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -29,11 +28,6 @@ public class Metadata implements Serializable {
      * 调用耗时
      */
     private long intervalMs;
-
-    /**
-     * 指标类型
-     */
-    private MetricCounterEnum type;
 
     /**
      * 创建时间

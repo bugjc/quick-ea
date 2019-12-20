@@ -3,7 +3,6 @@ package com.bugjc.ea.opensdk.http.core.component.monitor.data;
 import cn.hutool.core.util.NumberUtil;
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -78,10 +77,6 @@ public class CountInfoTable implements Serializable {
      * 统计数量
      */
     public void increment(HttpCallEvent httpCallEvent){
-        if (httpCallEvent.getMetadata().getType() != MetricCounterEnum.TotalRequests){
-            return;
-        }
-
         //只处理 TotalRequests 主题类型的数据
         if (httpCallEvent.getMetadata().getStatus() == StatusEnum.CallSuccess){
             COUNT_NUMBER_OF_SUCCESSES.increment();

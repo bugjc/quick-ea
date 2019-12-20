@@ -2,7 +2,6 @@ package com.bugjc.ea.opensdk.http.core.component.monitor.event;
 
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.component.monitor.entity.Metadata;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +36,6 @@ public class HttpCallEvent implements Serializable {
                 .setPath(path)
                 .setIntervalMs(intervalMs)
                 .setStatus(StatusEnum.CallSuccess)
-                .setType(MetricCounterEnum.TotalRequests)
                 .setCreateTime(new Date())
                 .build();
         return this;
@@ -56,7 +54,6 @@ public class HttpCallEvent implements Serializable {
                 .setPath(path)
                 .setIntervalMs(intervalMs)
                 .setStatus(StatusEnum.CallFailed)
-                .setType(MetricCounterEnum.TotalRequests)
                 .setCreateTime(new Date())
                 .build();
         return this;

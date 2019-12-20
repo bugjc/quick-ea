@@ -1,19 +1,20 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.metric;
 
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricHistogramEnum;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.HistogramKey;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.HistogramService;
 import com.codahale.metrics.Histogram;
 import com.codahale.metrics.MetricRegistry;
 import com.google.inject.Inject;
-import com.google.inject.name.Named;
 
 import java.util.Hashtable;
+import java.util.Set;
 
 /**
- * 度量数据的分布情况。
+ * 直方图
  * @author aoki
  * @date 2019/12/19
  * **/
-public class HistogramMetric implements Metric<Histogram, MetricHistogramEnum> {
+public class HistogramMetric implements Metric<Histogram, HistogramKey, HistogramService> {
 
     private MetricRegistry registry;
 
@@ -23,34 +24,28 @@ public class HistogramMetric implements Metric<Histogram, MetricHistogramEnum> {
     private static final Hashtable<String, Histogram> HASHTABLE = new Hashtable<>();
 
     @Inject
-    public HistogramMetric(@Named("MetricHistogramEnum") MetricHistogramEnum[] metrics, MetricRegistry registry){
+    public HistogramMetric(Set<HistogramService> histogramServices, MetricRegistry registry){
         this.registry = registry;
         //预加载度量实例
-        for (MetricHistogramEnum metric : metrics) {
-            this.init(metric);
+        for (HistogramService histogramService : histogramServices) {
+            this.init(histogramService);
         }
 
     }
 
     @Override
-    public synchronized void init(MetricHistogramEnum enumName) {
+    public synchronized void init(HistogramService enumName) {
+        String key = enumName.getKey();
         String name = enumName.getName();
         Histogram histogram = HASHTABLE.get(name);
         if (histogram != null){
             return;
         }
-        HASHTABLE.put(name, registry.histogram(name));
+        HASHTABLE.put(key, registry.histogram(name));
     }
 
     @Override
-    public Histogram get(MetricHistogramEnum enumName) {
-        for (;;) {
-            Histogram histogram = HASHTABLE.get(enumName.getName());
-            if (histogram == null){
-                init(enumName);
-                continue;
-            }
-            return histogram;
-        }
+    public Histogram get(HistogramKey enumName) {
+        return HASHTABLE.get(enumName.name());
     }
 }

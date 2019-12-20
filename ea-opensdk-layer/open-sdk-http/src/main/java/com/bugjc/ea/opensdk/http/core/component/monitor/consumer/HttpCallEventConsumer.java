@@ -1,12 +1,15 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.consumer;
 
 import com.bugjc.ea.opensdk.http.core.component.monitor.data.CountInfoTable;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricHistogramEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.Metric;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.index.MetricGaugeIndex;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.CounterKey;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.CounterService;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.GaugeKey;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.GaugeService;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.HistogramKey;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.HistogramService;
 import com.codahale.metrics.Counter;
 import com.codahale.metrics.Gauge;
 import com.codahale.metrics.Histogram;
@@ -22,11 +25,11 @@ import lombok.extern.slf4j.Slf4j;
 public class HttpCallEventConsumer implements EventConsumer<HttpCallEvent> {
 
     @Inject
-    private Metric<Counter, MetricCounterEnum> counterMetric;
+    private Metric<Counter, CounterKey, CounterService> counterMetric;
     @Inject
-    private Metric<Histogram, MetricHistogramEnum> histogramMetric;
+    private Metric<Histogram, HistogramKey, HistogramService> histogramMetric;
     @Inject
-    private Metric<Gauge, MetricGaugeIndex.MetricGauge> gaugeIndexMetric;
+    private Metric<Gauge, GaugeKey, GaugeService> gaugeMetric;
 
     /**
      * 接收消息
@@ -41,16 +44,16 @@ public class HttpCallEventConsumer implements EventConsumer<HttpCallEvent> {
         countInfoTable.increment(event);
 
         //总请求计数
-        counterMetric.get(MetricCounterEnum.TotalRequests).inc();
+        counterMetric.get(CounterKey.TotalRequests).inc();
         if (event.getMetadata().getStatus() == StatusEnum.CallSuccess){
             //成功请求计数
-            counterMetric.get(MetricCounterEnum.SuccessRequests).inc();
+            counterMetric.get(CounterKey.SuccessRequests).inc();
         }
 
         //时耗分布区间计算
-        histogramMetric.get(MetricHistogramEnum.Interval).update(event.getMetadata().getIntervalMs());
+        histogramMetric.get(HistogramKey.Interval).update(event.getMetadata().getIntervalMs());
 
         //统计请求成功率
-        gaugeIndexMetric.get(MetricGaugeIndex.getInstance().get(MetricGaugeIndex.MetricGaugeEnum.RequestSuccessRatio));
+        gaugeMetric.get(GaugeKey.RequestSuccessRatio);
     }
 }

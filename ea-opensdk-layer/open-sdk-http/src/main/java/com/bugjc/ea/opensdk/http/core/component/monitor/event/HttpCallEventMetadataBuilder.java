@@ -1,7 +1,6 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.event;
 
 import com.bugjc.ea.opensdk.http.core.component.monitor.entity.MetadataBuilder;
-import com.bugjc.ea.opensdk.http.core.component.monitor.enums.MetricCounterEnum;
 import com.bugjc.ea.opensdk.http.core.component.monitor.enums.StatusEnum;
 
 import java.util.Date;
@@ -33,12 +32,6 @@ public class HttpCallEventMetadataBuilder extends MetadataBuilder {
     @Override
     public HttpCallEventMetadataBuilder setIntervalMs(long intervalMs) {
         metadata.setIntervalMs(intervalMs);
-        return this;
-    }
-
-    @Override
-    public HttpCallEventMetadataBuilder setType(MetricCounterEnum type) {
-        metadata.setType(type);
         return this;
     }
 
