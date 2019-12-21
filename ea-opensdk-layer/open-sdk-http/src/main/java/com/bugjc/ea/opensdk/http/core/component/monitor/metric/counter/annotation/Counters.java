@@ -11,8 +11,8 @@ public class Counters {
 
     private Counters() {}
 
-    /** Creates a {@link Counter} annotation with {@code name} as the value. */
-    public static Counter named(CounterKey name) {
-        return new CounterImpl(name);
+    /** Creates a {@link Counted} annotation with {@code name} as the value. */
+    public static Counted named(CounterKey name) {
+        return new CountedImpl(name);
     }
 }

@@ -9,20 +9,17 @@ import com.bugjc.ea.opensdk.http.core.component.monitor.consumer.EventConsumer;
 import com.bugjc.ea.opensdk.http.core.component.monitor.consumer.HttpCallEventConsumer;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEventFactory;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.CounterMetric;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.GaugeMetric;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.HistogramMetric;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.Metric;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.CounterKey;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.CounterService;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.impl.SuccessRequestCounterServiceImpl;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.impl.TotalRequestCounterServiceImpl;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.annotation.Counters;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.impl.SuccessRequestCounterImpl;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.impl.TotalRequestCounterImpl;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.GaugeKey;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.GaugeService;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.impl.ReqSuccessRatioGaugeServiceImpl;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.annotation.Gauges;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.impl.ReqSuccessRatioGaugeImpl;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.HistogramKey;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.HistogramService;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.impl.IntervalHistogramServiceImpl;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.annotation.Histograms;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.impl.IntervalHistogramImpl;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.Metric;
 import com.bugjc.ea.opensdk.http.core.component.monitor.producer.EventProducer;
 import com.bugjc.ea.opensdk.http.core.component.monitor.producer.HttpCallEventProducer;
 import com.codahale.metrics.Counter;
@@ -32,7 +29,6 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.inject.AbstractModule;
 import com.google.inject.Scopes;
 import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.Multibinder;
 import com.lmax.disruptor.EventFactory;
 import com.lmax.disruptor.WaitStrategy;
 import com.lmax.disruptor.YieldingWaitStrategy;
@@ -55,18 +51,15 @@ public class BasicModule extends AbstractModule {
         this.bind(MetricRegistry.class).toInstance(MetricRegistryFactory.getInstance().getRegistry());
 
         //度量值指标
-        Multibinder<GaugeService> gaugeBinder = Multibinder.newSetBinder(binder(), GaugeService.class);
-        gaugeBinder.addBinding().to(ReqSuccessRatioGaugeServiceImpl.class).in(Scopes.SINGLETON);
-        this.bind(new TypeLiteral<Metric<Gauge, GaugeKey, GaugeService>>(){}).to(GaugeMetric.class).in(Scopes.SINGLETON);
+        this.bind(new TypeLiteral<Metric<Gauge<Double>>>(){}).annotatedWith(Gauges.named(GaugeKey.RequestSuccessRatio)).to(ReqSuccessRatioGaugeImpl.class).in(Scopes.SINGLETON);
+
         //计数器指标
-        Multibinder<CounterService> counterBinder = Multibinder.newSetBinder(binder(), CounterService.class);
-        counterBinder.addBinding().to(TotalRequestCounterServiceImpl.class).in(Scopes.SINGLETON);
-        counterBinder.addBinding().to(SuccessRequestCounterServiceImpl.class).in(Scopes.SINGLETON);
-        this.bind(new TypeLiteral<Metric<Counter, CounterKey, CounterService>>(){}).to(CounterMetric.class).in(Scopes.SINGLETON);
+        this.bind(new TypeLiteral<Metric<Counter>>(){}).annotatedWith(Counters.named(CounterKey.SuccessRequests)).to(SuccessRequestCounterImpl.class).in(Scopes.SINGLETON);
+        this.bind(new TypeLiteral<Metric<Counter>>(){}).annotatedWith(Counters.named(CounterKey.TotalRequests)).to(TotalRequestCounterImpl.class).in(Scopes.SINGLETON);
+
         //直方图指标
-        Multibinder<HistogramService> histogramBinder = Multibinder.newSetBinder(binder(), HistogramService.class);
-        histogramBinder.addBinding().to(IntervalHistogramServiceImpl.class).in(Scopes.SINGLETON);
-        this.bind(new TypeLiteral<Metric<Histogram, HistogramKey, HistogramService>>(){}).to(HistogramMetric.class).in(Scopes.SINGLETON);
+        this.bind(new TypeLiteral<Metric<Histogram>>(){}).annotatedWith(Histograms.named(HistogramKey.Interval)).to(IntervalHistogramImpl.class).in(Scopes.SINGLETON);
+
 
         //Disruptor 高性能队列配置
         this.bind(ThreadFactory.class).toInstance(DaemonThreadFactory.INSTANCE);

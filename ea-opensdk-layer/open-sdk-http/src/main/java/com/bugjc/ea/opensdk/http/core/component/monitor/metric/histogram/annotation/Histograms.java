@@ -11,8 +11,8 @@ public class Histograms {
 
     private Histograms() {}
 
-    /** Creates a {@link Histogram} annotation with {@code name} as the value. */
-    public static Histogram named(HistogramKey name) {
-        return new HistogramImpl(name);
+    /** Creates a {@link HistogramOf} annotation with {@code name} as the value. */
+    public static HistogramOf named(HistogramKey name) {
+        return new HistogramOfImpl(name);
     }
 }

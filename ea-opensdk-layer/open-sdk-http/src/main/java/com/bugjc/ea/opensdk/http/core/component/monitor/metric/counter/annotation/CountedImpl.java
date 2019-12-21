@@ -10,21 +10,27 @@ import java.lang.annotation.Annotation;
  * @author aoki
  * @date 2019/12/20
  * **/
-public class CounterImpl implements Counter, Serializable {
+public class CountedImpl implements Counted, Serializable {
 
     private final CounterKey value;
 
-    public CounterImpl(CounterKey value){
+    public CountedImpl(CounterKey value){
         this.value = value;
     }
 
     @Override
     public Class<? extends Annotation> annotationType() {
-        return Counter.class;
+        return Counted.class;
     }
 
     @Override
     public CounterKey value() {
         return this.value;
+    }
+
+    @Override
+    public int hashCode() {
+        // This is specified in java.lang.Annotation.
+        return (127 * "value".hashCode()) ^ value.hashCode();
     }
 }

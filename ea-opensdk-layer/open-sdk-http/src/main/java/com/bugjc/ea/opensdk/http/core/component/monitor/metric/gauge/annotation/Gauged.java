@@ -14,8 +14,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * @author aoki
  * @date 2019/12/20
  * **/
-@Target({ ElementType.TYPE, ElementType.METHOD, ElementType.FIELD})
 @Retention(RUNTIME)
+@Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.METHOD})
 @BindingAnnotation
 public @interface Gauged {
     /**

@@ -27,4 +27,10 @@ public class GaugedImpl implements Gauged, Serializable {
     public GaugeKey value() {
         return this.value;
     }
+
+    @Override
+    public int hashCode() {
+        // This is specified in java.lang.Annotation.
+        return (127 * "value".hashCode()) ^ value.hashCode();
+    }
 }
