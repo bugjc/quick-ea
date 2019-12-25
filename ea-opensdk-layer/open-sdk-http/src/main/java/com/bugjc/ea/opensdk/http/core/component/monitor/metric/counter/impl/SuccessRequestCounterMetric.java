@@ -6,14 +6,14 @@ import com.codahale.metrics.MetricRegistry;
 import com.google.inject.Inject;
 
 /**
- * 总请求数指标服务实现
+ * 成功请求总数指标服务实现
  * @author aoki
  * @date 2019/12/20
  * **/
-public class TotalRequestCounterImpl extends CounterImpl<Counter> {
+public class SuccessRequestCounterMetric extends AbstractCounterMetric<Counter> {
 
     @Inject
-    public TotalRequestCounterImpl(MetricRegistry registry) {
-        super(registry, CounterKey.TotalRequests);
+    public SuccessRequestCounterMetric(MetricRegistry registry) {
+        super(registry, CounterKey.SuccessRequests);
     }
 }

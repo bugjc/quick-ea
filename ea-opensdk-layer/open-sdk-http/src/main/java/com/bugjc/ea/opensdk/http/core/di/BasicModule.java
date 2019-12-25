@@ -3,7 +3,7 @@ package com.bugjc.ea.opensdk.http.core.di;
 import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.component.monitor.Disruptor;
 import com.bugjc.ea.opensdk.http.core.component.monitor.HttpCallEventDisruptor;
-import com.bugjc.ea.opensdk.http.core.component.monitor.MetricRegistryFactory;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.MetricRegistryFactory;
 import com.bugjc.ea.opensdk.http.core.component.monitor.aspect.HttpCallAspect;
 import com.bugjc.ea.opensdk.http.core.component.monitor.consumer.EventConsumer;
 import com.bugjc.ea.opensdk.http.core.component.monitor.consumer.HttpCallEventConsumer;
@@ -11,14 +11,14 @@ import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEventFactory;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.CounterKey;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.annotation.Counters;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.impl.SuccessRequestCounterImpl;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.impl.TotalRequestCounterImpl;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.impl.SuccessRequestCounterMetric;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.counter.impl.TotalRequestCounterMetric;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.GaugeKey;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.annotation.Gauges;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.impl.ReqSuccessRatioGaugeImpl;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.gauge.impl.ReqSuccessRatioGaugeMetric;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.HistogramKey;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.annotation.Histograms;
-import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.impl.IntervalHistogramImpl;
+import com.bugjc.ea.opensdk.http.core.component.monitor.metric.histogram.impl.IntervalHistogramMetric;
 import com.bugjc.ea.opensdk.http.core.component.monitor.metric.Metric;
 import com.bugjc.ea.opensdk.http.core.component.monitor.producer.EventProducer;
 import com.bugjc.ea.opensdk.http.core.component.monitor.producer.HttpCallEventProducer;
@@ -51,14 +51,14 @@ public class BasicModule extends AbstractModule {
         this.bind(MetricRegistry.class).toInstance(MetricRegistryFactory.getInstance().getRegistry());
 
         //度量值指标
-        this.bind(new TypeLiteral<Metric<Gauge<Double>>>(){}).annotatedWith(Gauges.named(GaugeKey.RequestSuccessRatio)).to(ReqSuccessRatioGaugeImpl.class).in(Scopes.SINGLETON);
+        this.bind(new TypeLiteral<Metric<Gauge<Double>>>(){}).annotatedWith(Gauges.named(GaugeKey.RequestSuccessRatio)).to(ReqSuccessRatioGaugeMetric.class).in(Scopes.SINGLETON);
 
         //计数器指标
-        this.bind(new TypeLiteral<Metric<Counter>>(){}).annotatedWith(Counters.named(CounterKey.SuccessRequests)).to(SuccessRequestCounterImpl.class).in(Scopes.SINGLETON);
-        this.bind(new TypeLiteral<Metric<Counter>>(){}).annotatedWith(Counters.named(CounterKey.TotalRequests)).to(TotalRequestCounterImpl.class).in(Scopes.SINGLETON);
+        this.bind(new TypeLiteral<Metric<Counter>>(){}).annotatedWith(Counters.named(CounterKey.SuccessRequests)).to(SuccessRequestCounterMetric.class).in(Scopes.SINGLETON);
+        this.bind(new TypeLiteral<Metric<Counter>>(){}).annotatedWith(Counters.named(CounterKey.TotalRequests)).to(TotalRequestCounterMetric.class).in(Scopes.SINGLETON);
 
         //直方图指标
-        this.bind(new TypeLiteral<Metric<Histogram>>(){}).annotatedWith(Histograms.named(HistogramKey.Interval)).to(IntervalHistogramImpl.class).in(Scopes.SINGLETON);
+        this.bind(new TypeLiteral<Metric<Histogram>>(){}).annotatedWith(Histograms.named(HistogramKey.Interval)).to(IntervalHistogramMetric.class).in(Scopes.SINGLETON);
 
 
         //Disruptor 高性能队列配置

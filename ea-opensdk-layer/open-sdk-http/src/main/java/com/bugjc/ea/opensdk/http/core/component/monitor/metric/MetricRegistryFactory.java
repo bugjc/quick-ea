@@ -1,4 +1,4 @@
-package com.bugjc.ea.opensdk.http.core.component.monitor;
+package com.bugjc.ea.opensdk.http.core.component.monitor.metric;
 
 import com.codahale.metrics.MetricRegistry;
 

@@ -9,7 +9,7 @@ import com.codahale.metrics.MetricRegistry;
  * @author aoki
  * @date 2019/12/20
  * **/
-public class HistogramImpl<T> implements Metric<T> {
+public abstract class AbstractHistogramMetric<T> implements Metric<T> {
 
     /**
      * 直方图指标实例对象
@@ -22,9 +22,11 @@ public class HistogramImpl<T> implements Metric<T> {
     }
 
 
-    public HistogramImpl(MetricRegistry registry, HistogramKey histogramKey) {
+    public AbstractHistogramMetric(MetricRegistry registry, HistogramKey histogramKey) {
         String name = MetricRegistry.name(getClass(), histogramKey.name());
         this.metric = (T) registry.histogram(name);
     }
+
+
 
 }

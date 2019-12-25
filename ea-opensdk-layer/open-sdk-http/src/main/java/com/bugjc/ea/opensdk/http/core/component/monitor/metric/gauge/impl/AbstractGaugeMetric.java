@@ -11,7 +11,7 @@ import com.codahale.metrics.MetricRegistry;
  * @author aoki
  * @date 2019/12/20
  **/
-public class GaugeImpl<T> implements Metric<T> {
+public abstract class AbstractGaugeMetric<T> implements Metric<T> {
 
     /**
      * 度量值指标实例对象
@@ -30,7 +30,7 @@ public class GaugeImpl<T> implements Metric<T> {
      * @param gaugeKey
      * @param gauge
      */
-    public GaugeImpl(MetricRegistry registry, GaugeKey gaugeKey, Gauge gauge) {
+    public AbstractGaugeMetric(MetricRegistry registry, GaugeKey gaugeKey, Gauge gauge) {
         String name = MetricRegistry.name(getClass(), gaugeKey.name());
         this.metric = (T) registry.register(name, gauge);
     }

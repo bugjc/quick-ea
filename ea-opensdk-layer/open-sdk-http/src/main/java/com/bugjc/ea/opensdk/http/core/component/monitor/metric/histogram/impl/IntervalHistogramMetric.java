@@ -10,10 +10,10 @@ import com.google.inject.Inject;
  * @author aoki
  * @date 2019/12/20
  * **/
-public class IntervalHistogramImpl extends HistogramImpl<Histogram> {
+public class IntervalHistogramMetric extends AbstractHistogramMetric<Histogram> {
 
     @Inject
-    public IntervalHistogramImpl(MetricRegistry registry) {
+    public IntervalHistogramMetric(MetricRegistry registry) {
         super(registry, HistogramKey.Interval);
     }
 }

@@ -18,10 +18,10 @@ import static java.lang.Double.isNaN;
  * @author aoki
  * @date 2019/12/20
  **/
-public class ReqSuccessRatioGaugeImpl extends GaugeImpl<Gauge<Double>> {
+public class ReqSuccessRatioGaugeMetric extends AbstractGaugeMetric<Gauge<Double>> {
 
     @Inject
-    public ReqSuccessRatioGaugeImpl(MetricRegistry registry, @Counted(CounterKey.TotalRequests) Metric<Counter> totalRequests, @Counted(CounterKey.SuccessRequests) Metric<Counter> successRequests) {
+    public ReqSuccessRatioGaugeMetric(MetricRegistry registry, @Counted(CounterKey.TotalRequests) Metric<Counter> totalRequests, @Counted(CounterKey.SuccessRequests) Metric<Counter> successRequests) {
         super(registry, GaugeKey.RequestSuccessRatio, new Gauge<Double>() {
 
             /**

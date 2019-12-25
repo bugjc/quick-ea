@@ -1,6 +1,5 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.metric;
 
-import com.bugjc.ea.opensdk.http.core.component.monitor.MetricRegistryFactory;
 import com.codahale.metrics.ConsoleReporter;
 
 import java.util.concurrent.TimeUnit;
