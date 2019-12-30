@@ -1,22 +1,20 @@
-package com.bugjc.ea.opensdk.http.core.aop.interceptor;
+package com.bugjc.ea.opensdk.aop.interceptor;
 
-import cn.hutool.core.util.ClassUtil;
-import com.bugjc.ea.opensdk.http.core.aop.AspectInterceptorUtil;
-import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
-import lombok.extern.slf4j.Slf4j;
-import net.sf.cglib.proxy.Enhancer;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
 
+import com.bugjc.ea.opensdk.aop.AspectInterceptorUtil;
+import com.bugjc.ea.opensdk.aop.aspect.Aspect;
+
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
 /**
- * CGLib 动态代理
+ * jdk 代理实现
  * @author aoki
  * @date 2019/11/29
  * **/
-@Slf4j
-public class CgLibProxyInterceptor implements MethodInterceptor {
+public class JdkProxyInterceptor implements InvocationHandler {
+
     /** 需要代理的目标对象 */
     private Object target;
     /** 切面对象 */
@@ -31,12 +29,9 @@ public class CgLibProxyInterceptor implements MethodInterceptor {
     public Object newProxy(Object target, Aspect aspect) {
         this.target = target;
         this.aspect = aspect;
-
-        Enhancer enhancer = new Enhancer();
-        enhancer.setInterfaces(target.getClass().getInterfaces());
-        enhancer.setCallback(this);
-        // 返回代理对象
-        return enhancer.create();
+        //返回代理对象
+        return Proxy.newProxyInstance(target.getClass().getClassLoader(),
+                target.getClass().getInterfaces(), this);
     }
 
     /**
@@ -48,28 +43,25 @@ public class CgLibProxyInterceptor implements MethodInterceptor {
      * @throws Throwable        --目标方法抛出的异常
      */
     @Override
-    public Object intercept(Object proxy, Method method, Object[] args,
-                            MethodProxy methodProxy) throws Throwable {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         //获取并检查方法是否已开启切面拦截
         boolean flag = AspectInterceptorUtil.check(method);
-        //获取并检查方法是否已开启切面拦截
         if (!flag){
-            log.debug("CGLib 动态代理方法 {} 无需拦截！", method.getName());
             return method.invoke(target, args);
         }
-
         try {
             if (aspect.before(target, method, args)){
-                Object returnVal = method.invoke(ClassUtil.isStatic(method) ? null : target, args);
+                Object returnVal = method.invoke(target, args);
                 aspect.afterReturning(target, method, args, returnVal);
                 return returnVal;
             }
+            return null;
         } catch (Exception ex){
             aspect.afterThrowing(target, method, args, ex.getCause());
             throw ex.getCause();
         } finally {
             aspect.after();
         }
-        return null;
     }
+
 }

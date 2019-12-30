@@ -1,8 +1,8 @@
 package com.bugjc.ea.opensdk.http;
 
 import cn.hutool.core.util.StrUtil;
-import com.bugjc.ea.opensdk.http.core.aop.ProxyUtil;
-import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
+import com.bugjc.ea.opensdk.aop.ProxyUtil;
+import com.bugjc.ea.opensdk.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.component.eureka.EurekaConfig;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthFactory;

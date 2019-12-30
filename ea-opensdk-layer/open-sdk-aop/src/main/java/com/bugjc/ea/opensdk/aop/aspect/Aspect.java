@@ -1,4 +1,4 @@
-package com.bugjc.ea.opensdk.http.core.aop.aspect;
+package com.bugjc.ea.opensdk.aop.aspect;
 
 import java.lang.reflect.Method;
 

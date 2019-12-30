@@ -1,7 +1,7 @@
 package com.bugjc.ea.opensdk.http.core.component.monitor.aspect;
 
 import cn.hutool.core.date.TimeInterval;
-import com.bugjc.ea.opensdk.http.core.aop.aspect.Aspect;
+import com.bugjc.ea.opensdk.aop.aspect.Aspect;
 import com.bugjc.ea.opensdk.http.core.component.monitor.event.HttpCallEvent;
 import com.bugjc.ea.opensdk.http.core.component.monitor.producer.EventProducer;
 import com.google.inject.Inject;

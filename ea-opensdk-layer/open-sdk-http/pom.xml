@@ -26,6 +26,13 @@
 
     <dependencies>
 
+        <!-- aop -->
+        <dependency>
+            <groupId>com.bugjc.ea.opensdk.aop</groupId>
+            <artifactId>open-sdk-aop</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!-- 监控指标的度量类库 -->
         <dependency>
             <groupId>io.dropwizard.metrics</groupId>
