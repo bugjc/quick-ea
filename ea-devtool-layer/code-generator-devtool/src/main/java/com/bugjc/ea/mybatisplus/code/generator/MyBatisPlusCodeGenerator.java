@@ -25,6 +25,7 @@ public class MyBatisPlusCodeGenerator {
         MyBatisPackageConfig myBatisPackageConfig = environmentConfig.getComponent(MyBatisPackageConfig.class);
         MyBatisStrategyConfig myBatisStrategyConfig = environmentConfig.getComponent(MyBatisStrategyConfig.class);
 
+
         //生成代码
         new AutoGenerator()
                 .setGlobalConfig(myBatisGlobalConfig.getGlobalConfig())
