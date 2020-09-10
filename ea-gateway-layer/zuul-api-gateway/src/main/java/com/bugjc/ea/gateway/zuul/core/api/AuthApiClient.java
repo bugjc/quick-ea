@@ -1,10 +1,11 @@
 package com.bugjc.ea.gateway.zuul.core.api;
 
+import com.bugjc.ea.gateway.zuul.core.dto.ApiGatewayServerResultCode;
 import com.bugjc.ea.gateway.zuul.model.App;
 import com.bugjc.ea.gateway.zuul.service.AppService;
 import com.bugjc.ea.opensdk.http.api.AuthPathInfo;
+import com.bugjc.ea.opensdk.http.core.dto.CommonResultCode;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import com.bugjc.ea.opensdk.http.core.util.HttpClient;
 import com.bugjc.ea.opensdk.http.model.AppParam;
 import com.bugjc.ea.opensdk.http.model.auth.VerifyTokenBody;
@@ -20,16 +21,17 @@ import javax.annotation.Resource;
 
 /**
  * 授权认证服务
+ *
  * @author aoki
  * @date 2019/11/4
- * **/
+ **/
 @Slf4j
 @Component
 public class AuthApiClient {
 
     @Data
     @Configuration
-    static class Config{
+    static class Config {
         @Value("${api-gateway.server.address}")
         private String apiServerAddress;
     }
@@ -42,15 +44,16 @@ public class AuthApiClient {
 
     /**
      * 接口调用
+     *
      * @param appId
      * @param token
      * @return
      */
-    public Result verifyToken(String appId, String token){
+    public Result verifyToken(String appId, String token) {
         //获取应用配置信息
         App app = appService.findByAppId(appId);
-        if (app == null){
-            return ResultGenerator.genFailResult("无效的APP_ID");
+        if (app == null) {
+            return Result.failure(ApiGatewayServerResultCode.APP_ID_MISSING);
         }
 
         try {
@@ -66,11 +69,10 @@ public class AuthApiClient {
             requestBody.setAccessToken(token);
             return authService.verifyToken(AuthPathInfo.VERIFY_TOKEN_V1, requestBody);
         } catch (Exception e) {
-            log.info(e.getMessage(),e);
-            return ResultGenerator.genFailResult(e.getMessage());
+            log.info("校验 Token 发生错误：{}", e.getMessage(), e);
+            return Result.failure(CommonResultCode.INTERNAL_SERVER_ERROR.getCode(), e.getMessage());
         }
     }
-
 
 
 }

@@ -1,32 +1,16 @@
-/*
- * Copyright (c) 2011-2020, baomidou (jobob@qq.com).
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * <p>
- * https://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
+
 package com.bugjc.ea.code.generator.config;
 
-import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
-import com.baomidou.mybatisplus.core.toolkit.ClassUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.bugjc.ea.code.generator.config.po.LikeTable;
-import com.bugjc.ea.code.generator.config.po.TableFill;
-import com.bugjc.ea.code.generator.config.rules.NamingStrategy;
+
+import com.bugjc.ea.code.generator.core.db.rules.NamingStrategy;
+import com.bugjc.ea.code.generator.core.toolkit.StringUtils;
+import com.bugjc.ea.code.generator.model.LikeTable;
+import com.bugjc.ea.code.generator.model.TableFill;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -84,7 +68,7 @@ public class StrategyConfig {
     /**
      * 自定义继承的Mapper类全称，带包名
      */
-    private String superMapperClass = ConstVal.SUPER_MAPPER_CLASS;
+    //private String superMapperClass = ConstVal.SUPER_MAPPER_CLASS;
     /**
      * 自定义继承的Service类全称，带包名
      */
@@ -271,57 +255,6 @@ public class StrategyConfig {
         return this;
     }
 
-    /**
-     * 设置实体父类
-     *
-     * @param superEntityClass 类全名称
-     * @return this
-     */
-    public StrategyConfig setSuperEntityClass(String superEntityClass) {
-        try {
-            return setSuperEntityClass(ClassUtils.toClassConfident(superEntityClass));
-        } catch (Exception e) {
-            this.superEntityClass = superEntityClass;
-        }
-        return this;
-    }
-
-
-    /**
-     * <p>
-     * 设置实体父类，该设置自动识别公共字段<br/>
-     * 属性 superEntityColumns 改配置无需再次配置
-     * </p>
-     * <p>
-     * 注意！！字段策略要在设置实体父类之前有效
-     * </p>
-     *
-     * @param clazz 实体父类 Class
-     * @return
-     */
-    public StrategyConfig setSuperEntityClass(Class<?> clazz) {
-        return setSuperEntityClass(clazz, null);
-    }
-
-    /**
-     * <p>
-     * 设置实体父类，该设置自动识别公共字段<br/>
-     * 属性 superEntityColumns 改配置无需再次配置
-     * </p>
-     *
-     * @param clazz        实体父类 Class
-     * @param columnNaming 字段命名策略
-     * @return
-     */
-    public StrategyConfig setSuperEntityClass(Class<?> clazz, NamingStrategy columnNaming) {
-        if (null != columnNaming) {
-            this.columnNaming = columnNaming;
-        }
-        this.superEntityClass = clazz.getName();
-        convertSuperEntityColumns(clazz);
-        return this;
-    }
-
     public StrategyConfig setSuperServiceClass(Class<?> clazz) {
         this.superServiceClass = clazz.getName();
         return this;
@@ -352,24 +285,6 @@ public class StrategyConfig {
         return this;
     }
 
-    /**
-     * <p>
-     * 父类 Class 反射属性转换为公共字段
-     * </p>
-     *
-     * @param clazz 实体父类 Class
-     */
-    protected void convertSuperEntityColumns(Class<?> clazz) {
-        List<Field> fields = TableInfoHelper.getAllFields(clazz);
-        this.superEntityColumns = fields.stream().map(field -> {
-            if (null == columnNaming || columnNaming == NamingStrategy.no_change) {
-                return field.getName();
-            }
-            return StringUtils.camelToUnderline(field.getName());
-        }).distinct().toArray(String[]::new);
-    }
-    
-    
     /**
      * 是否为构建者模型
      *

@@ -1,7 +1,7 @@
 package com.bugjc.ea.mybatisplus.code.generator.config;
 
 import com.bugjc.ea.code.generator.config.StrategyConfig;
-import com.bugjc.ea.code.generator.config.rules.NamingStrategy;
+import com.bugjc.ea.code.generator.core.db.rules.NamingStrategy;
 import com.bugjc.flink.config.annotation.ConfigurationProperties;
 import lombok.Data;
 

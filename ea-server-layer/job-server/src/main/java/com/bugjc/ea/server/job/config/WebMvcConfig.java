@@ -5,7 +5,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
+import com.bugjc.ea.opensdk.http.core.dto.CommonResultCode;
 import com.bugjc.ea.server.job.core.exception.BizException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +28,7 @@ import java.util.Objects;
 
 /**
  * Spring MVC 配置
+ *
  * @author : aoki
  */
 @Slf4j
@@ -59,6 +60,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
 
     /**
      * 统一异常处理
+     *
      * @param exceptionResolvers
      */
     @Override
@@ -66,22 +68,19 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         exceptionResolvers.add(new HandlerExceptionResolver() {
             @Override
             public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception e) {
-                WebMvcConfig.log.error(e.getMessage(),e);
-                Result result = new Result();
+                WebMvcConfig.log.error(e.getMessage(), e);
+                Result result;
                 //业务失败的异常，如“账号或密码错误”
                 if (e instanceof NoHandlerFoundException) {
-                    result.setCode(ResultCode.NOT_FOUND).setMessage("接口 [" + request.getRequestURI() + "] 不存在");
+                    result = Result.failure(CommonResultCode.NOT_FOUND);
                 } else if (e instanceof ServletException) {
-                    result.setCode(ResultCode.FAIL).setMessage(e.getMessage());
-                } else if (e instanceof MethodArgumentNotValidException){
-                    log.error(e.getMessage());
+                    result = Result.failure(CommonResultCode.FAIL);
+                } else if (e instanceof MethodArgumentNotValidException) {
                     String message = Objects.requireNonNull(((MethodArgumentNotValidException) e).getBindingResult().getFieldError()).getDefaultMessage();
-                    result.setCode(ResultCode.INTERNAL_SERVER_ERROR).setMessage(message);
+                    result = Result.failure(CommonResultCode.INTERNAL_SERVER_ERROR.getCode(), message);
                 } else if (e instanceof BizException) {
-                    result.setCode(((BizException) e).getCode());
-                    result.setMessage(e.getMessage());
+                    result = Result.failure(((BizException) e).getCode(), e.getMessage());
                 } else {
-                    result.setCode(ResultCode.INTERNAL_SERVER_ERROR).setMessage("接口 [" + request.getRequestURI() + "] 内部错误，请联系管理员");
                     String message;
                     if (handler instanceof HandlerMethod) {
                         HandlerMethod handlerMethod = (HandlerMethod) handler;
@@ -93,7 +92,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
                     } else {
                         message = e.getMessage();
                     }
-                    result.setMessage(message);
+                    result = Result.failure(CommonResultCode.INTERNAL_SERVER_ERROR.getCode(), message);
                 }
                 WebMvcConfig.responseResult(response, result);
                 return new ModelAndView();

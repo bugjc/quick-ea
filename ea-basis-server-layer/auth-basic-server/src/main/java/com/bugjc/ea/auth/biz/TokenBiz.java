@@ -11,14 +11,12 @@ import com.bugjc.ea.auth.service.AppTokenService;
 import com.bugjc.ea.auth.web.io.platform.auth.QueryTokenBody;
 import com.bugjc.ea.auth.web.io.platform.auth.VerifyTokenBody;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
 /**
- *
  * @author aoki
  * @create 2018/12/14.
  */
@@ -32,6 +30,7 @@ public class TokenBiz {
 
     /**
      * 获取token
+     *
      * @param requestBody
      * @throws Exception
      */
@@ -42,16 +41,15 @@ public class TokenBiz {
 
         //查询运营商是否存在
         App app = appService.findByAppId(requestBody.getAppId());
-        if (app == null){
+        if (app == null) {
             //不存在运营商
             responseBody.setFailCode(QueryTokenFailCode.NoSuchCarrier.getCode());
-            return ResultGenerator.genSuccessResult(responseBody);
+            return Result.success(responseBody);
         }
 
-        if (app.getAppSecret() == null || !app.getAppSecret().equals(requestBody.getAppSecret())){
+        if (app.getAppSecret() == null || !app.getAppSecret().equals(requestBody.getAppSecret())) {
             //密钥不匹配
-            responseBody.setFailCode(QueryTokenFailCode.KeyError.getCode());
-            return ResultGenerator.genFailResult(QueryTokenFailCode.KeyError.getDesc());
+            return Result.failure(QueryTokenFailCode.KeyError);
         }
 
         try {
@@ -59,35 +57,36 @@ public class TokenBiz {
             //设置业务成功状态
             responseBody.setSuccessStat(QueryTokenFailCode.SUCCESS.getCode());
             responseBody.setFailCode(QueryTokenFailCode.SUCCESS.getCode());
-            BeanUtil.copyProperties(token,responseBody);
+            BeanUtil.copyProperties(token, responseBody);
 
-            return ResultGenerator.genSuccessResult(responseBody);
+            return Result.success(responseBody);
         } catch (Exception e) {
             //业务失败
-            log.error("生成 Token 失败,错误信息：{}",e.getMessage(),e);
+            log.error("生成 Token 失败,错误信息：{}", e.getMessage(), e);
             responseBody.setFailCode(QueryTokenFailCode.ERROR.getCode());
-            return ResultGenerator.genFailResult(QueryTokenFailCode.ERROR.getDesc());
+            return Result.failure(QueryTokenFailCode.ERROR);
         }
     }
 
     /**
      * 校验token
+     *
      * @param requestBody
      * @return
      */
-    public Result verifyToken(VerifyTokenBody.RequestBody requestBody){
+    public Result verifyToken(VerifyTokenBody.RequestBody requestBody) {
         VerifyTokenBody.ResponseBody responseBody = new VerifyTokenBody.ResponseBody();
 
         try {
-            if (!tokenService.verifyToken(requestBody.getAccessToken())){
+            if (!tokenService.verifyToken(requestBody.getAccessToken())) {
                 responseBody.setFailCode(VerifyTokenFailCode.ERROR.getCode());
-                return ResultGenerator.genSuccessResult(responseBody);
+                return Result.success(responseBody);
             }
-        }catch (Exception ex){
-            log.error("校验 token 错误信息：{}",ex.getMessage());
+        } catch (Exception ex) {
+            log.error("校验 token 错误信息：{}", ex.getMessage());
             responseBody.setFailCode(VerifyTokenFailCode.ERROR.getCode());
         }
 
-        return ResultGenerator.genSuccessResult(responseBody);
+        return Result.success(responseBody);
     }
 }

@@ -2,8 +2,11 @@ package ${package.packagePath};
 import ${package.dependClasses["model.entity"].referencePath!};
 import ${package.dependClasses["dao"].referencePath!};
 import ${package.dependClasses["business"].referencePath!};
+import ${package.dependClasses["model.api"].referencePath!};
 import ${superServiceImplClassPackage};
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import javax.annotation.Resource;
 
 /**
  * <p>
@@ -16,4 +19,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class ${package.className} extends ${superServiceImplClass}<${package.dependClasses["dao"].className!}, ${package.dependClasses["model.entity"].className!}> implements ${package.dependClasses["business"].className!}{
 
+    @Resource
+    private ${package.dependClasses["dao"].className!} dao;
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void create(${package.dependClasses["model.api"].className!} param) {
+        ${package.dependClasses["model.entity"].className!} entity = new ${package.dependClasses["model.entity"].className!}(param);
+        dao.insert(entity);
+    }
 }

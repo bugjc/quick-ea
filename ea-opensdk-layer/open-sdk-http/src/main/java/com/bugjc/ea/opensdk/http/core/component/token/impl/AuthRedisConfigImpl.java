@@ -6,7 +6,7 @@ import com.bugjc.ea.opensdk.http.api.AuthPathInfo;
 import com.bugjc.ea.opensdk.http.core.component.token.AuthConfig;
 import com.bugjc.ea.opensdk.http.core.component.token.constants.AccessTokenConstants;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.enums.TokenResultStatusEnum;
+import com.bugjc.ea.opensdk.http.core.dto.TokenResultCode;
 import com.bugjc.ea.opensdk.http.core.exception.HttpSecurityException;
 import com.bugjc.ea.opensdk.http.model.auth.QueryTokenBody;
 import com.bugjc.ea.opensdk.http.service.AuthService;
@@ -96,7 +96,7 @@ public class AuthRedisConfigImpl implements AuthConfig {
                 //获取 token 重试次数
                 int retryCount = 3;
                 Result result =  authService.getToken(AuthPathInfo.QUERY_TOKEN_V1);
-                while (result.getCode() == TokenResultStatusEnum.Retry.getStatus()){
+                while (result.getCode() == TokenResultCode.Retry.getCode()){
                     retryCount--;
                     log.info(retryCount +"");
                     result = authService.getToken(AuthPathInfo.QUERY_TOKEN_V1);
@@ -110,11 +110,11 @@ public class AuthRedisConfigImpl implements AuthConfig {
                     }
                 }
 
-                if (result.getCode() == TokenResultStatusEnum.Ignorable.getStatus()){
+                if (result.getCode() == TokenResultCode.Ignorable.getCode()){
                     return null;
                 }
 
-                if (result.getCode() == TokenResultStatusEnum.Normal.getStatus()){
+                if (result.getCode() == TokenResultCode.Normal.getCode()){
                     QueryTokenBody.ResponseBody responseBody = ((JSONObject)result.getData()).toJavaObject(QueryTokenBody.ResponseBody.class);
                     token = responseBody.getAccessToken();
                     String key = AccessTokenConstants.getKey(appId);

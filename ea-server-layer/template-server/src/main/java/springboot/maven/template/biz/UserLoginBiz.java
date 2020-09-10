@@ -2,7 +2,6 @@ package springboot.maven.template.biz;
 
 
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 
 import springboot.maven.template.core.enums.UserLoginFailCode;
 import springboot.maven.template.service.UserService;
@@ -43,7 +42,7 @@ public class UserLoginBiz {
             //3.设置运行中失败默认错误
             responseBody.setFailCode(UserLoginFailCode.ERROR.getCode());
         }
-        return ResultGenerator.genSuccessResult(responseBody);
+        return Result.success(responseBody);
     }
 
 

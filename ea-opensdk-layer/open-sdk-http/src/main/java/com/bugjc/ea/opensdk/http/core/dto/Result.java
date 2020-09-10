@@ -1,46 +1,50 @@
 package com.bugjc.ea.opensdk.http.core.dto;
 
 import com.alibaba.fastjson.JSON;
+import lombok.Builder;
+import lombok.Data;
+
+import java.io.Serializable;
 
 /**
  * 统一API响应结果封装
+ *
  * @author : aoki
  */
-public class Result {
+@Data
+@Builder
+public class Result<T> implements Serializable {
     private int code;
     private String message;
-    private Object data;
+    private T data;
 
-    public Result setCode(ResultCode resultCode) {
-        this.code = resultCode.getCode();
-        return this;
+    public static Result success() {
+        return new ResultBuilder()
+                .code(CommonResultCode.SUCCESS.getCode())
+                .message(CommonResultCode.SUCCESS.getMessage())
+                .build();
     }
 
-    public int getCode() {
-        return code;
+    public static <T> Result<T> success(T obj) {
+        return new ResultBuilder<T>()
+                .data(obj)
+                .code(CommonResultCode.SUCCESS.getCode())
+                .message(CommonResultCode.SUCCESS.getMessage())
+                .build();
     }
 
-    public Result setCode(int code) {
-        this.code = code;
-        return this;
+    public static Result failure(ResultCode resultCode) {
+        return new ResultBuilder()
+                .code(resultCode.getCode())
+                .message(resultCode.getMessage())
+                .build();
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public Result setMessage(String message) {
-        this.message = message;
-        return this;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public Result setData(Object data) {
-        this.data = data;
-        return this;
+    public static Result failure(int code, String message) {
+        return new ResultBuilder()
+                .code(code)
+                .message(message)
+                .build();
     }
 
     @Override

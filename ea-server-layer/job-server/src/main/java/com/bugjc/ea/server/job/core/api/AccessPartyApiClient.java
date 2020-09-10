@@ -4,8 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.dto.CommonResultCode;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -55,7 +54,7 @@ public class AccessPartyApiClient {
             return JSON.parseObject(result,Result.class);
         }catch (Exception ex){
             log.error("外部接口调用失败的应答数据：{}", ex.getMessage());
-            return ResultGenerator.genFailResult(ResultCode.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());
+            return Result.failure(CommonResultCode.INTERNAL_SERVER_ERROR.getCode(), ex.getMessage());
         }
 
     }

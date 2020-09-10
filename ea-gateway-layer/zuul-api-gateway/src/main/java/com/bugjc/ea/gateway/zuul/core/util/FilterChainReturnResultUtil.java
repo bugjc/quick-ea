@@ -2,7 +2,7 @@ package com.bugjc.ea.gateway.zuul.core.util;
 
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.gateway.zuul.core.constants.ApiGatewayKeyConstants;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.dto.Result;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,7 +36,7 @@ public class FilterChainReturnResultUtil {
      * @param message
      */
     public static void genErrorResult(RequestContext ctx, int code, String message){
-        String result = JSON.toJSONString(ResultGenerator.genFailResult(code,message));
+        String result = JSON.toJSONString(Result.failure(code,message));
         log.info("过滤器应答结果:{}",result);
         ctx.setSendZuulResponse(false);
         ctx.setResponseStatusCode(200);

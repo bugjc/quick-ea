@@ -10,7 +10,7 @@ import com.bugjc.ea.gateway.zuul.core.util.FilterChainReturnResultUtil;
 import com.bugjc.ea.gateway.zuul.service.AppSecurityConfigService;
 import com.bugjc.ea.opensdk.http.core.constants.HttpHeaderKeyConstants;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
+import com.bugjc.ea.opensdk.http.core.dto.CommonResultCode;
 import com.bugjc.ea.opensdk.http.model.auth.VerifyTokenBody;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
@@ -75,7 +75,7 @@ public class VerifyTokenRequestFilter extends ZuulFilter {
 
 			//调用授权认证服务
 			Result result = authApiClient.verifyToken(appId,token);
-			if (result.getCode() != ResultCode.SUCCESS.getCode()) {
+			if (result.getCode() != CommonResultCode.SUCCESS.getCode()) {
 				FilterChainReturnResultUtil.genErrorResult(ctx, ResultErrorEnum.VerifyTokenError.getCode(), result.getMessage());
 				return null;
 			}
@@ -91,7 +91,7 @@ public class VerifyTokenRequestFilter extends ZuulFilter {
 
 		}catch (Exception ex){
 			log.error(ex.getMessage(),ex);
-			FilterChainReturnResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), "Token认证服务器内部错误！");
+			FilterChainReturnResultUtil.genErrorResult(ctx, CommonResultCode.INTERNAL_SERVER_ERROR.getCode(), "Token认证服务器内部错误！");
 			return null;
 		}
 

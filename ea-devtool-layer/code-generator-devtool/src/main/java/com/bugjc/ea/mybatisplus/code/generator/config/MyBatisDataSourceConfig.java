@@ -1,8 +1,8 @@
 package com.bugjc.ea.mybatisplus.code.generator.config;
 
-import com.baomidou.mybatisplus.annotation.DbType;
 import com.bugjc.ea.code.generator.config.DataSourceConfig;
-import com.bugjc.ea.code.generator.config.querys.MySqlQuery;
+import com.bugjc.ea.code.generator.core.db.querys.MySqlQuery;
+import com.bugjc.ea.code.generator.core.annotation.DbType;
 import com.bugjc.flink.config.annotation.ConfigurationProperties;
 import lombok.Data;
 

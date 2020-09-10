@@ -1,7 +1,7 @@
 package ${package.packagePath};
 
 import ${package.dependClasses["model.entity"].referencePath!};
-import ${superMapperClassPackage};
+import ${package.dependClasses["superMapperClass"].referencePath!}
 
 /**
  * <p>
@@ -11,6 +11,6 @@ import ${superMapperClassPackage};
  * @author ${author}
  * @since ${date}
  */
-public interface ${package.className} extends ${superMapperClass}<${package.dependClasses["model.entity"].className!}> {
+public interface ${package.className} extends ${package.dependClasses["superMapperClass"].className!}<${package.dependClasses["model.entity"].className!}> {
 
 }
