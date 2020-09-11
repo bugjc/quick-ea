@@ -1,9 +1,9 @@
-package ${package.packagePath};
+package ${template.packagePath};
 
 
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import ${package.dependClasses["business"].referencePath!};
-import ${package.dependClasses["model.api"].referencePath!};
+import ${template.dependClasses["business"].referencePath!};
+import ${template.dependClasses["model.api"].referencePath!};
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,11 +20,11 @@ import javax.annotation.Resource;
 */
 
 @RestController
-@RequestMapping("${package.className}")
-public class ${package.className} {
+@RequestMapping("${template.className}")
+public class ${template.className} {
 
     @Resource
-    private ${package.dependClasses["business"].className!} business;
+    private ${template.dependClasses["business"].className!} business;
 
     /**
     * 创建文章 API
@@ -33,7 +33,7 @@ public class ${package.className} {
     * @return          --Result.success()
     */
     @PostMapping("create")
-    public Result create(@Validated ${package.dependClasses["model.api"].className!} param) {
+    public Result create(@Validated ${template.dependClasses["model.api"].className!} param) {
         business.create(param);
         return Result.success();
     }

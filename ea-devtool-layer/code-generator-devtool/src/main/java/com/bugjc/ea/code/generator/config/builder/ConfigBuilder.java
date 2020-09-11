@@ -37,16 +37,7 @@ public class ConfigBuilder {
      * SQL连接
      */
     private Connection connection;
-    /**
-     * SQL语句类型
-     */
-    private String superEntityClass;
-    private String superMapperClass;
-    /**
-     * service超类定义
-     */
-    private String superServiceClass;
-    private String superServiceImplClass;
+
     /**
      * 数据库表信息
      */
@@ -104,10 +95,9 @@ public class ConfigBuilder {
      * @param tableInfo 表信息对象
      * @return ignore
      */
-    private Map<String, Object> getObjectMap(Template packageInfo, TableInfo tableInfo) {
+    private Map<String, Object> getObjectMap(Template template, TableInfo tableInfo) {
         Map<String, Object> objectMap = new HashMap<>();
-        objectMap.put("config", this);
-        objectMap.put("package", packageInfo);
+        objectMap.put("template", template);
         objectMap.put("author", this.getGlobalConfig().getAuthor());
         //TODO ID Type
         objectMap.put("idType", null);
@@ -124,19 +114,6 @@ public class ConfigBuilder {
         return objectMap;
     }
 
-    /**
-     * 获取类名
-     *
-     * @param classPath ignore
-     * @return ignore
-     */
-    private String getSuperClassName(String classPath) {
-        if (StringUtils.isBlank(classPath)) {
-            return null;
-        }
-        return classPath.substring(classPath.lastIndexOf(StringPool.DOT) + 1);
-    }
-
     // ************************ 曝露方法 BEGIN*****************************
 
 
@@ -148,31 +125,6 @@ public class ConfigBuilder {
     public List<Template> getTemplateList() {
         return templateList;
     }
-
-    public String getSuperEntityClass() {
-        return superEntityClass;
-    }
-
-
-    public String getSuperMapperClass() {
-        return superMapperClass;
-    }
-
-
-    /**
-     * 获取超类定义
-     *
-     * @return 完整超类名称
-     */
-    public String getSuperServiceClass() {
-        return superServiceClass;
-    }
-
-
-    public String getSuperServiceImplClass() {
-        return superServiceImplClass;
-    }
-
 
     /**
      * 表信息
@@ -242,6 +194,7 @@ public class ConfigBuilder {
                         String className = referencePath.substring(packagePath.length() + 1);
                         dependClasses.put(key, new DependClass(packagePath, className, referencePath));
                     }
+                    //TODO KEY 冲突检测
                     //合并外部依赖
                     dependMap.putAll(dependClasses);
                 }
@@ -276,25 +229,7 @@ public class ConfigBuilder {
      * @param config StrategyConfig
      */
     private void handlerStrategy(StrategyConfig config) {
-        processTypes(config);
         tableInfoList = getTablesInfo(config);
-    }
-
-
-    /**
-     * 处理superClassName,IdClassType,IdStrategy配置
-     *
-     * @param config 策略配置
-     */
-    private void processTypes(StrategyConfig config) {
-        this.superServiceClass = getValueOrDefault(config.getSuperServiceClass(), ConstVal.SUPER_SERVICE_CLASS);
-        this.superServiceImplClass = getValueOrDefault(config.getSuperServiceImplClass(), ConstVal.SUPER_SERVICE_IMPL_CLASS);
-        //this.superMapperClass = getValueOrDefault(config.getSuperMapperClass(), ConstVal.SUPER_MAPPER_CLASS);
-        superEntityClass = config.getSuperEntityClass();
-    }
-
-    private static String getValueOrDefault(String value, String defaultValue) {
-        return StringUtils.isBlank(value) ? defaultValue : value;
     }
 
     /**
@@ -398,6 +333,7 @@ public class ConfigBuilder {
                             .append(Arrays.stream(config.getExclude()).map(tb -> "'" + tb + "'").collect(Collectors.joining(","))).append(")");
                 }
             }
+
             TableInfo tableInfo;
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
                  ResultSet results = preparedStatement.executeQuery()) {

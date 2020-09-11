@@ -1,9 +1,9 @@
-package ${package.packagePath};
-import ${package.dependClasses["model.entity"].referencePath!};
-import ${package.dependClasses["dao"].referencePath!};
-import ${package.dependClasses["business"].referencePath!};
-import ${package.dependClasses["model.api"].referencePath!};
-import ${package.dependClasses["superServiceImplClass"].referencePath!};
+package ${template.packagePath};
+import ${template.dependClasses["model.entity"].referencePath!};
+import ${template.dependClasses["dao"].referencePath!};
+import ${template.dependClasses["business"].referencePath!};
+import ${template.dependClasses["model.api"].referencePath!};
+import ${template.dependClasses["superServiceImplClass"].referencePath!};
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -17,15 +17,15 @@ import javax.annotation.Resource;
  * @since ${date}
  */
 @Service
-public class ${package.className} extends ${package.dependClasses["superServiceImplClass"].className!}<${package.dependClasses["dao"].className!}, ${package.dependClasses["model.entity"].className!}> implements ${package.dependClasses["business"].className!}{
+public class ${template.className} extends ${template.dependClasses["superServiceImplClass"].className!}<${template.dependClasses["dao"].className!}, ${template.dependClasses["model.entity"].className!}> implements ${template.dependClasses["business"].className!}{
 
     @Resource
-    private ${package.dependClasses["dao"].className!} dao;
+    private ${template.dependClasses["dao"].className!} dao;
 
     @Transactional(rollbackFor = Exception.class)
     @Override
-    public void create(${package.dependClasses["model.api"].className!} param) {
-        ${package.dependClasses["model.entity"].className!} entity = new ${package.dependClasses["model.entity"].className!}(param);
+    public void create(${template.dependClasses["model.api"].className!} param) {
+        ${template.dependClasses["model.entity"].className!} entity = new ${template.dependClasses["model.entity"].className!}(param);
         dao.insert(entity);
     }
 }

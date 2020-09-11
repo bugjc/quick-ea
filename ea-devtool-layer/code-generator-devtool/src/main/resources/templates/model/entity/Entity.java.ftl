@@ -1,10 +1,13 @@
-package ${package.packagePath};
+package ${template.packagePath};
 
 <#list table.importPackages as pkg>
     import ${pkg};
 </#list>
 import cn.hutool.core.bean.BeanUtil;
-import ${package.dependClasses["model.api"].referencePath!};
+import ${template.dependClasses["model.api"].referencePath!};
+import ${template.dependClasses["mybatisPlusAnnotationClass"].referencePath!};
+import ${template.dependClasses["serializableClass"].referencePath!};
+
 import lombok.Data;
 
 /**
@@ -17,7 +20,7 @@ import lombok.Data;
 */
 @Data
 @TableName("${table.name}")
-public class ${package.className} implements Serializable {
+public class ${template.className} implements Serializable {
 
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>
@@ -67,7 +70,7 @@ public class ${package.className} implements Serializable {
     * 创建 API 数据转存
     * @param param
     */
-    public ${package.className}(${package.dependClasses["model.api"].className!} param) {
+    public ${template.className}(${template.dependClasses["model.api"].className!} param) {
         BeanUtil.copyProperties(param, this);
         //TODO 数据转换逻辑
     }

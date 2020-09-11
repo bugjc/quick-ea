@@ -1,4 +1,4 @@
-package  ${package.packagePath};
+package  ${template.packagePath};
 
 <#list table.importPackages as pkg>
     import ${pkg};
@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 * @since ${date}
 */
 @Data
-public class ${package.className} {
+public class ${template.className} {
 
 <#-- ----------  BEGIN 字段循环遍历  ---------->
 <#list table.fields as field>

@@ -1,8 +1,8 @@
-package ${package.packagePath};
+package ${template.packagePath};
 
-import ${package.dependClasses["model.entity"].referencePath!};
-import ${package.dependClasses["model.api"].referencePath!};
-import ${package.dependClasses["superServiceClass"].referencePath!};
+import ${template.dependClasses["model.entity"].referencePath!};
+import ${template.dependClasses["model.api"].referencePath!};
+import ${template.dependClasses["superServiceClass"].referencePath!};
 
 /**
  * <p>
@@ -12,12 +12,12 @@ import ${package.dependClasses["superServiceClass"].referencePath!};
  * @author ${author}
  * @since ${date}
  */
-public interface ${package.className} extends ${package.dependClasses["superServiceClass"].className!}<${package.dependClasses["model.entity"].className!}> {
+public interface ${template.className} extends ${template.dependClasses["superServiceClass"].className!}<${template.dependClasses["model.entity"].className!}> {
 
     /**
     * 创建文章
     *
     * @param param
     */
-    void create(${package.dependClasses["model.api"].className!} param);
+    void create(${template.dependClasses["model.api"].className!} param);
 }

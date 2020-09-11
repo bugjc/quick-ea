@@ -17,29 +17,27 @@ package com.bugjc.ea.code.generator;
 
 import com.bugjc.ea.code.generator.config.DataSourceConfig;
 import com.bugjc.ea.code.generator.config.GlobalConfig;
-import com.bugjc.ea.code.generator.config.TemplateConfig;
 import com.bugjc.ea.code.generator.config.StrategyConfig;
+import com.bugjc.ea.code.generator.config.TemplateConfig;
 import com.bugjc.ea.code.generator.config.builder.ConfigBuilder;
-import com.bugjc.ea.code.generator.model.TableField;
-import com.bugjc.ea.code.generator.model.TableInfo;
-import com.bugjc.ea.code.generator.core.toolkit.StringUtils;
 import com.bugjc.ea.code.generator.core.engine.AbstractTemplateEngine;
 import com.bugjc.ea.code.generator.core.engine.FreemarkerTemplateEngine;
+import com.bugjc.ea.code.generator.core.toolkit.StringUtils;
+import com.bugjc.ea.code.generator.model.TableField;
+import com.bugjc.ea.code.generator.model.TableInfo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * 生成文件
- *
- * @author YangHu, tangguo, hubin
- * @since 2016-08-30
- */
+ * @author aoki
+ * @date 2020/9/11
+ * **/
 @Data
 @Accessors(chain = true)
 public class AutoGenerator {
@@ -106,8 +104,6 @@ public class AutoGenerator {
          */
         List<TableInfo> tableList = this.getAllTableInfoList(config);
         for (TableInfo tableInfo : tableList) {
-            tableInfo.setImportPackages("com.baomidou.mybatisplus.annotation.*");
-            tableInfo.setImportPackages(Serializable.class.getCanonicalName());
             //TODO 自定义添加导入包
 
             // Boolean类型is前缀处理
