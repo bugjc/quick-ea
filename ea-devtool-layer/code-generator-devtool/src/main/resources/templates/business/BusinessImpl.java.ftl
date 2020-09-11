@@ -3,7 +3,7 @@ import ${package.dependClasses["model.entity"].referencePath!};
 import ${package.dependClasses["dao"].referencePath!};
 import ${package.dependClasses["business"].referencePath!};
 import ${package.dependClasses["model.api"].referencePath!};
-import ${superServiceImplClassPackage};
+import ${package.dependClasses["superServiceImplClass"].referencePath!};
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * @since ${date}
  */
 @Service
-public class ${package.className} extends ${superServiceImplClass}<${package.dependClasses["dao"].className!}, ${package.dependClasses["model.entity"].className!}> implements ${package.dependClasses["business"].className!}{
+public class ${package.className} extends ${package.dependClasses["superServiceImplClass"].className!}<${package.dependClasses["dao"].className!}, ${package.dependClasses["model.entity"].className!}> implements ${package.dependClasses["business"].className!}{
 
     @Resource
     private ${package.dependClasses["dao"].className!} dao;

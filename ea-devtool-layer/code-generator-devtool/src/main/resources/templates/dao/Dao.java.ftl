@@ -1,7 +1,7 @@
 package ${package.packagePath};
 
 import ${package.dependClasses["model.entity"].referencePath!};
-import ${package.dependClasses["superMapperClass"].referencePath!}
+import ${package.dependClasses["superMapperClass"].referencePath!};
 
 /**
  * <p>

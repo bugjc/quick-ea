@@ -2,7 +2,7 @@ package ${package.packagePath};
 
 import ${package.dependClasses["model.entity"].referencePath!};
 import ${package.dependClasses["model.api"].referencePath!};
-import ${superServiceClassPackage};
+import ${package.dependClasses["superServiceClass"].referencePath!};
 
 /**
  * <p>
@@ -12,7 +12,7 @@ import ${superServiceClassPackage};
  * @author ${author}
  * @since ${date}
  */
-public interface ${package.className} extends ${superServiceClass}<${package.dependClasses["model.entity"].className!}> {
+public interface ${package.className} extends ${package.dependClasses["superServiceClass"].className!}<${package.dependClasses["model.entity"].className!}> {
 
     /**
     * 创建文章

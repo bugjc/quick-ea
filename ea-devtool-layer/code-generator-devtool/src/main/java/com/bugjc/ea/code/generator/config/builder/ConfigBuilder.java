@@ -121,13 +121,6 @@ public class ConfigBuilder {
         objectMap.put("chainModel", this.getStrategyConfig().isChainModel());
         objectMap.put("entityLombokModel", this.getStrategyConfig().isEntityLombokModel());
         objectMap.put("entityBooleanColumnRemoveIsPrefix", this.getStrategyConfig().isEntityBooleanColumnRemoveIsPrefix());
-        objectMap.put("superEntityClass", getSuperClassName(this.getSuperEntityClass()));
-        objectMap.put("superMapperClassPackage", this.getSuperMapperClass());
-        objectMap.put("superMapperClass", getSuperClassName(this.getSuperMapperClass()));
-        objectMap.put("superServiceClassPackage", this.getSuperServiceClass());
-        objectMap.put("superServiceClass", getSuperClassName(this.getSuperServiceClass()));
-        objectMap.put("superServiceImplClassPackage", this.getSuperServiceImplClass());
-        objectMap.put("superServiceImplClass", getSuperClassName(this.getSuperServiceImplClass()));
         return objectMap;
     }
 
@@ -245,8 +238,8 @@ public class ConfigBuilder {
                     Map<String, DependClass> dependClasses = new HashMap<>();
                     for (String key : template.getDependMap().keySet()) {
                         String referencePath = template.getDependMap().get(key);
-                        String packagePath = referencePath.substring(0, referencePath.lastIndexOf(".") - 1);
-                        String className = referencePath.substring(packagePath.length());
+                        String packagePath = referencePath.substring(0, referencePath.lastIndexOf("."));
+                        String className = referencePath.substring(packagePath.length() + 1);
                         dependClasses.put(key, new DependClass(packagePath, className, referencePath));
                     }
                     //合并外部依赖
