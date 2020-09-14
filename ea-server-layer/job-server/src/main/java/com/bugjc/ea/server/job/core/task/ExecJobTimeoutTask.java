@@ -2,7 +2,7 @@ package com.bugjc.ea.server.job.core.task;
 
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
+import com.bugjc.ea.opensdk.http.core.dto.CommonResultCode;
 import com.bugjc.ea.server.job.core.api.AccessPartyApiClient;
 import com.bugjc.ea.server.job.core.enums.business.JobStatus;
 import com.bugjc.ea.server.job.core.exception.BizException;
@@ -93,7 +93,7 @@ public class ExecJobTimeoutTask implements TimerTask {
         //执行任务
         Result result = accessPartyApiClient.doPost(job.getHttpCallbackInfo());
         //回调业务方的任务
-        if (result.getCode() != ResultCode.SUCCESS.getCode()){
+        if (result.getCode() != CommonResultCode.SUCCESS.getCode()){
             //注：如抛出异常则自动重试
             throw new BizException(RETRY_ERROR_MARK_CODE, JSON.toJSONString(result));
         }

@@ -1,15 +1,18 @@
-package ${package.packagePath};
+package ${template.packagePath};
 
 
+import com.bugjc.ea.opensdk.http.core.dto.Result;
+import ${template.dependClasses["business"].referencePath!};
+import ${template.dependClasses["model.api"].referencePath!};
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-<#if superControllerClassPackage??>
-    import ${superControllerClassPackage};
-</#if>
+import javax.annotation.Resource;
 
 /**
 * <p>
-    * ${table.comment!} 前端控制器
+    * ${table.comment!} API
     * </p>
 *
 * @author ${author}
@@ -17,27 +20,22 @@ import org.springframework.web.bind.annotation.RestController;
 */
 
 @RestController
-@RequestMapping("${package.className}")
-<#if superControllerClass??>
-    public class ${package.className} extends ${superControllerClass} {
-<#else>
-    public class ${package.className} {
-</#if>
+@RequestMapping("${template.className}")
+public class ${template.className} {
 
+    @Resource
+    private ${template.dependClasses["business"].className!} business;
 
-<#--    @Resource-->
-<#--    private UserArticleStarRepository business;-->
-
-<#--    /**-->
-<#--    * 创建文章 API-->
-<#--    *-->
-<#--    * @param param     --接口请求参数-->
-<#--    * @return          --Result.success()-->
-<#--    */-->
-<#--    @PostMapping("create")-->
-<#--    public Result create(@Validated UserArticleStarCreateApiParam param) {-->
-<#--    //business.create(param);-->
-<#--    return Result.success();-->
-<#--    }-->
+    /**
+    * 创建文章 API
+    *
+    * @param param     --接口请求参数
+    * @return          --Result.success()
+    */
+    @PostMapping("create")
+    public Result create(@Validated ${template.dependClasses["model.api"].className!} param) {
+        business.create(param);
+        return Result.success();
+    }
 
 }

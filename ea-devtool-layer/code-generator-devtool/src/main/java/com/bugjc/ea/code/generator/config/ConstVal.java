@@ -15,7 +15,7 @@
  */
 package com.bugjc.ea.code.generator.config;
 
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
+import com.bugjc.ea.code.generator.core.toolkit.StringPool;
 
 import java.nio.charset.StandardCharsets;
 
@@ -26,43 +26,15 @@ import java.nio.charset.StandardCharsets;
  * @since 2016-08-31
  */
 public interface ConstVal {
-
-    String MODULE_NAME = "ModuleName";
-
-    String ENTITY = "Entity";
-    String SERVICE = "Service";
-    String SERVICE_IMPL = "ServiceImpl";
-    String MAPPER = "Mapper";
-    String XML = "Xml";
-    String API = "Api";
-    String MODEL_CREATE_API = "ApiParam";
-
-    String ENTITY_PATH = "entity_path";
-    String SERVICE_PATH = "service_path";
-    String SERVICE_IMPL_PATH = "service_impl_path";
-    String MAPPER_PATH = "mapper_path";
-    String XML_PATH = "xml_path";
-    String API_PATH = "api_path";
-    //增加的内容
-    String MODEL_CREATE_API_PATH = "model_create_api_path";
-
     String JAVA_TMPDIR = "java.io.tmpdir";
     String UTF8 = StandardCharsets.UTF_8.name();
     String UNDERLINE = "_";
 
     String JAVA_SUFFIX = StringPool.DOT_JAVA;
-    String KT_SUFFIX = ".kt";
     String XML_SUFFIX = ".xml";
+    String XML_FREEMARKER_SUFFIX = "xml.ftl";
 
-    String TEMPLATE_ENTITY_JAVA = "/templates/entity/Entity.java";
-    String TEMPLATE_MAPPER = "/templates/dao/dao.java";
-    String TEMPLATE_XML = "/templates/dao/dao.xml";
-    String TEMPLATE_SERVICE = "/templates/business/business.java";
-    String TEMPLATE_SERVICE_IMPL = "/templates/business/businessImpl.java";
-    String TEMPLATE_API = "/templates/api/Api.java";
-    String TEMPLATE_MODEL_CREATE_API = "/templates/api/CreateApiParam.java";
-
-    String SUPER_MAPPER_CLASS = "com.baomidou.mybatisplus.core.mapper.BaseMapper";
+    //String SUPER_MAPPER_CLASS = "com.baomidou.mybatisplus.core.mapper.BaseMapper";
     String SUPER_SERVICE_CLASS = "com.baomidou.mybatisplus.extension.service.IService";
     String SUPER_SERVICE_IMPL_CLASS = "com.baomidou.mybatisplus.extension.service.impl.ServiceImpl";
 

@@ -5,7 +5,7 @@ import com.bugjc.ea.gateway.zuul.core.constants.ApiGatewayKeyConstants;
 import com.bugjc.ea.gateway.zuul.core.dto.ApiGatewayServerResultCode;
 import com.bugjc.ea.gateway.zuul.core.util.FilterChainReturnResultUtil;
 import com.bugjc.ea.opensdk.http.core.constants.HttpHeaderKeyConstants;
-import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
+import com.bugjc.ea.opensdk.http.core.dto.CommonResultCode;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import lombok.extern.slf4j.Slf4j;
@@ -60,7 +60,7 @@ public class RouteErrorFilter extends SendErrorFilter {
                 ribbonComponent.markServerDown(appId, uri, url);
             }
 
-            FilterChainReturnResultUtil.genErrorResult(ctx, ResultCode.INTERNAL_SERVER_ERROR.getCode(), ctx.getThrowable().getMessage());
+            FilterChainReturnResultUtil.genErrorResult(ctx, CommonResultCode.INTERNAL_SERVER_ERROR.getCode(), ctx.getThrowable().getMessage());
             return null;
         }catch (Exception ex) {
             FilterChainReturnResultUtil.genErrorResult(ctx, ApiGatewayServerResultCode.ROUTE_FAILURE.getCode(), ApiGatewayServerResultCode.ROUTE_FAILURE.getMessage()+":"+ex.getMessage());

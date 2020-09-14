@@ -2,8 +2,7 @@ package springboot.maven.template.core.task;
 
 import com.alibaba.fastjson.JSONObject;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.dto.CommonResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.retry.annotation.Backoff;
@@ -41,8 +40,8 @@ public class RetryComponent {
         //注：如抛出异常则自动重试
         //1.余额支付
         //Result result = openGatewayApiClient.getUserHttpService().balancePay(JobPathInfo.BALANCE_PAY_V1,userId,amt);
-        Result result = ResultGenerator.genSuccessResult();
-        if (result.getCode() != ResultCode.SUCCESS.getCode()){
+        Result result = Result.success();
+        if (result.getCode() != CommonResultCode.SUCCESS.getCode()){
             log.info("系统运行时异常，无需处理，快速失败。");
             return ;
         }

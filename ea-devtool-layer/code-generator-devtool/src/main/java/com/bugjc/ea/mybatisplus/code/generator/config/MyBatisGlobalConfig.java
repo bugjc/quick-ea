@@ -1,8 +1,7 @@
 package com.bugjc.ea.mybatisplus.code.generator.config;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.bugjc.ea.code.generator.config.GlobalConfig;
-import com.bugjc.ea.code.generator.config.rules.DateType;
+import com.bugjc.ea.code.generator.core.db.rules.DateType;
 import com.bugjc.flink.config.annotation.ConfigurationProperties;
 import lombok.Data;
 
@@ -50,8 +49,6 @@ public class MyBatisGlobalConfig implements Serializable {
                 .setOutputDir(outputDir)
                 .setFileOverride(fileOverride)
                 .setOpen(open)
-                .setDateType(dateType)
-                // 主键类型
-                .setIdType(IdType.ASSIGN_ID);
+                .setDateType(dateType);
     }
 }

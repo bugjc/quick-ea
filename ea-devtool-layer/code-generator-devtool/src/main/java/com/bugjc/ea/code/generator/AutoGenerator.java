@@ -15,39 +15,29 @@
  */
 package com.bugjc.ea.code.generator;
 
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.annotation.Version;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.bugjc.ea.code.generator.config.DataSourceConfig;
 import com.bugjc.ea.code.generator.config.GlobalConfig;
-import com.bugjc.ea.code.generator.config.PackageConfig;
 import com.bugjc.ea.code.generator.config.StrategyConfig;
+import com.bugjc.ea.code.generator.config.TemplateConfig;
 import com.bugjc.ea.code.generator.config.builder.ConfigBuilder;
-import com.bugjc.ea.code.generator.config.po.TableField;
-import com.bugjc.ea.code.generator.config.po.TableInfo;
-import com.bugjc.ea.code.generator.engine.AbstractTemplateEngine;
-import com.bugjc.ea.code.generator.engine.FreemarkerTemplateEngine;
-import lombok.AccessLevel;
+import com.bugjc.ea.code.generator.core.engine.AbstractTemplateEngine;
+import com.bugjc.ea.code.generator.core.engine.FreemarkerTemplateEngine;
+import com.bugjc.ea.code.generator.core.toolkit.StringUtils;
+import com.bugjc.ea.code.generator.model.TableField;
+import com.bugjc.ea.code.generator.model.TableInfo;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * 生成文件
- *
- * @author YangHu, tangguo, hubin
- * @since 2016-08-30
- */
+ * @author aoki
+ * @date 2020/9/11
+ * **/
 @Data
 @Accessors(chain = true)
 public class AutoGenerator {
@@ -57,12 +47,6 @@ public class AutoGenerator {
      * 配置信息
      */
     protected ConfigBuilder config;
-    /**
-     * 注入配置
-     */
-    @Getter(AccessLevel.NONE)
-    @Setter(AccessLevel.NONE)
-    protected InjectionConfig injectionConfig;
     /**
      * 数据源配置
      */
@@ -74,7 +58,7 @@ public class AutoGenerator {
     /**
      * 包 相关配置
      */
-    private PackageConfig packageInfo;
+    private TemplateConfig templateConfig;
 
     /**
      * 全局 相关配置
@@ -91,14 +75,7 @@ public class AutoGenerator {
     public void execute() {
         logger.debug("==========================准备生成文件...==========================");
         // 初始化配置
-
-        if (null == config) {
-            config = new ConfigBuilder(packageInfo, dataSource, strategy, globalConfig);
-            if (null != injectionConfig) {
-                injectionConfig.setConfig(config);
-            }
-        }
-
+        config = new ConfigBuilder(templateConfig, dataSource, strategy, globalConfig);
         // 模板引擎初始化执行文件输出
         templateEngine = new FreemarkerTemplateEngine();
         templateEngine.init(this.pretreatmentConfigBuilder(config)).mkdirs().batchOutput().open();
@@ -123,65 +100,24 @@ public class AutoGenerator {
      */
     private ConfigBuilder pretreatmentConfigBuilder(ConfigBuilder config) {
         /*
-         * 注入自定义配置
-         */
-        if (null != injectionConfig) {
-            injectionConfig.initMap();
-            config.setInjectionConfig(injectionConfig);
-        }
-        /*
          * 表信息列表
          */
         List<TableInfo> tableList = this.getAllTableInfoList(config);
         for (TableInfo tableInfo : tableList) {
-            /* ---------- 添加导入包 ---------- */
-            if (tableInfo.isConvert()) {
-                // 表注解
-                tableInfo.setImportPackages(TableName.class.getCanonicalName());
-            }
-            if (config.getStrategyConfig().getLogicDeleteFieldName() != null && tableInfo.isLogicDelete(config.getStrategyConfig().getLogicDeleteFieldName())) {
-                // 逻辑删除注解
-                tableInfo.setImportPackages(TableLogic.class.getCanonicalName());
-            }
-            if (StringUtils.isNotBlank(config.getStrategyConfig().getVersionFieldName())) {
-                // 乐观锁注解
-                tableInfo.setImportPackages(Version.class.getCanonicalName());
-            }
-            boolean importSerializable = true;
-            if (StringUtils.isNotBlank(config.getSuperEntityClass())) {
-                // 父实体
-                tableInfo.setImportPackages(config.getSuperEntityClass());
-                importSerializable = false;
-            }
-            if (importSerializable) {
-                tableInfo.setImportPackages(Serializable.class.getCanonicalName());
-            }
+            //TODO 自定义添加导入包
+
             // Boolean类型is前缀处理
             if (config.getStrategyConfig().isEntityBooleanColumnRemoveIsPrefix()
-                    && CollectionUtils.isNotEmpty(tableInfo.getFields())) {
+                    && tableInfo.getFields() != null
+                    && !tableInfo.getFields().isEmpty()) {
                 List<TableField> tableFields = tableInfo.getFields().stream().filter(field -> "boolean".equalsIgnoreCase(field.getPropertyType()))
                         .filter(field -> field.getPropertyName().startsWith("is")).collect(Collectors.toList());
                 tableFields.forEach(field -> {
-                    //主键为is的情况基本上是不存在的.
-                    if (field.isKeyFlag()) {
-                        tableInfo.setImportPackages(TableId.class.getCanonicalName());
-                    } else {
-                        tableInfo.setImportPackages(com.baomidou.mybatisplus.annotation.TableField.class.getCanonicalName());
-                    }
                     field.setConvert(true);
                     field.setPropertyName(StringUtils.removePrefixAfterPrefixToLower(field.getPropertyName(), 2));
                 });
             }
         }
         return config.setTableInfoList(tableList);
-    }
-
-    public InjectionConfig getCfg() {
-        return injectionConfig;
-    }
-
-    public AutoGenerator setCfg(InjectionConfig injectionConfig) {
-        this.injectionConfig = injectionConfig;
-        return this;
     }
 }

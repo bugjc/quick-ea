@@ -3,7 +3,6 @@ package com.bugjc.ea.server.job.web;
 import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import com.bugjc.ea.server.job.service.JobService;
 import com.bugjc.ea.server.job.web.io.job.*;
 import lombok.extern.slf4j.Slf4j;
@@ -41,21 +40,22 @@ public class JobController {
      * @return
      */
     @PostMapping("/create")
-    public Result create(@Validated @RequestBody CreateBody.RequestBody requestBody) {
+    public Result<CreateBody.ResponseBody> create(@Validated @RequestBody CreateBody.RequestBody requestBody) {
         log.info("接收到创建任务请求参数：{}", JSON.toJSONString(requestBody));
-        return ResultGenerator.genSuccessResult(jobService.createJob(requestBody));
+        return Result.success(jobService.createJob(requestBody));
     }
 
 
     /**
      * 分页列表接口
+     *
      * @param requestBody
      * @return
      */
     @PostMapping("/list")
-    public Result list(@Validated @RequestBody ListBody.RequestBody requestBody) {
+    public Result<ListBody.ResponseBody> list(@Validated @RequestBody ListBody.RequestBody requestBody) {
         log.info("接收到查询分页列表请求参数: {}", JSON.toJSONString(requestBody));
-        return ResultGenerator.genSuccessResult(jobService.findJobPage(requestBody));
+        return Result.success(jobService.findJobPage(requestBody));
     }
 
     /**
@@ -65,9 +65,9 @@ public class JobController {
      * @return
      */
     @PostMapping("/del")
-    public Result del(@Validated @RequestBody DelBody.RequestBody requestBody) {
+    public Result<DelBody.ResponseBody> del(@Validated @RequestBody DelBody.RequestBody requestBody) {
         log.info("接收到删除任务请求参数：{}", JSON.toJSONString(requestBody));
-        return ResultGenerator.genSuccessResult(jobService.delJob(requestBody));
+        return Result.success(jobService.delJob(requestBody));
     }
 
     /**
@@ -77,9 +77,9 @@ public class JobController {
      * @return
      */
     @PostMapping("/upd")
-    public Result upd(@Validated @RequestBody UpdBody.RequestBody requestBody) {
+    public Result<UpdBody.ResponseBody> upd(@Validated @RequestBody UpdBody.RequestBody requestBody) {
         log.info("接收到修改任务请求参数：{}", JSON.toJSONString(requestBody));
-        return ResultGenerator.genSuccessResult(jobService.updJob(requestBody));
+        return Result.success(jobService.updJob(requestBody));
     }
 
 
@@ -90,9 +90,9 @@ public class JobController {
      * @return
      */
     @PostMapping("/find")
-    public Result find(@Validated @RequestBody FindBody.RequestBody requestBody) {
+    public Result<FindBody.ResponseBody> find(@Validated @RequestBody FindBody.RequestBody requestBody) {
         log.info("接收到获取任务信息请求参数：{}", JSON.toJSONString(requestBody));
-        return ResultGenerator.genSuccessResult(jobService.findJob(requestBody));
+        return Result.success(jobService.findJob(requestBody));
     }
 
     /**
@@ -101,8 +101,8 @@ public class JobController {
      * @return
      */
     @PostMapping("/status/list")
-    public Result statusList() {
-        return ResultGenerator.genSuccessResult(new StatusListBody.ResponseBody());
+    public Result<StatusListBody.ResponseBody> statusList() {
+        return Result.success(new StatusListBody.ResponseBody());
     }
 
 

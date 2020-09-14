@@ -2,7 +2,7 @@ package com.bugjc.ea.gateway.zuul.core.fallback;
 
 import com.bugjc.ea.gateway.zuul.core.dto.ApiGatewayServerResultCode;
 import com.bugjc.ea.opensdk.http.core.constants.HttpHeaderKeyConstants;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.dto.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.netflix.zuul.filters.route.FallbackProvider;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +34,7 @@ public class AuthServerFallback implements FallbackProvider {
     public ClientHttpResponse fallbackResponse(String route, Throwable cause) {
 
         //失败应答消息
-        String failureResponseMessage = ResultGenerator.genFailResult(ApiGatewayServerResultCode.BUSINESS_SERVICE_UNAVAILABLE.getCode(),ApiGatewayServerResultCode.BUSINESS_SERVICE_UNAVAILABLE.getMessage()).toString();
+        String failureResponseMessage = Result.failure(ApiGatewayServerResultCode.BUSINESS_SERVICE_UNAVAILABLE).toString();
         return new ClientHttpResponse(){
 
             @NotNull

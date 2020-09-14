@@ -1,31 +1,15 @@
-/*
- * Copyright (c) 2011-2020, baomidou (jobob@qq.com).
- * <p>
- * Licensed under the Apache License, Version 2.0 (the "License"); you may not
- * use this file except in compliance with the License. You may obtain a copy of
- * the License at
- * <p>
- * https://www.apache.org/licenses/LICENSE-2.0
- * <p>
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations under
- * the License.
- */
+
 package com.bugjc.ea.code.generator.config.builder;
 
-import com.baomidou.mybatisplus.annotation.DbType;
-import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringPool;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.bugjc.ea.code.generator.InjectionConfig;
+import cn.hutool.core.bean.BeanUtil;
 import com.bugjc.ea.code.generator.config.*;
-import com.bugjc.ea.code.generator.config.po.*;
-import com.bugjc.ea.code.generator.config.querys.H2Query;
-import com.bugjc.ea.code.generator.config.rules.NamingStrategy;
-import org.springframework.beans.BeanUtils;
+import com.bugjc.ea.code.generator.model.*;
+import com.bugjc.ea.code.generator.core.db.querys.H2Query;
+import com.bugjc.ea.code.generator.core.db.rules.NamingStrategy;
+import com.bugjc.ea.code.generator.core.annotation.DbType;
+import com.bugjc.ea.code.generator.core.toolkit.ArrayUtils;
+import com.bugjc.ea.code.generator.core.toolkit.StringPool;
+import com.bugjc.ea.code.generator.core.toolkit.StringUtils;
 
 import java.io.File;
 import java.sql.Connection;
@@ -53,25 +37,15 @@ public class ConfigBuilder {
      * SQL连接
      */
     private Connection connection;
-    /**
-     * SQL语句类型
-     */
-    private String superEntityClass;
-    private String superMapperClass;
-    /**
-     * service超类定义
-     */
-    private String superServiceClass;
-    private String superServiceImplClass;
-    private String superControllerClass;
+
     /**
      * 数据库表信息
      */
     private List<TableInfo> tableInfoList;
     /**
-     * 包配置详情
+     * 模板配置详情
      */
-    private List<PackageInfo> packageInfoList;
+    private List<Template> templateList;
 
     /**
      * 策略配置
@@ -84,11 +58,7 @@ public class ConfigBuilder {
     /**
      * 包配置
      */
-    private PackageConfig packageConfig;
-    /**
-     * 注入配置信息
-     */
-    private InjectionConfig injectionConfig;
+    private TemplateConfig templateConfig;
 
     /**
      * 过滤正则
@@ -98,12 +68,12 @@ public class ConfigBuilder {
     /**
      * 在构造器中处理配置
      *
-     * @param packageConfig    包配置
+     * @param templateConfig   包配置
      * @param dataSourceConfig 数据源配置
      * @param strategyConfig   表配置
      * @param globalConfig     全局配置
      */
-    public ConfigBuilder(PackageConfig packageConfig, DataSourceConfig dataSourceConfig, StrategyConfig strategyConfig,
+    public ConfigBuilder(TemplateConfig templateConfig, DataSourceConfig dataSourceConfig, StrategyConfig strategyConfig,
                          GlobalConfig globalConfig) {
         // 全局配置
         this.globalConfig = Optional.ofNullable(globalConfig).orElseGet(GlobalConfig::new);
@@ -114,8 +84,9 @@ public class ConfigBuilder {
         this.strategyConfig = Optional.ofNullable(strategyConfig).orElseGet(StrategyConfig::new);
         handlerStrategy(this.strategyConfig);
         // 包配置
-        this.packageConfig = packageConfig;
-        handlerPackage();
+        this.templateConfig = templateConfig;
+        //处理模板
+        handlerTemplate();
     }
 
     /**
@@ -124,13 +95,12 @@ public class ConfigBuilder {
      * @param tableInfo 表信息对象
      * @return ignore
      */
-    private Map<String, Object> getObjectMap(PackageInfo packageInfo, TableInfo tableInfo) {
+    private Map<String, Object> getObjectMap(Template template, TableInfo tableInfo) {
         Map<String, Object> objectMap = new HashMap<>();
-        objectMap.put("config", this);
-        objectMap.put("package", packageInfo);
-        GlobalConfig globalConfig = this.getGlobalConfig();
-        objectMap.put("author", globalConfig.getAuthor());
-        objectMap.put("idType", globalConfig.getIdType() == null ? null : globalConfig.getIdType().toString());
+        objectMap.put("template", template);
+        objectMap.put("author", this.getGlobalConfig().getAuthor());
+        //TODO ID Type
+        objectMap.put("idType", null);
         objectMap.put("logicDeleteFieldName", this.getStrategyConfig().getLogicDeleteFieldName());
         objectMap.put("versionFieldName", this.getStrategyConfig().getVersionFieldName());
         objectMap.put("date", new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
@@ -141,39 +111,7 @@ public class ConfigBuilder {
         objectMap.put("chainModel", this.getStrategyConfig().isChainModel());
         objectMap.put("entityLombokModel", this.getStrategyConfig().isEntityLombokModel());
         objectMap.put("entityBooleanColumnRemoveIsPrefix", this.getStrategyConfig().isEntityBooleanColumnRemoveIsPrefix());
-        objectMap.put("superEntityClass", getSuperClassName(this.getSuperEntityClass()));
-        objectMap.put("superMapperClassPackage", this.getSuperMapperClass());
-        objectMap.put("superMapperClass", getSuperClassName(this.getSuperMapperClass()));
-        objectMap.put("superServiceClassPackage", this.getSuperServiceClass());
-        objectMap.put("superServiceClass", getSuperClassName(this.getSuperServiceClass()));
-        objectMap.put("superServiceImplClassPackage", this.getSuperServiceImplClass());
-        objectMap.put("superServiceImplClass", getSuperClassName(this.getSuperServiceImplClass()));
-        objectMap.put("superControllerClassPackage", verifyClassPacket(this.getSuperControllerClass()));
-        objectMap.put("superControllerClass", getSuperClassName(this.getSuperControllerClass()));
-        return Objects.isNull(this.getInjectionConfig()) ? objectMap : this.getInjectionConfig().prepareObjectMap(objectMap);
-    }
-
-    /**
-     * 获取类名
-     *
-     * @param classPath ignore
-     * @return ignore
-     */
-    private String getSuperClassName(String classPath) {
-        if (StringUtils.isBlank(classPath)) {
-            return null;
-        }
-        return classPath.substring(classPath.lastIndexOf(StringPool.DOT) + 1);
-    }
-
-    /**
-     * 用于渲染对象MAP信息 {@link #getObjectMap(PackageInfo, TableInfo)} 时的superClassPacket非空校验
-     *
-     * @param classPacket ignore
-     * @return ignore
-     */
-    private String verifyClassPacket(String classPacket) {
-        return StringUtils.isBlank(classPacket) ? null : classPacket;
+        return objectMap;
     }
 
     // ************************ 曝露方法 BEGIN*****************************
@@ -184,39 +122,9 @@ public class ConfigBuilder {
      *
      * @return 包配置
      */
-    public List<PackageInfo> getPackageInfoList() {
-        return packageInfoList;
+    public List<Template> getTemplateList() {
+        return templateList;
     }
-
-    public String getSuperEntityClass() {
-        return superEntityClass;
-    }
-
-
-    public String getSuperMapperClass() {
-        return superMapperClass;
-    }
-
-
-    /**
-     * 获取超类定义
-     *
-     * @return 完整超类名称
-     */
-    public String getSuperServiceClass() {
-        return superServiceClass;
-    }
-
-
-    public String getSuperServiceImplClass() {
-        return superServiceImplClass;
-    }
-
-
-    public String getSuperControllerClass() {
-        return superControllerClass;
-    }
-
 
     /**
      * 表信息
@@ -235,63 +143,70 @@ public class ConfigBuilder {
     // ****************************** 曝露方法 END**********************************
 
     /**
-     * 处理包配置
+     * 处理模板配置
      */
-    private void handlerPackage() {
+    private void handlerTemplate() {
         String outputDir = this.globalConfig.getOutputDir();
         List<TableInfo> tableInfos = getTableInfoList();
-        packageInfoList = new ArrayList<>();
+        templateList = new ArrayList<>();
         for (TableInfo tableInfo : tableInfos) {
             //处理参数
-            List<PackageInfo> middlePackageInfos = new ArrayList<>();
-            for (PackageInfo packageInfo : packageConfig.getPackageInfos()) {
-                PackageInfo newPackageInfo = new PackageInfo();
-                BeanUtils.copyProperties(packageInfo, newPackageInfo);
+            List<Template> middlePackageInfos = new ArrayList<>();
+            for (Template template : templateConfig.getTemplates()) {
+                Template newTemplate = new Template();
+                BeanUtil.copyProperties(template, newTemplate);
 
-                String path = joinPackage(packageInfo.getParent(), packageInfo.getPackageName());
-                newPackageInfo.setPackagePath(path);
+                String path = joinPackage(template.getParent(), template.getPackageName());
+                newTemplate.setPackagePath(path);
 
                 String absolutePath = joinPath(outputDir, path);
-                newPackageInfo.setAbsolutePath(absolutePath);
+                newTemplate.setAbsolutePath(absolutePath);
 
                 String fileSuffix = ConstVal.JAVA_SUFFIX;
-                if (newPackageInfo.getTemplatePath().endsWith("xml.ftl")) {
+                if (newTemplate.getTemplatePath().endsWith(ConstVal.XML_FREEMARKER_SUFFIX)) {
                     fileSuffix = ConstVal.XML_SUFFIX;
                 }
-                String filePath = newPackageInfo.getAbsolutePath() + File.separator + String.format(newPackageInfo.getFileNamingConvention(), tableInfo.getClassName()) + fileSuffix;
-                newPackageInfo.setFilePath(filePath);
+                String filePath = newTemplate.getAbsolutePath() + File.separator + String.format(newTemplate.getFileNamingConvention(), tableInfo.getClassName()) + fileSuffix;
+                newTemplate.setFilePath(filePath);
 
                 String entityName = NamingStrategy.capitalFirst(processName(tableInfo.getName(), strategyConfig.getNaming(), strategyConfig.getTablePrefix()));
-                String className = String.format(packageInfo.getFileNamingConvention(), entityName);
-                newPackageInfo.setClassName(className);
+                String className = String.format(template.getFileNamingConvention(), entityName);
+                newTemplate.setClassName(className);
 
-                String referencePath = newPackageInfo.getPackagePath() + "." + className;
-                newPackageInfo.setReferencePath(referencePath);
+                String referencePath = newTemplate.getPackagePath() + "." + className;
+                newTemplate.setReferencePath(referencePath);
 
-                middlePackageInfos.add(newPackageInfo);
+                middlePackageInfos.add(newTemplate);
             }
 
             //处理依赖参数
-            List<PackageInfo> finalPackageInfos = new ArrayList<>();
-            Map<String, DependClass> packageReferenceMap = middlePackageInfos.stream().collect(Collectors.toMap(PackageInfo::getPackageName, packageInfo -> new DependClass(packageInfo.getPackagePath(), packageInfo.getClassName(), packageInfo.getReferencePath())));
-            for (PackageInfo packageInfo : middlePackageInfos) {
-                PackageInfo newPackageInfo = new PackageInfo();
-                BeanUtils.copyProperties(packageInfo, newPackageInfo);
-
-                if (packageInfo.getDependPackageNames() != null && packageInfo.getDependPackageNames().length > 0) {
+            List<Template> finalTemplateList = new ArrayList<>();
+            Map<String, DependClass> dependMap = middlePackageInfos.stream().collect(Collectors.toMap(Template::getPackageName, packageInfo -> new DependClass(packageInfo.getPackagePath(), packageInfo.getClassName(), packageInfo.getReferencePath())));
+            for (Template template : middlePackageInfos) {
+                Template newTemplate = new Template();
+                BeanUtil.copyProperties(template, newTemplate);
+                //处理外部依赖
+                if (template.getDependMap() != null && template.getDependMap().size() > 0) {
                     Map<String, DependClass> dependClasses = new HashMap<>();
-                    for (String dependPackage : packageInfo.getDependPackageNames()) {
-                        dependClasses.put(dependPackage, packageReferenceMap.get(dependPackage));
+                    for (String key : template.getDependMap().keySet()) {
+                        String referencePath = template.getDependMap().get(key);
+                        String packagePath = referencePath.substring(0, referencePath.lastIndexOf("."));
+                        String className = referencePath.substring(packagePath.length() + 1);
+                        dependClasses.put(key, new DependClass(packagePath, className, referencePath));
                     }
-                    //添加依赖类
-                    newPackageInfo.setDependClasses(dependClasses);
+                    //TODO KEY 冲突检测
+                    //合并外部依赖
+                    dependMap.putAll(dependClasses);
                 }
+                //默认全依赖，即当前上下文生成的依赖文件均可应用
+
+                newTemplate.setDependClasses(dependMap);
 
                 //添加模板数据
-                newPackageInfo.setTemplateData(getObjectMap(newPackageInfo, tableInfo));
-                finalPackageInfos.add(newPackageInfo);
+                newTemplate.setTemplateData(getObjectMap(newTemplate, tableInfo));
+                finalTemplateList.add(newTemplate);
             }
-            packageInfoList.addAll(finalPackageInfos);
+            templateList.addAll(finalTemplateList);
         }
 
 
@@ -314,26 +229,7 @@ public class ConfigBuilder {
      * @param config StrategyConfig
      */
     private void handlerStrategy(StrategyConfig config) {
-        processTypes(config);
         tableInfoList = getTablesInfo(config);
-    }
-
-
-    /**
-     * 处理superClassName,IdClassType,IdStrategy配置
-     *
-     * @param config 策略配置
-     */
-    private void processTypes(StrategyConfig config) {
-        this.superServiceClass = getValueOrDefault(config.getSuperServiceClass(), ConstVal.SUPER_SERVICE_CLASS);
-        this.superServiceImplClass = getValueOrDefault(config.getSuperServiceImplClass(), ConstVal.SUPER_SERVICE_IMPL_CLASS);
-        this.superMapperClass = getValueOrDefault(config.getSuperMapperClass(), ConstVal.SUPER_MAPPER_CLASS);
-        superEntityClass = config.getSuperEntityClass();
-        superControllerClass = config.getSuperControllerClass();
-    }
-
-    private static String getValueOrDefault(String value, String defaultValue) {
-        return StringUtils.isBlank(value) ? defaultValue : value;
     }
 
     /**
@@ -357,36 +253,8 @@ public class ConfigBuilder {
 
             //增加表类名
             tableInfo.setClassName(entityName);
-            // 检测导入包
-            checkImportPackages(tableInfo);
         }
         return tableList;
-    }
-
-    /**
-     * 检测导入包
-     *
-     * @param tableInfo ignore
-     */
-    private void checkImportPackages(TableInfo tableInfo) {
-        if (StringUtils.isNotBlank(strategyConfig.getSuperEntityClass())) {
-            // 自定义父类
-            tableInfo.getImportPackages().add(strategyConfig.getSuperEntityClass());
-        }
-
-        if (null != globalConfig.getIdType() && tableInfo.isHavePrimaryKey()) {
-            // 指定需要 IdType 场景
-            tableInfo.getImportPackages().add(com.baomidou.mybatisplus.annotation.IdType.class.getCanonicalName());
-            tableInfo.getImportPackages().add(com.baomidou.mybatisplus.annotation.TableId.class.getCanonicalName());
-        }
-        if (StringUtils.isNotBlank(strategyConfig.getVersionFieldName())
-                && CollectionUtils.isNotEmpty(tableInfo.getFields())) {
-            tableInfo.getFields().forEach(f -> {
-                if (strategyConfig.getVersionFieldName().equals(f.getName())) {
-                    tableInfo.getImportPackages().add(com.baomidou.mybatisplus.annotation.Version.class.getCanonicalName());
-                }
-            });
-        }
     }
 
 
@@ -465,6 +333,7 @@ public class ConfigBuilder {
                             .append(Arrays.stream(config.getExclude()).map(tb -> "'" + tb + "'").collect(Collectors.joining(","))).append(")");
                 }
             }
+
             TableInfo tableInfo;
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
                  ResultSet results = preparedStatement.executeQuery()) {
@@ -626,7 +495,7 @@ public class ConfigBuilder {
                     // 自定义字段查询
                     String[] fcs = dbQuery.fieldCustom();
                     if (null != fcs) {
-                        Map<String, Object> customMap = CollectionUtils.newHashMapWithExpectedSize(fcs.length);
+                        Map<String, Object> customMap = new HashMap<>();
                         for (String fc : fcs) {
                             customMap.put(fc, results.getObject(fc));
                         }
@@ -754,31 +623,10 @@ public class ConfigBuilder {
     }
 
 
-    public ConfigBuilder setStrategyConfig(StrategyConfig strategyConfig) {
-        this.strategyConfig = strategyConfig;
-        return this;
-    }
-
-
     public GlobalConfig getGlobalConfig() {
         return globalConfig;
     }
 
-
-    public ConfigBuilder setGlobalConfig(GlobalConfig globalConfig) {
-        this.globalConfig = globalConfig;
-        return this;
-    }
-
-
-    public InjectionConfig getInjectionConfig() {
-        return injectionConfig;
-    }
-
-
-    public void setInjectionConfig(InjectionConfig injectionConfig) {
-        this.injectionConfig = injectionConfig;
-    }
 
     /**
      * 格式化数据库注释内容
@@ -787,7 +635,7 @@ public class ConfigBuilder {
      * @return 注释
      * @since 3.4.0
      */
-    public String formatComment(String comment) {
+    private String formatComment(String comment) {
         return StringUtils.isBlank(comment) ? StringPool.EMPTY : comment.replaceAll("\r\n", "\t");
     }
 

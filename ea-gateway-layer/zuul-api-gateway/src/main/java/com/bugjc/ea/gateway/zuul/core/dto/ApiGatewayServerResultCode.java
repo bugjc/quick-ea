@@ -1,10 +1,12 @@
 package com.bugjc.ea.gateway.zuul.core.dto;
 
+import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
+
 /**
  * 响应码枚举，参考HTTP状态码的语义（网关状态码）
  * @author : aoki
  */
-public  enum ApiGatewayServerResultCode {
+public enum ApiGatewayServerResultCode implements ResultCode {
     //业务服务不可用
     BUSINESS_SERVICE_UNAVAILABLE(1020,"业务服务不可用"),
     //路由失败
@@ -38,10 +40,12 @@ public  enum ApiGatewayServerResultCode {
         this.message = message;
     }
 
+    @Override
     public int getCode() {
         return code;
     }
 
+    @Override
     public String getMessage(){
         return message;
     }

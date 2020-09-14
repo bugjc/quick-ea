@@ -29,12 +29,6 @@
     </profiles>
 
     <properties>
-        <spring-boot-starter-web.version>2.3.0.RELEASE</spring-boot-starter-web.version>
-        <spring-boot-starter-undertow.version>2.3.0.RELEASE</spring-boot-starter-undertow.version>
-        <spring-boot-starter-aop.version>2.3.0.RELEASE</spring-boot-starter-aop.version>
-        <spring-boot-starter-jdbc.version>2.3.0.RELEASE</spring-boot-starter-jdbc.version>
-        <spring-boot-starter-test.version>2.3.0.RELEASE</spring-boot-starter-test.version>
-        <spring-boot-starter-validation.version>2.3.0.RELEASE</spring-boot-starter-validation.version>
         <flink-config.version>1.11.0</flink-config.version>
         <mybatis-plus.version>3.4.0</mybatis-plus.version>
         <mysql5.version>5.1.47</mysql5.version>
@@ -45,6 +39,7 @@
         <velocity.version>2.2</velocity.version>
         <freemarker.version>2.3.30</freemarker.version>
         <beetl.version>3.1.6.RELEASE</beetl.version>
+        <hutool-all.version>5.4.1</hutool-all.version>
     </properties>
 
     <dependencies>
@@ -55,17 +50,6 @@
             <version>${flink-config.version}</version>
         </dependency>
 
-        <!-- mybatis-plus(mybatis) -->
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-core</artifactId>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-extension</artifactId>
-            <version>${mybatis-plus.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>
             <artifactId>freemarker</artifactId>
@@ -97,35 +81,13 @@
             <version>${slf4j.version}</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/cn.hutool/hutool-all -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-            <version>${spring-boot-starter-web.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.logging.log4j</groupId>
-                    <artifactId>log4j-to-slf4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-tomcat</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool-all.version}</version>
         </dependency>
 
-        <!-- 添加 Undertow依赖 -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-undertow</artifactId>
-            <version>${spring-boot-starter-undertow.version}</version>
-        </dependency>
-
-        <!--validation-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-            <version>${spring-boot-starter-validation.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>junit</groupId>

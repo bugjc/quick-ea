@@ -1,8 +1,7 @@
 package com.bugjc.ea.auth.web;
 
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
+import com.bugjc.ea.opensdk.http.core.dto.CommonResultCode;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,7 +23,6 @@ public class ErrorHandlerController implements ErrorController {
 
     @RequestMapping("/error")
     public Result error(HttpServletRequest request) {
-        String message = "服务器内部错误。";
-        return ResultGenerator.genFailResult(ResultCode.INTERNAL_SERVER_ERROR.getCode(),message);
+        return Result.failure(CommonResultCode.INTERNAL_SERVER_ERROR);
     }
 }

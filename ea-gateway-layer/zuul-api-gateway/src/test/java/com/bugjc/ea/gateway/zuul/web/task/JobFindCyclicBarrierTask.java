@@ -5,7 +5,7 @@ import com.bugjc.ea.gateway.zuul.env.EnvUtil;
 import com.bugjc.ea.gateway.zuul.util.HttpUtil;
 import com.bugjc.ea.opensdk.http.api.JobPathInfo;
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultCode;
+import com.bugjc.ea.opensdk.http.core.dto.CommonResultCode;
 import com.bugjc.ea.opensdk.http.model.job.FindBody;
 import com.bugjc.ea.opensdk.test.service.CyclicBarrierTask;
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +31,7 @@ public class JobFindCyclicBarrierTask implements CyclicBarrierTask {
             return result.getCode();
         }catch (Exception ex){
             log.info("调用接口返回的错误信息：{}",ex.getMessage());
-            return ResultCode.INTERNAL_SERVER_ERROR.getCode();
+            return CommonResultCode.INTERNAL_SERVER_ERROR.getCode();
         }
 
     }

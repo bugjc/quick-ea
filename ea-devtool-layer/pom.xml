@@ -15,6 +15,7 @@
         <module>flyway-devtool</module>
         <module>mybatis-generator-devtool</module>
         <module>code-generator-devtool</module>
+        <module>mybatis-plus-demo</module>
     </modules>
 
 </project>

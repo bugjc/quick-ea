@@ -1,7 +1,6 @@
 package com.bugjc.ea.gateway.zuul.web;
 
 import com.bugjc.ea.opensdk.http.core.dto.Result;
-import com.bugjc.ea.opensdk.http.core.dto.ResultGenerator;
 import com.netflix.zuul.exception.ZuulException;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +29,6 @@ public class ErrorHandlerController implements ErrorController {
         if (exception instanceof ZuulException) {
             message = exception.getMessage();
         }
-        return ResultGenerator.genFailResult(code, message);
+        return Result.failure(code, message);
     }
 }

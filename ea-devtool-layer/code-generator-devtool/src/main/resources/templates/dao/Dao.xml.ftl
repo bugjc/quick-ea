@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="${package.dependClasses["dao"].referencePath!}">
+<mapper namespace="${template.dependClasses["dao"].referencePath!}">
 
     <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="${package.dependClasses["model.entity"].referencePath!}">
+    <resultMap id="BaseResultMap" type="${template.dependClasses["model.entity"].referencePath!}">
         <#list table.fields as field>
             <#if field.keyFlag><#--生成主键排在第一位-->
                 <id column="${field.name}" property="${field.propertyName}"/>
