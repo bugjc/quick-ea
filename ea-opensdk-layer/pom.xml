@@ -17,7 +17,7 @@
         <module>open-sdk-http</module>
         <module>open-sdk-test</module>
         <module>open-sdk-aop</module>
-        <module>open-sdk-config</module>
+        <module>open-sdk-chart</module>
     </modules>
 
 
