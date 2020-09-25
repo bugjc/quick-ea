@@ -18,6 +18,7 @@
         <module>open-sdk-test</module>
         <module>open-sdk-aop</module>
         <module>open-sdk-chart</module>
+        <module>open-sdk-mock</module>
     </modules>
 
 
