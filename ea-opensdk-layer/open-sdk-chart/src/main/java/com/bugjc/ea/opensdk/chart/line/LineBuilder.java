@@ -20,7 +20,7 @@ public class LineBuilder<T> {
     private Line line = new Line();
     private LineStrategy lineStrategy;
     private List<T> data;
-    private int numberOfSample;
+    private Integer numberOfSample;
     private String xFieldMethodName;
     private String yFieldMethodName;
 
@@ -31,11 +31,29 @@ public class LineBuilder<T> {
     }
 
     public LineBuilder setData(List<T> data) {
+        this.data = data;
+        return this;
+    }
+
+    public LineBuilder setNumberOfSample(Integer numberOfSample) {
+        this.numberOfSample = numberOfSample;
+        return this;
+    }
+
+    public Line build() {
+
         if (data == null || data.isEmpty()) {
-            throw new NullPointerException();
+            return new Line();
         }
 
-        this.data = data;
+        if (lineStrategy == null) {
+            throw new NullPointerException("The lineStrategy cannot be empty");
+        }
+
+        if (numberOfSample == null) {
+            //默认等于传入的数据对象大小
+            numberOfSample = data.size();
+        }
 
         T t = data.get(0);
         Field[] fields = t.getClass().getDeclaredFields();
@@ -45,18 +63,10 @@ public class LineBuilder<T> {
             } else if (field.getAnnotation(Y.class) != null) {
                 yFieldMethodName = "get" + getMethodName(field.getName());
             } else {
-                throw new NullPointerException();
+                throw new NullPointerException("Entity must be configured with X and Y annotations");
             }
         }
-        return this;
-    }
 
-    public LineBuilder setNumberOfSample(int numberOfSample) {
-        this.numberOfSample = numberOfSample;
-        return this;
-    }
-
-    public Line build() {
         int size = data.size();
         if (size < numberOfSample) {
             throw new IndexOutOfBoundsException();
@@ -96,9 +106,8 @@ public class LineBuilder<T> {
     /**
      * 把一个字符串的第一个字母转变成大写
      *
-     * @param fieldName
+     * @param fieldName     --字段名
      * @return
-     * @throws Exception
      */
     private String getMethodName(String fieldName) {
         byte[] items = fieldName.getBytes();
