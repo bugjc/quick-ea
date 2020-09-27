@@ -1,9 +1,6 @@
 package com.bugjc.ea.opensdk.mock.data.parser.handler.impl;
 
-import com.bugjc.ea.opensdk.mock.data.parser.Container;
-import com.bugjc.ea.opensdk.mock.data.parser.ContainerType;
-import com.bugjc.ea.opensdk.mock.data.parser.GroupContainer;
-import com.bugjc.ea.opensdk.mock.data.parser.Params;
+import com.bugjc.ea.opensdk.mock.data.parser.*;
 import com.bugjc.ea.opensdk.mock.data.parser.handler.NewFieldHandler;
 
 import java.lang.reflect.Type;
@@ -28,6 +25,9 @@ public class VirtualArrayListEntityTypeNewFieldHandler implements NewFieldHandle
         String currentGroupName = output.getCurrentGroupContainer().getCurrentGroupName();
 
         Type valueType = input.getCurrentField().getGenericType();
+        if (!TypeUtil.isJavaBean(valueType)) {
+            throw new NullPointerException();
+        }
 
         GroupContainer nextGroupContainer = GroupContainer.create(currentContainerType, currentGroupName, upperContainerType);
         Params newInput = Params.create(nextGroupContainer, input.getEntityFields(valueType));

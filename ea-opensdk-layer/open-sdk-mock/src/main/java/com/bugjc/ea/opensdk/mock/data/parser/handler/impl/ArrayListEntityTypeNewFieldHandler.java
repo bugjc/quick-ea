@@ -31,19 +31,22 @@ public class ArrayListEntityTypeNewFieldHandler implements NewFieldHandler {
         ParameterizedType parameterizedType = (ParameterizedType) input.getCurrentField().getGenericType();
         Type valueType = parameterizedType.getActualTypeArguments()[0];
 
+        ContainerType containerType;
         if (TypeUtil.isList(valueType)) {
-            List<NewField> valueFields = new ArrayList<>();
-            for (int i = 0; i < RandomUtil.randomInt(1, 10); i++) {
-                String name = String.valueOf(i);
-                NewField newField = new NewField(name, field.getType(), valueType, ContainerType.ArrayList_Entity);
-                valueFields.add(newField);
-            }
-
-            GroupContainer nextGroupContainer = GroupContainer.create(currentContainerType, currentGroupName, ContainerType.ArrayList_Entity);
-            Params newInput = Params.create(nextGroupContainer, valueFields);
-            deconstruction(newInput, output);
+            containerType = ContainerType.ArrayList_Entity;
         } else if (TypeUtil.isMap(valueType)) {
-            throw new NullPointerException("TODO");
+            containerType = ContainerType.HashMap_Entity;
+        } else if (TypeUtil.isJavaBean(valueType)) {
+            containerType = ContainerType.Virtual_ArrayList_Entity;
+        } else {
+            throw new NullPointerException();
         }
+
+        GroupContainer nextGroupContainer = GroupContainer.create(currentContainerType, currentGroupName, ContainerType.ArrayList_Entity);
+        Params newInput = Params.create(
+                nextGroupContainer,
+                input.getFields(field.getType(), valueType, containerType));
+        deconstruction(newInput, output);
+
     }
 }

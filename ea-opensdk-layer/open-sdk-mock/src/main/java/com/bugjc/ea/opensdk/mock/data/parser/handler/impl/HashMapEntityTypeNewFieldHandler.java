@@ -1,13 +1,10 @@
 package com.bugjc.ea.opensdk.mock.data.parser.handler.impl;
 
-import cn.hutool.core.util.RandomUtil;
 import com.bugjc.ea.opensdk.mock.data.parser.*;
 import com.bugjc.ea.opensdk.mock.data.parser.handler.NewFieldHandler;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
 
 import static com.bugjc.ea.opensdk.mock.data.parser.PropertyParser.deconstruction;
 
@@ -29,16 +26,15 @@ public class HashMapEntityTypeNewFieldHandler implements NewFieldHandler {
         Class<?> keyType = (Class<?>) parameterizedType.getActualTypeArguments()[0];
         Type valueType = parameterizedType.getActualTypeArguments()[1];
 
-        ContainerType virtualType = ContainerType.Virtual_HashMap_Entity;
+        ContainerType containerType;
         if (TypeUtil.isList(valueType)) {
-            virtualType = ContainerType.ArrayList_Entity;
-        }
-
-        List<NewField> valueFields = new ArrayList<>();
-        for (int i = 0; i < RandomUtil.randomInt(1, 10); i++) {
-            String name = String.valueOf(i);
-            NewField newField = new NewField(name, keyType, valueType, virtualType);
-            valueFields.add(newField);
+            containerType = ContainerType.ArrayList_Entity;
+        } else if (TypeUtil.isMap(valueType)) {
+            containerType = ContainerType.HashMap_Entity;
+        } else if (TypeUtil.isJavaBean(valueType)) {
+            containerType = ContainerType.Virtual_HashMap_Entity;
+        } else {
+            throw new NullPointerException();
         }
 
         GroupContainer nextGroupContainer = GroupContainer.create(
@@ -46,7 +42,9 @@ public class HashMapEntityTypeNewFieldHandler implements NewFieldHandler {
                 output.getCurrentGroupContainer().getCurrentGroupName(),
                 ContainerType.HashMap_Entity);
 
-        Params newInput = Params.create(nextGroupContainer, valueFields);
+        Params newInput = Params.create(
+                nextGroupContainer,
+                input.getFields(keyType, valueType, containerType));
         deconstruction(newInput, output);
     }
 }

@@ -32,20 +32,22 @@ public class ArrayListTypeNewFieldHandler implements NewFieldHandler {
         ParameterizedType parameterizedType = (ParameterizedType) input.getCurrentField().getGenericType();
         Type valueType = parameterizedType.getActualTypeArguments()[0];
 
+        ContainerType containerType;
         if (TypeUtil.isList(valueType)) {
-            List<NewField> valueFields = new ArrayList<>();
-            for (int i = 0; i < RandomUtil.randomInt(1, 10); i++) {
-                String name = String.valueOf(i);
-                NewField newField = new NewField(name, field.getType(), valueType, ContainerType.Virtual_ArrayList);
-                valueFields.add(newField);
-            }
-
-            GroupContainer nextGroupContainer = GroupContainer.create(currentContainerType, currentGroupName, ContainerType.ArrayList);
-            Params newInput = Params.create(nextGroupContainer, valueFields);
-            deconstruction(newInput, output);
+            containerType = ContainerType.ArrayList;
         } else if (TypeUtil.isMap(valueType)) {
-            throw new NullPointerException("TODO");
+            containerType = ContainerType.HashMap;
+        } else if (TypeUtil.isBasic(valueType)) {
+            VirtualArrayListTypeNewFieldHandler.INSTANCE.process(input, output);
+            return;
+        } else {
+            throw new NullPointerException();
         }
 
+        GroupContainer nextGroupContainer = GroupContainer.create(currentContainerType, currentGroupName, ContainerType.ArrayList);
+        Params newInput = Params.create(
+                nextGroupContainer,
+                input.getFields(field.getType(), valueType, containerType));
+        deconstruction(newInput, output);
     }
 }

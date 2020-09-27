@@ -20,18 +20,9 @@ public class VirtualHashMapEntityTypeNewFieldHandler implements NewFieldHandler 
     @Override
     public void process(Params input, Container output) {
 
-        //判断类型是否存在嵌套
         Type valueType = input.getCurrentField().getGenericType();
-        if (TypeUtil.isMap(valueType)) {
-            //解析下一级
-            HashMapEntityTypeNewFieldHandler.INSTANCE.process(input, output);
-            return;
-        }
-
-        if (TypeUtil.isList(valueType)) {
-            //解析下一级
-            ArrayListEntityTypeNewFieldHandler.INSTANCE.process(input, output);
-            return;
+        if (!TypeUtil.isJavaBean(valueType)) {
+            throw new NullPointerException();
         }
 
         ContainerType currentContainerType = output.getCurrentGroupContainer().getCurrentContainerType();

@@ -1,9 +1,11 @@
 package com.bugjc.ea.opensdk.mock.data.parser;
 
+import cn.hutool.core.util.RandomUtil;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,4 +73,20 @@ public class Params {
     }
 
 
+    /**
+     * 获取要处理的基础类型字段列表
+     * @param type
+     * @param valueType
+     * @param containerType
+     * @return
+     */
+    public List<NewField> getFields(Class<?> type, Type valueType, ContainerType containerType) {
+        List<NewField> valueFields = new ArrayList<>();
+        for (int i = 0; i < RandomUtil.randomInt(1, 10); i++) {
+            String name = String.valueOf(i);
+            NewField newField = new NewField(name, type, valueType, containerType);
+            valueFields.add(newField);
+        }
+        return valueFields;
+    }
 }
