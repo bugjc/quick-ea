@@ -15,14 +15,28 @@
 
     <dependencies>
 
-        <!--封装了开放服务 Http 调用方式-->
+        <!--封装了  Http 调用方式-->
         <dependency>
             <groupId>com.bugjc.ea.opensdk.http</groupId>
             <artifactId>open-sdk-http</artifactId>
             <version>1.0</version>
         </dependency>
 
-        <!--封装了开放服务快速测试相关功能-->
+        <!--封装了 AOP -->
+        <dependency>
+            <groupId>com.bugjc.ea.opensdk.aop</groupId>
+            <artifactId>open-sdk-aop</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!--封装了 Chart -->
+        <dependency>
+            <groupId>com.bugjc.ea.opensdk.chart</groupId>
+            <artifactId>open-sdk-chart</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <!--封装了快速测试相关功能-->
         <dependency>
             <groupId>com.bugjc.ea.opensdk.test</groupId>
             <artifactId>open-sdk-test</artifactId>
