@@ -29,7 +29,7 @@
     </profiles>
 
     <properties>
-        <flink-config.version>1.11.0</flink-config.version>
+        <flink-config.version>1.10.0</flink-config.version>
         <mybatis-plus.version>3.4.0</mybatis-plus.version>
         <mysql5.version>5.1.47</mysql5.version>
         <mysql8.version>8.0.15</mysql8.version>
