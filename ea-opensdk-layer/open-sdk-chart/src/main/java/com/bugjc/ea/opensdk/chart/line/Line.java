@@ -10,6 +10,6 @@ import lombok.Data;
  **/
 @Data
 public class Line {
-    private String[] xAxis;
-    private String[] yAxis;
+    private String[] xAxis = new String[0];
+    private String[] yAxis = new String[0];
 }

@@ -69,8 +69,9 @@ public class LineBuilder<T> {
 
         int size = data.size();
         if (size < numberOfSample) {
-            throw new IndexOutOfBoundsException();
+            numberOfSample = size;
         }
+
         //样本数
         int[] numberOfSamples = lineStrategy.choose(size, numberOfSample);
         List<String> xList = new ArrayList<>();
@@ -106,7 +107,7 @@ public class LineBuilder<T> {
     /**
      * 把一个字符串的第一个字母转变成大写
      *
-     * @param fieldName     --字段名
+     * @param fieldName --字段名
      * @return
      */
     private String getMethodName(String fieldName) {
