@@ -13,7 +13,7 @@ import java.util.Map;
  * @date 2020/8/27
  **/
 @Data
-public class Template implements Serializable {
+public class TemplateEntity implements Serializable {
 
     /**
      * 父包的路徑（必须）

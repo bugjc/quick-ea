@@ -45,7 +45,7 @@ public class ConfigBuilder {
     /**
      * 模板配置详情
      */
-    private List<Template> templateList;
+    private List<TemplateEntity> templateList;
 
     /**
      * 策略配置
@@ -95,7 +95,7 @@ public class ConfigBuilder {
      * @param tableInfo 表信息对象
      * @return ignore
      */
-    private Map<String, Object> getObjectMap(Template template, TableInfo tableInfo) {
+    private Map<String, Object> getObjectMap(TemplateEntity template, TableInfo tableInfo) {
         Map<String, Object> objectMap = new HashMap<>();
         objectMap.put("template", template);
         objectMap.put("author", this.getGlobalConfig().getAuthor());
@@ -122,7 +122,7 @@ public class ConfigBuilder {
      *
      * @return 包配置
      */
-    public List<Template> getTemplateList() {
+    public List<TemplateEntity> getTemplateList() {
         return templateList;
     }
 
@@ -151,9 +151,9 @@ public class ConfigBuilder {
         templateList = new ArrayList<>();
         for (TableInfo tableInfo : tableInfos) {
             //处理参数
-            List<Template> middlePackageInfos = new ArrayList<>();
-            for (Template template : templateConfig.getTemplates()) {
-                Template newTemplate = new Template();
+            List<TemplateEntity> middlePackageInfos = new ArrayList<>();
+            for (TemplateEntity template : templateConfig.getTemplates()) {
+                TemplateEntity newTemplate = new TemplateEntity();
                 BeanUtil.copyProperties(template, newTemplate);
 
                 String path = joinPackage(template.getParent(), template.getPackageName());
@@ -180,10 +180,10 @@ public class ConfigBuilder {
             }
 
             //处理依赖参数
-            List<Template> finalTemplateList = new ArrayList<>();
-            Map<String, DependClass> dependMap = middlePackageInfos.stream().collect(Collectors.toMap(Template::getPackageName, packageInfo -> new DependClass(packageInfo.getPackagePath(), packageInfo.getClassName(), packageInfo.getReferencePath())));
-            for (Template template : middlePackageInfos) {
-                Template newTemplate = new Template();
+            List<TemplateEntity> finalTemplateList = new ArrayList<>();
+            Map<String, DependClass> dependMap = middlePackageInfos.stream().collect(Collectors.toMap(TemplateEntity::getPackageName, packageInfo -> new DependClass(packageInfo.getPackagePath(), packageInfo.getClassName(), packageInfo.getReferencePath())));
+            for (TemplateEntity template : middlePackageInfos) {
+                TemplateEntity newTemplate = new TemplateEntity();
                 BeanUtil.copyProperties(template, newTemplate);
                 //处理外部依赖
                 if (template.getDependMap() != null && template.getDependMap().size() > 0) {
@@ -199,7 +199,6 @@ public class ConfigBuilder {
                     dependMap.putAll(dependClasses);
                 }
                 //默认全依赖，即当前上下文生成的依赖文件均可应用
-
                 newTemplate.setDependClasses(dependMap);
 
                 //添加模板数据

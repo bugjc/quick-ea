@@ -1,7 +1,7 @@
 
 package com.bugjc.ea.code.generator.config;
 
-import com.bugjc.ea.code.generator.model.Template;
+import com.bugjc.ea.code.generator.model.TemplateEntity;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,6 +20,6 @@ public class TemplateConfig {
     /**
      * 包信息集合
      */
-    private List<Template> templates;
+    private List<TemplateEntity> templates;
 
 }
