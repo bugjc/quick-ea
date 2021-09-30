@@ -18,8 +18,8 @@ public class GeneratorTest extends Tester {
     @Test
     public void genCode(){
 
-       GeneratedKey generatedKey = new GeneratedKey("id", GeneratorKeyConstant.key.MySql.name(), true, null);
-       generator.genCode(globalConfiguration,generatedKey, GeneratorKeyConstant.key.MySql.name(),"tbs_order","Order");
+       GeneratedKey generatedKey = new GeneratedKey("market_data_report_id", GeneratorKeyConstant.key.MySql.name(), true, null);
+       generator.genCode(globalConfiguration,generatedKey, GeneratorKeyConstant.key.MySql.name(),"dsl_market_data_report","MarketDataReport");
        // 生成mssql数据库的mybatis文件
 //        GeneratedKey mssqlGeneratedKey = new GeneratedKey("id", GeneratorKeyConstant.key.SqlServer.name(), true, null);
 //        generator.genCode(globalConfiguration,mssqlGeneratedKey,GeneratorKeyConstant.key.SqlServer.name(),"tCard","Card");
