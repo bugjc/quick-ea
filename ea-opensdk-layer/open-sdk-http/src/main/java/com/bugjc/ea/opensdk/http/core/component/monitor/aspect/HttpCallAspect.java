@@ -26,7 +26,7 @@ public class HttpCallAspect implements Aspect, Serializable {
     @Inject
     private EventFactory<HttpCallEvent> httpCallEvent;
 
-    private TimeInterval interval = new TimeInterval();
+    private final TimeInterval interval = new TimeInterval();
 
 
     @Override

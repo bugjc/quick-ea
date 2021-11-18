@@ -17,7 +17,7 @@ import java.util.List;
  **/
 public class LineBuilder<T> {
 
-    private Line line = new Line();
+    private final Line line = new Line();
     private LineStrategy lineStrategy;
     private List<T> data;
     private Integer numberOfSample;
@@ -25,17 +25,17 @@ public class LineBuilder<T> {
     private String yFieldMethodName;
 
 
-    public LineBuilder setLineStrategy(LineStrategy lineStrategy) {
+    public LineBuilder<?> setLineStrategy(LineStrategy lineStrategy) {
         this.lineStrategy = lineStrategy;
         return this;
     }
 
-    public LineBuilder setData(List<T> data) {
+    public LineBuilder<?> setData(List<T> data) {
         this.data = data;
         return this;
     }
 
-    public LineBuilder setNumberOfSample(Integer numberOfSample) {
+    public LineBuilder<?> setNumberOfSample(Integer numberOfSample) {
         this.numberOfSample = numberOfSample;
         return this;
     }

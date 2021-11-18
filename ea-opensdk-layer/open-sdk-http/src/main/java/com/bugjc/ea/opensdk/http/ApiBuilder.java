@@ -44,7 +44,7 @@ public class ApiBuilder {
     /**
      * 调用http接口服务
      */
-    private HttpService httpService;
+    private final HttpService httpService;
 
     /**
      * 注入器
@@ -54,7 +54,7 @@ public class ApiBuilder {
      * http 客户端
      */
     private OkHttpClient httpClient;
-    private OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
+    private final OkHttpClient.Builder httpClientBuilder = new OkHttpClient.Builder();
 
     public ApiBuilder() {
         this.httpClientBuilder.connectTimeout(5L, TimeUnit.SECONDS).readTimeout(20L, TimeUnit.SECONDS);

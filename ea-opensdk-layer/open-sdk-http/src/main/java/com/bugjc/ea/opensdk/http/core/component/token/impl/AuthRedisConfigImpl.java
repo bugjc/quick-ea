@@ -40,7 +40,7 @@ public class AuthRedisConfigImpl implements AuthConfig {
     enum SingletonEnum {
         //创建一个枚举对象，该对象天生为单例
         INSTANCE;
-        private AuthConfig authConfig;
+        private final AuthConfig authConfig;
 
         /**
          * 私有化枚举的构造函数

@@ -11,9 +11,9 @@ public enum AuthPathInfo {
     QUERY_TOKEN_V1("/auth/query_token","1.0","获取接口调用凭证"),
     VERIFY_TOKEN_V1("/auth/verify_token","1.0","校验接口调用凭证");
 
-    private String path;
-    private String version;
-    private String desc;
+    private final String path;
+    private final String version;
+    private final String desc;
 
     AuthPathInfo(String path, String version, String desc) {
         this.path = path;

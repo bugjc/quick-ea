@@ -51,9 +51,9 @@ public class AuthDefaultConfigImpl implements AuthConfig {
         CACHE_INSTANCE,
         //创建一个锁重入实例对象
         LOCK_INSTANCE;
-        private AuthDefaultConfigImpl authConfig;
-        private FIFOCache<String, String> ramStorage;
-        private Lock accessTokenLock;
+        private final AuthDefaultConfigImpl authConfig;
+        private final FIFOCache<String, String> ramStorage;
+        private final Lock accessTokenLock;
 
         /**
          * 私有化枚举的构造函数

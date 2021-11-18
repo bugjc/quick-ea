@@ -13,9 +13,9 @@ public enum JobPathInfo {
     JOB_UPD_PATH_V1("/job/upd","1.0","修改任务接口"),
     JOB_FIND_PATH_V1("/job/find","1.0","获取任务信息接口");
 
-    private String path;
-    private String version;
-    private String desc;
+    private final String path;
+    private final String version;
+    private final String desc;
 
     JobPathInfo(String path, String version, String desc) {
         this.path = path;

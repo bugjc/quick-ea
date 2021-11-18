@@ -70,6 +70,7 @@
         <module>ea-monitor-layer</module>
         <module>ea-devtool-layer</module>
         <module>ea-opensdk-layer</module>
+        <module>ea-admin-layer</module>
     </modules>
 
     <dependencyManagement>
