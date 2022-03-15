@@ -25,6 +25,8 @@
         <spring-boot-starter-data-redis.version>2.0.4.RELEASE</spring-boot-starter-data-redis.version>
         <spring-boot-starter-jdbc.version>2.0.4.RELEASE</spring-boot-starter-jdbc.version>
         <spring-boot-starter-undertow.version>2.0.4.RELEASE</spring-boot-starter-undertow.version>
+        <spring-boot-starter-websocket.version>2.0.4.RELEASE</spring-boot-starter-websocket.version>
+        <spring-boot-starter-thymeleaf.version>2.0.4.RELEASE</spring-boot-starter-thymeleaf.version>
 
         <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
         <spring-cloud-starter-netflix-zuul.version>2.0.4.RELEASE</spring-cloud-starter-netflix-zuul.version>
@@ -68,6 +70,7 @@
         <module>ea-monitor-layer</module>
         <module>ea-devtool-layer</module>
         <module>ea-opensdk-layer</module>
+        <module>ea-admin-layer</module>
     </modules>
 
     <dependencyManagement>

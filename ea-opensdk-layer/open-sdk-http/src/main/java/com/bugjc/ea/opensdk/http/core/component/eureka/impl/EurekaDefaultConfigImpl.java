@@ -40,7 +40,7 @@ public class EurekaDefaultConfigImpl implements EurekaConfig {
     /**
      *  平台接口授权服务 http客户端
      */
-    private HttpService httpService;
+    private final HttpService httpService;
     public EurekaDefaultConfigImpl(HttpService httpService){
         this.httpService = httpService;
     }

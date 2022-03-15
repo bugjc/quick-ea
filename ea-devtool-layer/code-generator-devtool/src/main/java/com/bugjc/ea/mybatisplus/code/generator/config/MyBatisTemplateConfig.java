@@ -1,7 +1,7 @@
 package com.bugjc.ea.mybatisplus.code.generator.config;
 
 import com.bugjc.ea.code.generator.config.TemplateConfig;
-import com.bugjc.ea.code.generator.model.Template;
+import com.bugjc.ea.code.generator.model.TemplateEntity;
 import com.bugjc.flink.config.annotation.ConfigurationProperties;
 import lombok.Data;
 
@@ -20,7 +20,7 @@ public class MyBatisTemplateConfig {
     /**
      * 包信息集合
      */
-    private List<Template> templates;
+    private List<TemplateEntity> templates;
 
     public TemplateConfig getPackageConfig() {
         return new TemplateConfig()

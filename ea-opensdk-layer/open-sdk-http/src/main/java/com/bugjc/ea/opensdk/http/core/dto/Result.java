@@ -47,6 +47,13 @@ public class Result<T> implements Serializable {
                 .build();
     }
 
+    public static Result failure(ResultCode resultCode, String message) {
+        return new ResultBuilder()
+                .code(resultCode.getCode())
+                .message(message)
+                .build();
+    }
+
     @Override
     public String toString() {
         return JSON.toJSONString(this);

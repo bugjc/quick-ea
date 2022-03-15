@@ -28,13 +28,13 @@ public class CyclicBarrierComponent {
      * 失败应答结果数量
      */
     @Getter
-    private AtomicInteger resultErrorNum = new AtomicInteger(0);
+    private final AtomicInteger resultErrorNum = new AtomicInteger(0);
 
     /**
      * 成功应答结果数量
      */
     @Getter
-    private AtomicInteger resultSuccessNum = new AtomicInteger(0);
+    private final AtomicInteger resultSuccessNum = new AtomicInteger(0);
 
     /**
      * 总任务数
@@ -132,13 +132,13 @@ public class CyclicBarrierComponent {
     @Slf4j
     private static class DefaultBarrierActionTask implements Runnable {
         //记录请求开始时间
-        private long startTime;
+        private final long startTime;
         //标记，false 表示准备测试资源所消耗的时间，true 表示所有任务执行完毕所消耗的总时间（RT）
         private boolean flag;
         //请求总数
-        private int numberOfRequests;
+        private final int numberOfRequests;
         //可循环栅栏组件对象
-        private CyclicBarrierComponent cyclicBarrierComponent;
+        private final CyclicBarrierComponent cyclicBarrierComponent;
 
 
         DefaultBarrierActionTask(CyclicBarrierComponent cyclicBarrierComponent, long startTime, boolean flag, int numberOfRequests){

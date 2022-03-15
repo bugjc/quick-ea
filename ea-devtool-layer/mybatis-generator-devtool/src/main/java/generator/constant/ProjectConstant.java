@@ -9,7 +9,7 @@ public final class ProjectConstant {
     /**
      * 项目基础包名称
      */
-    public static final String BASE_PACKAGE = "com.bugjc.ea.qrcode";
+    public static final String BASE_PACKAGE = "com.ugiant.data.compute.parse.job";
 
     /**
      * Model所在包
@@ -22,7 +22,7 @@ public final class ProjectConstant {
     /**
      * Service所在包
      */
-    public static final String SERVICE_PACKAGE = BASE_PACKAGE + ".service";
+    public static final String SERVICE_PACKAGE = BASE_PACKAGE + ".repository";
     /**
      * ServiceImpl所在包
      */
@@ -30,7 +30,7 @@ public final class ProjectConstant {
     /**
      * Controller所在包
      */
-    public static final String CONTROLLER_PACKAGE = BASE_PACKAGE + ".web";
+    public static final String CONTROLLER_PACKAGE = BASE_PACKAGE + ".api";
 
     /**
      * Mapper插件基础接口的完全限定名

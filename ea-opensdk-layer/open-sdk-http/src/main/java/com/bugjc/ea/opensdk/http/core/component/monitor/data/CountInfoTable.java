@@ -41,7 +41,7 @@ public class CountInfoTable implements Serializable {
     enum SingletonEnum {
         //创建一个枚举对象，该对象天生为单例
         INSTANCE;
-        private CountInfoTable countInfoTable;
+        private final CountInfoTable countInfoTable;
 
         /**
          * 私有化枚举的构造函数

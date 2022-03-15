@@ -3,7 +3,7 @@ package com.bugjc.ea.code.generator.core.engine;
 
 import com.bugjc.ea.code.generator.config.ConstVal;
 import com.bugjc.ea.code.generator.config.builder.ConfigBuilder;
-import com.bugjc.ea.code.generator.model.Template;
+import com.bugjc.ea.code.generator.model.TemplateEntity;
 import com.bugjc.ea.code.generator.core.toolkit.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,8 +43,8 @@ public abstract class AbstractTemplateEngine {
      */
     public AbstractTemplateEngine batchOutput() {
         try {
-            List<Template> packageInfoList = getConfigBuilder().getTemplateList();
-            for (Template packageInfo : packageInfoList) {
+            List<TemplateEntity> packageInfoList = getConfigBuilder().getTemplateList();
+            for (TemplateEntity packageInfo : packageInfoList) {
                 if (isCreate(packageInfo.getFilePath())) {
                     this.writer(packageInfo.getTemplateData(), packageInfo.getTemplatePath(), packageInfo.getFilePath());
                 }

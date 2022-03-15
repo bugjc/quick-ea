@@ -15,7 +15,8 @@
         <module>template-server</module>
         <module>job-server</module>
         <module>wechat-server</module>
-  </modules>
+        <module>websocket-server</module>
+    </modules>
 
 
     <dependencies>
